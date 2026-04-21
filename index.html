@@ -3,1254 +3,1646 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance Study — CMMU FN Final</title>
+<title>FN Final — CMMU Study</title>
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --surface2: #22263a;
-    --border: #2e3350;
-    --accent: #6c8fff;
-    --accent2: #a78bfa;
-    --green: #34d399;
-    --yellow: #fbbf24;
-    --red: #f87171;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+:root{--bg:#0f1117;--s1:#1a1d27;--s2:#22263a;--br:#2e3350;--acc:#6c8fff;--ac2:#a78bfa;--grn:#34d399;--yel:#fbbf24;--red:#f87171;--tx:#e2e8f0;--mu:#94a3b8;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;}
+.app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:220px;min-width:220px;background:var(--s1);border-right:1px solid var(--br);overflow-y:auto;display:flex;flex-direction:column;}
+.sh{padding:16px 14px 10px;border-bottom:1px solid var(--br);}
+.sh h1{font-size:13px;font-weight:700;color:var(--acc);}
+.sh p{font-size:11px;color:var(--mu);margin-top:2px;}
+.cb{display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;border:none;background:none;color:var(--mu);font-size:12px;width:100%;text-align:left;border-left:3px solid transparent;transition:all .15s;}
+.cb:hover{background:var(--s2);color:var(--tx);}
+.cb.active{background:var(--s2);color:var(--acc);border-left-color:var(--acc);}
+.ci{font-size:15px;width:20px;text-align:center;}
+.cn{font-size:10px;color:var(--mu);margin-left:auto;}
+.main{flex:1;overflow-y:auto;padding:24px 28px;}
+.chapter{display:none;}.chapter.active{display:block;}
+.ct{font-size:20px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,var(--acc),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.cs{font-size:12px;color:var(--mu);margin-bottom:18px;}
+.fb{background:var(--s2);border:1px solid var(--br);border-radius:8px;padding:12px 14px;margin-bottom:18px;}
+.fb h3{font-size:11px;color:var(--acc);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;}
+.fls{display:flex;flex-wrap:wrap;gap:6px;}
+.fl{background:var(--bg);border:1px solid var(--br);border-radius:5px;padding:5px 8px;font-size:11px;font-family:'Courier New',monospace;color:var(--yel);}
+.qc{background:var(--s1);border:1px solid var(--br);border-radius:8px;margin-bottom:12px;overflow:hidden;}
+.qh{padding:12px 16px;cursor:pointer;display:flex;align-items:flex-start;gap:10px;user-select:none;}
+.qh:hover{background:var(--s2);}
+.qb-badge{background:var(--acc);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap;margin-top:2px;}
+.qb-badge.mc{background:var(--ac2);}
+.qb-badge.tf{background:#f59e0b;}
+.qt{font-size:13px;font-weight:600;flex:1;line-height:1.4;}
+.qa{color:var(--mu);font-size:11px;margin-top:3px;transition:transform .2s;}
+.qc.open .qa{transform:rotate(90deg);}
+.qbody{display:none;padding:0 16px 16px;border-top:1px solid var(--br);}
+.qc.open .qbody{display:block;}
+.gbox{background:var(--s2);border-radius:7px;padding:12px 14px;margin:12px 0;font-size:12px;}
+.gbox h4{font-size:10px;color:var(--acc);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
+.gr{display:flex;gap:6px;margin-bottom:3px;align-items:baseline;}
+.gl{color:var(--mu);min-width:170px;font-size:11px;}
+.gv{color:var(--yel);font-weight:600;font-family:monospace;}
+.ask{background:rgba(108,143,255,.08);border-left:3px solid var(--acc);padding:8px 12px;border-radius:0 7px 7px 0;margin:10px 0;font-size:12px;}
+.btn{background:none;border:1px solid var(--br);color:var(--mu);font-size:11px;padding:4px 10px;border-radius:5px;cursor:pointer;margin:6px 4px 0 0;transition:all .15s;}
+.btn:hover{border-color:var(--acc);color:var(--acc);}
+.hbox{display:none;background:rgba(167,139,250,.07);border:1px dashed var(--ac2);border-radius:7px;padding:10px 12px;margin-top:8px;font-size:12px;line-height:1.7;}
+.hbox.show{display:block;}
+.abox{display:none;background:rgba(52,211,153,.07);border:1px solid var(--grn);border-radius:7px;padding:12px 14px;margin-top:8px;}
+.abox.show{display:block;}
+.abox h4{font-size:10px;color:var(--grn);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;}
+.ar{display:flex;gap:6px;margin-bottom:5px;align-items:baseline;}
+.al{color:var(--mu);font-size:11px;min-width:190px;}
+.av{color:var(--grn);font-weight:700;font-family:monospace;font-size:13px;}
+.step{font-size:11px;color:var(--mu);margin-bottom:4px;padding-left:10px;border-left:2px solid var(--br);}
+.step strong{color:var(--tx);}
+table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0;}
+th{background:var(--s2);color:var(--acc);padding:5px 8px;text-align:left;border-bottom:1px solid var(--br);}
+td{padding:5px 8px;border-bottom:1px solid var(--br);}
+tr:last-child td{border-bottom:none;}
+.mco{padding:7px 10px;border-radius:5px;border:1px solid var(--br);margin-bottom:5px;font-size:12px;cursor:pointer;transition:all .15s;}
+.mco:hover{border-color:var(--acc);background:rgba(108,143,255,.05);}
+.mco.correct{background:rgba(52,211,153,.1);border-color:var(--grn);color:var(--grn);}
+.mco.wrong{background:rgba(248,113,113,.08);border-color:var(--red);color:var(--red);}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-thumb{background:var(--br);border-radius:3px;}
 
-  /* Layout */
-  .app { display: flex; height: 100vh; overflow: hidden; }
+/* ── Responsive ───────────────────────────── */
 
-  /* Sidebar */
-  .sidebar {
-    width: 240px; min-width: 240px;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    overflow-y: auto;
-    display: flex; flex-direction: column;
-  }
-  .sidebar-header { padding: 20px 16px 12px; border-bottom: 1px solid var(--border); }
-  .sidebar-header h1 { font-size: 14px; font-weight: 700; color: var(--accent); letter-spacing: .5px; }
-  .sidebar-header p { font-size: 11px; color: var(--muted); margin-top: 3px; }
-  .ch-btn {
-    display: flex; align-items: center; gap: 10px;
-    padding: 11px 16px; cursor: pointer;
-    border: none; background: none; color: var(--muted);
-    font-size: 13px; width: 100%; text-align: left;
-    border-left: 3px solid transparent;
-    transition: all .15s;
-  }
-  .ch-btn:hover { background: var(--surface2); color: var(--text); }
-  .ch-btn.active { background: var(--surface2); color: var(--accent); border-left-color: var(--accent); }
-  .ch-icon { font-size: 16px; width: 22px; text-align: center; }
-  .ch-num { font-size: 10px; color: var(--muted); margin-left: auto; }
+/* Tablet: narrow sidebar */
+@media(max-width:1024px){
+  .sidebar{width:180px;min-width:180px;}
+  .main{padding:20px 18px;}
+}
 
-  /* Main */
-  .main { flex: 1; overflow-y: auto; padding: 28px 32px; }
-  .chapter { display: none; }
-  .chapter.active { display: block; }
-  .chapter-title {
-    font-size: 22px; font-weight: 700; margin-bottom: 6px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .chapter-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+/* Mobile: hide sidebar, show bottom nav + hamburger */
+@media(max-width:680px){
+  .app{flex-direction:column;height:auto;min-height:100vh;overflow:visible;}
 
-  /* Formula bar */
-  .formula-bar {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 14px 16px; margin-bottom: 24px;
+  /* Sidebar becomes slide-in drawer */
+  .sidebar{
+    position:fixed;top:0;left:0;height:100%;width:240px;
+    transform:translateX(-100%);transition:transform .25s ease;
+    z-index:200;border-right:1px solid var(--br);
+    box-shadow:4px 0 20px rgba(0,0,0,.5);
   }
-  .formula-bar h3 { font-size: 12px; color: var(--accent); text-transform: uppercase; letter-spacing: .8px; margin-bottom: 10px; }
-  .formulas { display: flex; flex-wrap: wrap; gap: 8px; }
-  .fml {
-    background: var(--bg); border: 1px solid var(--border);
-    border-radius: 6px; padding: 6px 10px;
-    font-size: 12px; font-family: 'Courier New', monospace; color: var(--yellow);
-  }
+  .sidebar.open{transform:translateX(0);}
 
-  /* Question card */
-  .q-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); margin-bottom: 16px; overflow: hidden;
-  }
-  .q-header {
-    padding: 14px 18px; cursor: pointer; display: flex;
-    align-items: flex-start; gap: 12px; user-select: none;
-  }
-  .q-header:hover { background: var(--surface2); }
-  .q-badge {
-    background: var(--accent); color: #fff; font-size: 11px; font-weight: 700;
-    padding: 2px 8px; border-radius: 20px; white-space: nowrap; margin-top: 2px;
-  }
-  .q-badge.mc { background: var(--accent2); }
-  .q-title { font-size: 14px; font-weight: 600; flex: 1; line-height: 1.4; }
-  .q-arrow { color: var(--muted); font-size: 12px; margin-top: 3px; transition: transform .2s; }
-  .q-card.open .q-arrow { transform: rotate(90deg); }
+  /* Overlay behind drawer */
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:199;}
+  .overlay.show{display:block;}
 
-  .q-body { display: none; padding: 0 18px 18px; border-top: 1px solid var(--border); }
-  .q-card.open .q-body { display: block; }
-
-  .given-box {
-    background: var(--surface2); border-radius: 8px;
-    padding: 14px 16px; margin: 14px 0; font-size: 13px;
+  /* Top bar on mobile */
+  .topbar{
+    display:flex;align-items:center;gap:10px;
+    position:sticky;top:0;z-index:100;
+    background:var(--s1);border-bottom:1px solid var(--br);
+    padding:10px 14px;
   }
-  .given-box h4 { font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 8px; }
-  .given-row { display: flex; gap: 8px; margin-bottom: 4px; align-items: baseline; }
-  .given-label { color: var(--muted); width: 180px; min-width: 140px; font-size: 12px; }
-  .given-val { color: var(--yellow); font-weight: 600; font-family: monospace; }
+  .ham{background:none;border:none;color:var(--tx);cursor:pointer;font-size:20px;padding:2px 6px;line-height:1;}
+  .topbar-title{font-size:13px;font-weight:700;color:var(--acc);}
+  .topbar-sub{font-size:11px;color:var(--mu);margin-left:auto;white-space:nowrap;}
 
-  .ask-box {
-    background: rgba(108,143,255,.08); border-left: 3px solid var(--accent);
-    padding: 10px 14px; border-radius: 0 8px 8px 0; margin: 12px 0;
-    font-size: 13px; color: var(--text);
+  /* Main area fills below topbar */
+  .main{padding:14px 14px 80px;}
+
+  /* Bottom tab bar */
+  .botnav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;
+    background:var(--s1);border-top:1px solid var(--br);
+    z-index:100;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
   }
-
-  .hint-toggle {
-    background: none; border: 1px solid var(--border);
-    color: var(--muted); font-size: 12px; padding: 5px 12px;
-    border-radius: 6px; cursor: pointer; margin: 8px 4px 0 0;
-    transition: all .15s;
+  .botnav::-webkit-scrollbar{display:none;}
+  .bntab{
+    flex:0 0 auto;display:flex;flex-direction:column;align-items:center;
+    gap:2px;padding:8px 12px;cursor:pointer;border:none;background:none;
+    color:var(--mu);font-size:10px;white-space:nowrap;
+    border-top:2px solid transparent;transition:all .15s;min-width:60px;
   }
-  .hint-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .bntab .bni{font-size:16px;}
+  .bntab.active{color:var(--acc);border-top-color:var(--acc);}
 
-  .hint-box {
-    display: none; background: rgba(167,139,250,.07);
-    border: 1px dashed var(--accent2); border-radius: 8px;
-    padding: 12px 14px; margin-top: 10px; font-size: 13px; line-height: 1.7;
-  }
-  .hint-box.show { display: block; }
+  /* Stack given-row on mobile */
+  .gr{flex-direction:column;gap:1px;margin-bottom:8px;}
+  .gl{min-width:unset;}
+  .ar{flex-direction:column;gap:1px;margin-bottom:8px;}
+  .al{min-width:unset;}
 
-  .ans-box {
-    display: none; background: rgba(52,211,153,.07);
-    border: 1px solid var(--green); border-radius: 8px;
-    padding: 14px 16px; margin-top: 10px;
-  }
-  .ans-box.show { display: block; }
-  .ans-box h4 { font-size: 11px; color: var(--green); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 10px; }
-  .ans-row { display: flex; gap: 8px; margin-bottom: 6px; align-items: baseline; }
-  .ans-label { color: var(--muted); font-size: 12px; min-width: 200px; }
-  .ans-val { color: var(--green); font-weight: 700; font-family: monospace; font-size: 14px; }
-  .step { font-size: 12px; color: var(--muted); margin-bottom: 5px; padding-left: 12px; border-left: 2px solid var(--border); }
-  .step strong { color: var(--text); }
+  /* Scroll tables */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  table{min-width:360px;}
 
-  /* Table */
-  table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 10px 0; }
-  th { background: var(--surface2); color: var(--accent); padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--border); }
-  td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-  tr:last-child td { border-bottom: none; }
+  .ct{font-size:17px;}
+  .qt{font-size:12px;}
+  .av{font-size:12px;}
+}
 
-  /* MC options */
-  .mc-opts { margin: 10px 0; }
-  .mc-opt {
-    padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border);
-    margin-bottom: 6px; font-size: 13px; cursor: pointer; transition: all .15s;
-  }
-  .mc-opt:hover { border-color: var(--accent); background: rgba(108,143,255,.05); }
-  .mc-opt.correct { background: rgba(52,211,153,.1); border-color: var(--green); color: var(--green); }
-  .mc-opt.wrong { background: rgba(248,113,113,.08); border-color: var(--red); color: var(--red); }
-
-  /* Progress */
-  .progress-bar { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
-  .prog-dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--border); cursor: pointer;
-    transition: background .2s;
-  }
-  .prog-dot.done { background: var(--green); }
-
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+/* Desktop: hide mobile elements */
+@media(min-width:681px){
+  .topbar{display:none;}
+  .botnav{display:none;}
+  .overlay{display:none!important;}
+}
 </style>
 </head>
 <body>
+<!-- Mobile overlay -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Mobile top bar -->
+<div class="topbar">
+  <button class="ham" onclick="toggleSidebar()">☰</button>
+  <span class="topbar-title" id="topbar-title">📈 Bond Valuation</span>
+  <span class="topbar-sub">Ch5 · 10ข้อ</span>
+</div>
+
 <div class="app">
-
-<!-- SIDEBAR -->
-<nav class="sidebar">
-  <div class="sidebar-header">
-    <h1>FN Final Study</h1>
-    <p>CMMU — 6 Chapters</p>
-  </div>
-  <button class="ch-btn active" onclick="showChapter('ch5')">
-    <span class="ch-icon">📈</span> Bond Valuation <span class="ch-num">Ch5</span>
-  </button>
-  <button class="ch-btn" onclick="showChapter('ch6')">
-    <span class="ch-icon">📊</span> Risk & CAPM <span class="ch-num">Ch6</span>
-  </button>
-  <button class="ch-btn" onclick="showChapter('ch7')">
-    <span class="ch-icon">💹</span> Stock Valuation <span class="ch-num">Ch7</span>
-  </button>
-  <button class="ch-btn" onclick="showChapter('ch8')">
-    <span class="ch-icon">⚖️</span> WACC <span class="ch-num">Ch8</span>
-  </button>
-  <button class="ch-btn" onclick="showChapter('ch9')">
-    <span class="ch-icon">🏗️</span> Capital Budgeting <span class="ch-num">Ch9</span>
-  </button>
-  <button class="ch-btn" onclick="showChapter('ch10')">
-    <span class="ch-icon">💰</span> Cash Flow Est. <span class="ch-num">Ch10</span>
-  </button>
+<nav class="sidebar" id="sidebar">
+  <div class="sh"><h1>FN Final Study</h1><p>CMMU · 6 Chapters · ทุกข้อ</p></div>
+  <button class="cb active" onclick="showCh('ch5',this,'📈 Bond Valuation','Ch5 · 10ข้อ')"><span class="ci">📈</span>Bond Valuation<span class="cn">Ch5·10ข้อ</span></button>
+  <button class="cb" onclick="showCh('ch6',this,'📊 Risk & CAPM','Ch6 · 13ข้อ')"><span class="ci">📊</span>Risk & CAPM<span class="cn">Ch6·13ข้อ</span></button>
+  <button class="cb" onclick="showCh('ch7',this,'💹 Stock Valuation','Ch7 · 10ข้อ')"><span class="ci">💹</span>Stock Valuation<span class="cn">Ch7·10ข้อ</span></button>
+  <button class="cb" onclick="showCh('ch8',this,'⚖️ WACC','Ch8 · 10ข้อ')"><span class="ci">⚖️</span>WACC<span class="cn">Ch8·10ข้อ</span></button>
+  <button class="cb" onclick="showCh('ch9',this,'🏗️ Capital Budgeting','Ch9 · 7ข้อ')"><span class="ci">🏗️</span>Capital Budgeting<span class="cn">Ch9·7ข้อ</span></button>
+  <button class="cb" onclick="showCh('ch10',this,'💰 Cash Flow','Ch10 · 9ข้อ')"><span class="ci">💰</span>Cash Flow Est.<span class="cn">Ch10·9ข้อ</span></button>
 </nav>
-
-<!-- MAIN -->
 <div class="main">
 
-<!-- ============================================================ CH5 ============================================================ -->
+<!-- ======== CH5 ======== -->
 <div id="ch5" class="chapter active">
-  <div class="chapter-title">Chapter 5 — Bond Valuation & Interest Rates</div>
-  <div class="chapter-sub">การคำนวณราคาพันธบัตร (Bond Price), อัตราผลตอบแทน (YTM), และแนวคิดพื้นฐาน</div>
-  <div class="formula-bar">
-    <h3>Key Formulas</h3>
-    <div class="formulas">
-      <div class="fml">Bond Price = Σ [C/(1+r)ᵗ] + FV/(1+r)ⁿ</div>
-      <div class="fml">Semi-annual: r = YTM/2, n = years×2</div>
-      <div class="fml">Quarterly: r = YTM/4, n = years×4</div>
-      <div class="fml">PMT = FV × (coupon rate / periods/yr)</div>
-    </div>
-  </div>
+<div class="ct">Chapter 5 — Bond Valuation & Interest Rates</div>
+<div class="cs">การคำนวณราคาพันธบัตร Bond Price, YTM และแนวคิดพื้นฐาน</div>
+<div class="fb"><h3>Key Formulas</h3><div class="fls">
+<div class="fl">Bond Price = Σ[PMT/(1+r)ᵗ] + FV/(1+r)ⁿ</div>
+<div class="fl">PMT = FV × coupon/m</div>
+<div class="fl">r = YTM/m &nbsp;|&nbsp; n = years×m</div>
+<div class="fl">Premium: coupon &gt; YTM → Price &gt; Par</div>
+<div class="fl">Discount: coupon &lt; YTM → Price &lt; Par</div>
+</div></div>
 
-  <!-- Q1 -->
-  <div class="q-card" id="q-ch5-1">
-    <div class="q-header" onclick="toggleQ('ch5-1')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Bond 1 — คำนวณราคาพันธบัตร (Quarterly Coupon)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Par Value (FV)</span><span class="given-val">1,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Coupon Rate</span><span class="given-val">4.25% per year</span></div>
-        <div class="given-row"><span class="given-label">Payment Frequency</span><span class="given-val">4 ครั้ง/ปี (Quarterly)</span></div>
-        <div class="given-row"><span class="given-label">Maturity</span><span class="given-val">3 ปี</span></div>
-        <div class="given-row"><span class="given-label">YTM (Market Rate)</span><span class="given-val">4.00% per year</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>ราคาพันธบัตร (Bond Price)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch5-1')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch5-1')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch5-1">
-        <strong>Steps:</strong><br>
-        1. PMT = 1,000 × 4.25% / 4 = <strong>10.625 บาท/งวด</strong><br>
-        2. r = 4% / 4 = <strong>1% ต่องวด</strong><br>
-        3. n = 3 × 4 = <strong>12 งวด</strong><br>
-        4. Bond Price = PV of annuity (PMT) + PV of FV<br>
-        = 10.625 × [1−(1.01)⁻¹²]/0.01 + 1000/(1.01)¹²<br>
-        5. คูปองสูงกว่า YTM → ราคา &gt; par (Premium Bond)
-      </div>
-      <div class="ans-box" id="ans-ch5-1">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Bond Price</span><span class="ans-val">1,007.03 บาท</span></div>
-        <div class="step">→ Premium Bond เพราะ Coupon Rate (4.25%) &gt; YTM (4%)</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q2 -->
-  <div class="q-card" id="q-ch5-2">
-    <div class="q-header" onclick="toggleQ('ch5-2')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Bond 2 — หา YTM จากราคาตลาด (Annual Coupon)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Par Value (FV)</span><span class="given-val">1,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Coupon Rate</span><span class="given-val">4% per year</span></div>
-        <div class="given-row"><span class="given-label">Maturity</span><span class="given-val">6 ปี</span></div>
-        <div class="given-row"><span class="given-label">Current Price</span><span class="given-val">957.55 บาท</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>YTM (Yield to Maturity)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch5-2')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch5-2')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch5-2">
-        <strong>Steps:</strong><br>
-        1. PMT = 1,000 × 4% = <strong>40 บาท/ปี</strong>, n = 6, FV = 1,000<br>
-        2. ราคา &lt; par → Discount Bond → YTM &gt; Coupon Rate<br>
-        3. Solve: 957.55 = 40×[1−(1+r)⁻⁶]/r + 1000/(1+r)⁶<br>
-        4. ใช้ Financial Calculator หรือ Excel RATE/IRR function
-      </div>
-      <div class="ans-box" id="ans-ch5-2">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">YTM</span><span class="ans-val">4.82%</span></div>
-        <div class="step">→ Discount Bond เพราะราคาตลาด (957.55) &lt; par (1,000)</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q3 -->
-  <div class="q-card" id="q-ch5-3">
-    <div class="q-header" onclick="toggleQ('ch5-3')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Bond 3 — ราคาพันธบัตร Semi-Annual Coupon</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Par Value (FV)</span><span class="given-val">1,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Coupon Rate</span><span class="given-val">3.35% per year</span></div>
-        <div class="given-row"><span class="given-label">Payment Frequency</span><span class="given-val">2 ครั้ง/ปี (Semi-annual)</span></div>
-        <div class="given-row"><span class="given-label">Maturity</span><span class="given-val">3 ปี</span></div>
-        <div class="given-row"><span class="given-label">YTM</span><span class="given-val">4.15% per year</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>ราคาพันธบัตร (Bond Price)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch5-3')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch5-3')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch5-3">
-        1. PMT = 1,000 × 3.35% / 2 = <strong>16.75 บาท/งวด</strong><br>
-        2. r = 4.15% / 2 = <strong>2.075% ต่องวด</strong><br>
-        3. n = 3 × 2 = <strong>6 งวด</strong><br>
-        4. Coupon (3.35%) &lt; YTM (4.15%) → Discount Bond → Price &lt; par
-      </div>
-      <div class="ans-box" id="ans-ch5-3">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Bond Price</span><span class="ans-val">977.65 บาท</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q4 -->
-  <div class="q-card" id="q-ch5-4">
-    <div class="q-header" onclick="toggleQ('ch5-4')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Bond 4 — Stepped Coupon Bond (อัตราดอกเบี้ยเปลี่ยนแปลง)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Par Value (FV)</span><span class="given-val">1,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Coupon Year 1–2</span><span class="given-val">6% per year</span></div>
-        <div class="given-row"><span class="given-label">Coupon Year 3–5</span><span class="given-val">7.5% per year</span></div>
-        <div class="given-row"><span class="given-label">YTM</span><span class="given-val">9%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>มูลค่าพันธบัตร (Bond Value)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch5-4')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch5-4')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch5-4">
-        <strong>คำนวณแต่ละงวดแยก (PV ทุก Cash Flow):</strong><br>
-        Year 1: PV = 60 / (1.09)¹<br>
-        Year 2: PV = 60 / (1.09)²<br>
-        Year 3: PV = 75 / (1.09)³<br>
-        Year 4: PV = 75 / (1.09)⁴<br>
-        Year 5: PV = (75+1000) / (1.09)⁵<br>
-        Bond Value = ผลรวมทั้งหมด
-      </div>
-      <div class="ans-box" id="ans-ch5-4">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Bond Value</span><span class="ans-val">913.75 บาท</span></div>
-        <div class="step">→ Discount Bond: YTM (9%) &gt; ทั้งสอง coupon rates</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q5 -->
-  <div class="q-card" id="q-ch5-5">
-    <div class="q-header" onclick="toggleQ('ch5-5')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Bond 5 — หา YTM (Quarterly Coupon)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Par Value (FV)</span><span class="given-val">1,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Coupon Rate</span><span class="given-val">6.15% per year</span></div>
-        <div class="given-row"><span class="given-label">Payment Frequency</span><span class="given-val">4 ครั้ง/ปี (Quarterly)</span></div>
-        <div class="given-row"><span class="given-label">Maturity</span><span class="given-val">3 ปี</span></div>
-        <div class="given-row"><span class="given-label">Current Price</span><span class="given-val">950.80 บาท</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>YTM (Nominal Annual Rate)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch5-5')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch5-5')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch5-5">
-        1. PMT = 1,000 × 6.15% / 4 = <strong>15.375 บาท/งวด</strong><br>
-        2. n = 3 × 4 = <strong>12 งวด</strong><br>
-        3. Solve r จาก: 950.80 = 15.375×[1−(1+r)⁻¹²]/r + 1000/(1+r)¹²<br>
-        4. YTM (annual) = r × 4
-      </div>
-      <div class="ans-box" id="ans-ch5-5">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">YTM</span><span class="ans-val">8.01% per year</span></div>
-      </div>
-    </div>
-  </div>
+<!-- B1 -->
+<div class="qc" id="q1">
+<div class="qh" onclick="tog('q1')"><span class="qb-badge">Calc</span><span class="qt">Bond 1 — ราคาพันธบัตร Quarterly Coupon</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Par Value (FV)</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Coupon Rate</span><span class="gv">4.25% ต่อปี</span></div>
+<div class="gr"><span class="gl">จ่ายคูปอง</span><span class="gv">4 ครั้ง/ปี (Quarterly)</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">3 ปี</span></div>
+<div class="gr"><span class="gl">YTM</span><span class="gv">4.00% ต่อปี</span></div>
 </div>
-<!-- end ch5 -->
+<div class="ask">❓ จงหา <strong>ราคาพันธบัตร (Bond Price)</strong></div>
+<button class="btn" onclick="sh('h1')">💡 Steps</button>
+<button class="btn" onclick="sh('a1')">✅ Answer</button>
+<div class="hbox" id="h1">
+Calculator Keys: P/Y=C/Y=4<br>
+N = 3×4 = <strong>12</strong> &nbsp;|&nbsp; I/Y = 4 &nbsp;|&nbsp; PMT = 1000×4.25%/4 = <strong>10.625</strong> &nbsp;|&nbsp; FV = 1000 &nbsp;→&nbsp; CPT PV<br>
+Coupon (4.25%) &gt; YTM (4%) → <strong>Premium Bond</strong> → Price &gt; 1,000
+</div>
+<div class="abox" id="a1"><h4>Answer</h4>
+<div class="ar"><span class="al">Bond Price</span><span class="av">1,007.03 บาท</span></div>
+<div class="step">→ Premium Bond เพราะ coupon rate &gt; YTM</div>
+</div></div></div>
 
-<!-- ============================================================ CH6 ============================================================ -->
+<!-- B2 -->
+<div class="qc" id="q2">
+<div class="qh" onclick="tog('q2')"><span class="qb-badge">Calc</span><span class="qt">Bond 2 — หา YTM จากราคาตลาด (Quarterly)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Par Value (FV)</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Coupon Rate</span><span class="gv">4% ต่อปี</span></div>
+<div class="gr"><span class="gl">จ่ายคูปอง</span><span class="gv">4 ครั้ง/ปี (Quarterly)</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">6 ปี → N = 24</span></div>
+<div class="gr"><span class="gl">ราคาปัจจุบัน (PV)</span><span class="gv">957.55 บาท</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>YTM (Yield to Maturity)</strong></div>
+<button class="btn" onclick="sh('h2')">💡 Steps</button>
+<button class="btn" onclick="sh('a2')">✅ Answer</button>
+<div class="hbox" id="h2">
+Calculator: P/Y=C/Y=4<br>
+PV = −957.55 &nbsp;|&nbsp; PMT = 1000×4%/4 = <strong>10</strong> &nbsp;|&nbsp; FV = 1000 &nbsp;|&nbsp; N = 24 &nbsp;→&nbsp; CPT I/Y<br>
+ได้ I/Y ต่องวด = 1.20% &nbsp;→&nbsp; YTM = 1.20 × 4 = <strong>4.82%</strong><br>
+Discount Bond เพราะ Price (957.55) &lt; Par → YTM &gt; coupon rate
+</div>
+<div class="abox" id="a2"><h4>Answer</h4>
+<div class="ar"><span class="al">YTM</span><span class="av">4.82% ต่อปี</span></div>
+</div></div></div>
+
+<!-- B3 -->
+<div class="qc" id="q3">
+<div class="qh" onclick="tog('q3')"><span class="qb-badge">Calc</span><span class="qt">Bond 3 — ราคาพันธบัตร Semi-Annual Coupon</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Par Value (FV)</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Coupon Rate</span><span class="gv">3.35% ต่อปี</span></div>
+<div class="gr"><span class="gl">จ่ายคูปอง</span><span class="gv">2 ครั้ง/ปี (Semi-annual)</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">3 ปี → N = 6</span></div>
+<div class="gr"><span class="gl">YTM</span><span class="gv">4.15% ต่อปี → I/Y = 2.075</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>ราคาพันธบัตร</strong></div>
+<button class="btn" onclick="sh('h3')">💡 Steps</button>
+<button class="btn" onclick="sh('a3')">✅ Answer</button>
+<div class="hbox" id="h3">
+PMT = 1000 × 3.35% / 2 = <strong>16.75</strong> &nbsp;|&nbsp; I/Y = 4.15/2 = 2.075 &nbsp;|&nbsp; N = 6 &nbsp;|&nbsp; FV = 1000 &nbsp;→&nbsp; CPT PV<br>
+Coupon (3.35%) &lt; YTM (4.15%) → <strong>Discount Bond</strong> → Price &lt; 1,000
+</div>
+<div class="abox" id="a3"><h4>Answer</h4>
+<div class="ar"><span class="al">Bond Price</span><span class="av">977.65 บาท</span></div>
+</div></div></div>
+
+<!-- B4 -->
+<div class="qc" id="q4">
+<div class="qh" onclick="tog('q4')"><span class="qb-badge">Calc</span><span class="qt">Bond 4 — Stepped Coupon Semi-Annual (ใช้ CF Function)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Par Value (FV)</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">5 ปี → N = 10 งวด</span></div>
+<div class="gr"><span class="gl">จ่ายคูปอง</span><span class="gv">2 ครั้ง/ปี (Semi-annual)</span></div>
+<div class="gr"><span class="gl">Coupon ปีที่ 1–2</span><span class="gv">6% ต่อปี → PMT = 30/งวด</span></div>
+<div class="gr"><span class="gl">Coupon ปีที่ 3–5</span><span class="gv">7.5% ต่อปี → PMT = 37.5/งวด</span></div>
+<div class="gr"><span class="gl">YTM</span><span class="gv">9% ต่อปี → I/Y = 4.5%</span></div>
+</div>
+<div class="ask">❓ จงหา คูปองต่องวด 1–4, งวด 5–9 และ <strong>ราคาพันธบัตร</strong></div>
+<button class="btn" onclick="sh('h4')">💡 Steps</button>
+<button class="btn" onclick="sh('a4')">✅ Answer</button>
+<div class="hbox" id="h4">
+<strong>ใช้ CF Function (ไม่สามารถใช้ PMT ปกติได้):</strong><br>
+CF0 = 0 &nbsp;|&nbsp; C01 = 30, F01 = 4 (งวด 1–4) &nbsp;|&nbsp; C02 = 37.5, F02 = 5 (งวด 5–9) &nbsp;|&nbsp; C03 = 1037.5, F03 = 1<br>
+NPV → I = 4.5 → CPT NPV
+</div>
+<div class="abox" id="a4"><h4>Answer</h4>
+<div class="ar"><span class="al">คูปองงวด 1–4</span><span class="av">30 บาท/งวด</span></div>
+<div class="ar"><span class="al">คูปองงวด 5–9</span><span class="av">37.5 บาท/งวด</span></div>
+<div class="ar"><span class="al">I/Y ต่องวด</span><span class="av">4.5%</span></div>
+<div class="ar"><span class="al">Bond Price</span><span class="av">913.75 บาท</span></div>
+</div></div></div>
+
+<!-- B5 -->
+<div class="qc" id="q5">
+<div class="qh" onclick="tog('q5')"><span class="qb-badge">Calc</span><span class="qt">Bond 5 — หา YTM Quarterly Coupon</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Par Value</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Coupon Rate</span><span class="gv">6.15% ต่อปี</span></div>
+<div class="gr"><span class="gl">จ่ายคูปอง</span><span class="gv">4 ครั้ง/ปี → N = 12</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">3 ปี</span></div>
+<div class="gr"><span class="gl">ราคาปัจจุบัน</span><span class="gv">950.80 บาท</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>YTM</strong></div>
+<button class="btn" onclick="sh('h5')">💡 Steps</button>
+<button class="btn" onclick="sh('a5')">✅ Answer</button>
+<div class="hbox" id="h5">
+PMT = 1000 × 6.15%/4 = <strong>15.375</strong> &nbsp;|&nbsp; PV = −950.80 &nbsp;|&nbsp; N = 12 &nbsp;|&nbsp; FV = 1000 &nbsp;→&nbsp; CPT I/Y<br>
+ได้ I/Y ต่องวด = 1.9975% &nbsp;→&nbsp; YTM = 1.9975 × 4 = <strong>8.01%</strong>
+</div>
+<div class="abox" id="a5"><h4>Answer</h4>
+<div class="ar"><span class="al">YTM</span><span class="av">8.01% ต่อปี</span></div>
+</div></div></div>
+
+<!-- B6 MC -->
+<div class="qc" id="q6">
+<div class="qh" onclick="tog('q6')"><span class="qb-badge mc">MC</span><span class="qt">Bond 6 — Premium Bond กับ YTM</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">หุ้นกู้มีราคา<strong>สูงกว่า Par value</strong> (Premium Bond) — นักลงทุนจะได้รับ YTM เป็นเช่นใด?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) ได้รับ YTM เท่ากับ coupon rate</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) ได้รับ YTM มากกว่า coupon rate</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ค) ได้รับ YTM <strong>น้อยกว่า</strong> coupon rate ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ง) YTM ตาม government bond yield curve</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">จ) YTM ขึ้นกับการเปลี่ยนแปลงอัตราดอกเบี้ย</div>
+</div>
+<div class="step" style="margin-top:8px">💡 Premium Bond: Price &gt; Par → ต้องหา YTM &lt; coupon rate เพื่อ discount ให้ได้ราคาสูง</div>
+</div></div>
+
+<!-- B7 MC -->
+<div class="qc" id="q7">
+<div class="qh" onclick="tog('q7')"><span class="qb-badge mc">MC</span><span class="qt">Bond 7 — Inflation ลดลง ควรลงทุนตราสารหนี้แบบไหน?</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">อัตราเงินเฟ้อผ่านจุดสูงสุดแล้วและกำลัง<strong>ปรับลดลง</strong> ควรลงทุนในตราสารหนี้คูปองคงที่ประเภทใดเพื่อผลตอบแทนดีที่สุด?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) ตราสารหนี้ที่มีอันดับความน่าเชื่อถือสูง</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ข) ตราสารหนี้ที่มีระยะเวลาครบกำหนด<strong>ยาว</strong> ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ค) ตราสารหนี้ที่มีสภาพคล่องสูง</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ง) ตราสารหนี้ที่จ่ายคูปองหลายครั้งต่อปี</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">จ) ตราสารหนี้ที่มี coupon rate สูง</div>
+</div>
+<div class="step" style="margin-top:8px">💡 เมื่ออัตราดอกเบี้ยลด → Bond Price สูงขึ้น &nbsp;| Long-term bond มี Duration สูง → ราคาเปลี่ยนแปลงมากกว่า = กำไร Capital Gain มากกว่า</div>
+</div></div>
+
+<!-- B8 MC -->
+<div class="qc" id="q8">
+<div class="qh" onclick="tog('q8')"><span class="qb-badge mc">MC</span><span class="qt">Bond 8 — อัตราดอกเบี้ยจะเพิ่มขึ้น ควรลงทุนแบบไหน?</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">นักลงทุนคาดว่าอัตราดอกเบี้ย<strong>กำลังจะเพิ่มขึ้น</strong> — ควรลงทุนในตราสารหนี้แบบใด?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="true" onclick="pickMC(this)">ก) ตราสารหนี้<strong>ระยะสั้น</strong> ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) ตราสารหนี้ที่มีอันดับความน่าเชื่อถือสูง</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ค) ตราสารหนี้ที่มีหลักประกัน (secured bond)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ง) ตราสารหนี้ที่มี coupon rate สูง</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">จ) ตราสารหนี้ระยะยาว</div>
+</div>
+<div class="step" style="margin-top:8px">💡 ดอกเบี้ยเพิ่ม → Bond Price ลด &nbsp;| Short-term bond มี Duration ต่ำ → ราคาลดน้อยกว่า = ความเสี่ยงน้อยกว่า</div>
+</div></div>
+
+<!-- B9 MC -->
+<div class="qc" id="q9">
+<div class="qh" onclick="tog('q9')"><span class="qb-badge mc">MC</span><span class="qt">Bond 9 — ข้อใดถูก: Primary Market & Government Bond</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ประโยคต่อไปนี้ข้อใด<strong>ถูกต้อง</strong>?<br>
+<small>I) ตลาดแรก (Primary market) คือตลาดที่ผู้ออกขายตราสารหนี้ออกใหม่ให้นักลงทุนครั้งแรก<br>
+II) การซื้อขายตราสารหนี้ในไทยส่วนใหญ่เกิดขึ้นในตลาด Exchange Market<br>
+III) ตราสารหนี้ที่กระทรวงการคลังออก อายุ &gt; 1 ปี เรียกว่า พันธบัตรรัฐบาล<br>
+IV) ตราสารหนี้ที่กระทรวงการคลังออก อายุ &gt; 1 ปี เรียกว่า ตั๋วเงินคลัง</small></div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) ข้อ I และ II ถูก</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) ข้อ I และ IV ถูก</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ค) ข้อ I และ III ถูก ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ง) ข้อ II และ IV ถูก</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">จ) ข้อ II และ III ถูก</div>
+</div>
+<div class="step" style="margin-top:8px">💡 ตั๋วเงินคลัง = อายุ ≤ 1 ปี &nbsp;| พันธบัตรรัฐบาล = อายุ &gt; 1 ปี &nbsp;| ตลาดไทยซื้อขายส่วนใหญ่ใน OTC ไม่ใช่ Exchange</div>
+</div></div>
+
+<!-- B10 MC -->
+<div class="qc" id="q10">
+<div class="qh" onclick="tog('q10')"><span class="qb-badge mc">MC</span><span class="qt">Bond 10 — ความเสี่ยงของนักลงทุนตราสารหนี้</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">นักลงทุนที่ถือตราสารหนี้อัตราคูปองคงที่ระยะยาวจนครบกำหนด เผชิญความเสี่ยงใดต่อไปนี้?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) Reinvestment risk เท่านั้น</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) Default risk เท่านั้น</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ค) Interest rate risk เท่านั้น</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ง) ก และ ข</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">จ) ก และ ค — Reinvestment risk + Interest rate risk ✓</div>
+</div>
+<div class="step" style="margin-top:8px">💡 Reinvestment risk: นำคูปองไปลงทุนต่อได้ผลตอบแทนต่างจากที่คาด &nbsp;| Interest rate risk: ราคา Bond เปลี่ยนเมื่อดอกเบี้ยตลาดเปลี่ยน</div>
+</div></div>
+
+</div><!-- end ch5 -->
+
+<!-- ======== CH6 ======== -->
 <div id="ch6" class="chapter">
-  <div class="chapter-title">Chapter 6 — Risk, Return & CAPM</div>
-  <div class="chapter-sub">Portfolio Risk/Return, Beta, CAPM, Capital Market Line</div>
-  <div class="formula-bar">
-    <h3>Key Formulas</h3>
-    <div class="formulas">
-      <div class="fml">E(Rp) = Σ wᵢ × E(Rᵢ)</div>
-      <div class="fml">σp² = wA²σA² + wB²σB² + 2wAwBσAσBρAB</div>
-      <div class="fml">CAPM: E(Ri) = Rf + βi × (Rm − Rf)</div>
-      <div class="fml">βp = Σ wᵢ × βᵢ</div>
-      <div class="fml">MRP = Rm − Rf</div>
-    </div>
-  </div>
+<div class="ct">Chapter 6 — Risk, Return & CAPM</div>
+<div class="cs">Portfolio Risk/Return, Beta, CAPM, SML, Market Risk</div>
+<div class="fb"><h3>Key Formulas</h3><div class="fls">
+<div class="fl">E(Rp) = Σ wᵢ·E(Rᵢ)</div>
+<div class="fl">σp² = wA²σA² + wB²σB² + 2wAwBσAσBρAB</div>
+<div class="fl">βp = Σ wᵢ·βᵢ</div>
+<div class="fl">CAPM: E(Ri) = Rf + βᵢ·(Rm−Rf)</div>
+<div class="fl">MRP = Rm − Rf</div>
+<div class="fl">Risk Premium = β × MRP</div>
+</div></div>
 
-  <!-- Q1 -->
-  <div class="q-card" id="q-ch6-1">
-    <div class="q-header" onclick="toggleQ('ch6-1')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Risk 1 — Portfolio Return & Std Dev (2 Assets)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <table>
-          <tr><th>Asset</th><th>Weight (w)</th><th>E(R)</th><th>Std Dev (σ)</th></tr>
-          <tr><td>A</td><td>0.75</td><td>8%</td><td>14%</td></tr>
-          <tr><td>B</td><td>0.25</td><td>15%</td><td>40%</td></tr>
-        </table>
-        <div class="given-row" style="margin-top:8px"><span class="given-label">Correlation (ρAB)</span><span class="given-val">0.85</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>E(Rp)</strong> และ <strong>σp (Portfolio Std Dev)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch6-1')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch6-1')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch6-1">
-        <strong>E(Rp):</strong><br>
-        = 0.75 × 8% + 0.25 × 15% = 6% + 3.75% = 9.75%<br><br>
-        <strong>σp²:</strong><br>
-        = (0.75)²(14)² + (0.25)²(40)² + 2(0.75)(0.25)(14)(40)(0.85)<br>
-        = 110.25 + 100 + 178.5 = 388.75<br>
-        σp = √388.75
-      </div>
-      <div class="ans-box" id="ans-ch6-1">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">E(Rp)</span><span class="ans-val">9.75%</span></div>
-        <div class="ans-row"><span class="ans-label">σp (Portfolio Std Dev)</span><span class="ans-val">19.72%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q2 -->
-  <div class="q-card" id="q-ch6-2">
-    <div class="q-header" onclick="toggleQ('ch6-2')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Risk 2 — Portfolio Beta & Expected Return (CAPM, 3 Assets)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <table>
-          <tr><th>Asset</th><th>Weight</th><th>Beta</th></tr>
-          <tr><td>A</td><td>0.50</td><td>0.8</td></tr>
-          <tr><td>B</td><td>0.30</td><td>1.1</td></tr>
-          <tr><td>C</td><td>0.20</td><td>0.75</td></tr>
-        </table>
-        <div class="given-row" style="margin-top:8px"><span class="given-label">Risk-free Rate (Rf)</span><span class="given-val">3%</span></div>
-        <div class="given-row"><span class="given-label">Market Return (Rm)</span><span class="given-val">10.5%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>βp</strong> และ <strong>E(Rp)</strong> จาก CAPM</div>
-      <button class="hint-toggle" onclick="toggleHint('ch6-2')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch6-2')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch6-2">
-        βp = 0.5(0.8) + 0.3(1.1) + 0.2(0.75)<br>
-        = 0.40 + 0.33 + 0.15 = <strong>0.88</strong><br><br>
-        E(Rp) = 3% + 0.88 × (10.5% − 3%)<br>
-        = 3% + 0.88 × 7.5%
-      </div>
-      <div class="ans-box" id="ans-ch6-2">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Portfolio Beta (βp)</span><span class="ans-val">0.87</span></div>
-        <div class="ans-row"><span class="ans-label">E(Rp)</span><span class="ans-val">9.025%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q5 -->
-  <div class="q-card" id="q-ch6-5">
-    <div class="q-header" onclick="toggleQ('ch6-5')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Risk 5 — Historical Mean Return & Standard Deviation</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given — Monthly Returns of Singh Stock (12 months)</h4>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
-          <span class="given-val">5%, 12%, −3%, 18%, 8%, 4%, 25%, −8%, 6%, 14%, 9%, −2%</span>
-        </div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Mean Return</strong> และ <strong>Standard Deviation</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch6-5')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch6-5')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch6-5">
-        Mean = (ผลรวม returns ทั้งหมด) / 12<br>
-        SD = √[ Σ(Rᵢ − Mean)² / (n−1) ] (Sample SD)<br>
-        ผลรวม = 5+12−3+18+8+4+25−8+6+14+9−2 = <strong>88</strong><br>
-        Mean = 88/12 = <strong>7.33%</strong>
-      </div>
-      <div class="ans-box" id="ans-ch6-5">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Mean Return</span><span class="ans-val">7.3%</span></div>
-        <div class="ans-row"><span class="ans-label">Standard Deviation</span><span class="ans-val">14.74%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q7 -->
-  <div class="q-card" id="q-ch6-7">
-    <div class="q-header" onclick="toggleQ('ch6-7')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Risk 7 — CAPM: Undervalued or Overvalued?</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <table>
-          <tr><th>Asset</th><th>Weight</th><th>Beta</th></tr>
-          <tr><td>X</td><td>0.40</td><td>1.2</td></tr>
-          <tr><td>Y</td><td>0.35</td><td>0.9</td></tr>
-          <tr><td>Z</td><td>0.25</td><td>1.1</td></tr>
-        </table>
-        <div class="given-row" style="margin-top:8px"><span class="given-label">Rf</span><span class="given-val">2%</span></div>
-        <div class="given-row"><span class="given-label">Rm</span><span class="given-val">9%</span></div>
-        <div class="given-row"><span class="given-label">Actual Portfolio Return</span><span class="given-val">9.5%</span></div>
-      </div>
-      <div class="ask-box">❓ พอร์ตนี้ Undervalued หรือ Overvalued?</div>
-      <button class="hint-toggle" onclick="toggleHint('ch6-7')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch6-7')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch6-7">
-        1. βp = 0.4(1.2) + 0.35(0.9) + 0.25(1.1) = 0.48 + 0.315 + 0.275 = 1.075<br>
-        2. E(Rp) CAPM = 2% + 1.075 × (9%−2%) = 2% + 7.525% = 9.525%... ≈ 8.2%<br>
-        3. ถ้า Actual Return &gt; CAPM Required Return → <strong>Undervalued</strong>
-      </div>
-      <div class="ans-box" id="ans-ch6-7">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Portfolio Beta</span><span class="ans-val">1.075</span></div>
-        <div class="ans-row"><span class="ans-label">Required Return (CAPM)</span><span class="ans-val">8.2%</span></div>
-        <div class="ans-row"><span class="ans-label">Actual Return</span><span class="ans-val">9.5%</span></div>
-        <div class="ans-row"><span class="ans-label">Verdict</span><span class="ans-val">UNDERVALUED ✓</span></div>
-        <div class="step">→ Actual (9.5%) &gt; Required (8.2%) → หุ้นให้ผลตอบแทนดีกว่าที่ควร = Undervalued</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q9 -->
-  <div class="q-card" id="q-ch6-9">
-    <div class="q-header" onclick="toggleQ('ch6-9')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Risk 9 — Scenario Analysis (Boom/Normal/Recession)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <table>
-          <tr><th>Scenario</th><th>Probability</th><th>Return</th></tr>
-          <tr><td>Boom</td><td>0.25</td><td>15%</td></tr>
-          <tr><td>Normal</td><td>0.50</td><td>5%</td></tr>
-          <tr><td>Recession</td><td>0.25</td><td>−3%</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Expected Portfolio Return E(Rp)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch6-9')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch6-9')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch6-9">
-        E(Rp) = Σ Pᵢ × Rᵢ<br>
-        = 0.25(15%) + 0.50(5%) + 0.25(−3%)<br>
-        = 3.75% + 2.5% − 0.75%
-      </div>
-      <div class="ans-box" id="ans-ch6-9">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">E(Rp)</span><span class="ans-val">5.5%</span></div>
-      </div>
-    </div>
-  </div>
+<!-- R1 -->
+<div class="qc" id="r1">
+<div class="qh" onclick="tog('r1')"><span class="qb-badge">Calc</span><span class="qt">Risk 1 — Portfolio Return & Std Dev (2 Assets + Correlation)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Asset</th><th>Weight (w)</th><th>E(R)</th><th>σ (Std Dev)</th></tr>
+<tr><td>A</td><td>0.75</td><td>8%</td><td>14%</td></tr>
+<tr><td>B</td><td>0.25</td><td>15%</td><td>40%</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">Correlation ρ(A,B)</span><span class="gv">0.85</span></div>
 </div>
-<!-- end ch6 -->
+<div class="ask">❓ จงหา (1) <strong>E(Rp)</strong> และ (2) <strong>σp</strong></div>
+<button class="btn" onclick="sh('h-r1')">💡 Steps</button><button class="btn" onclick="sh('a-r1')">✅ Answer</button>
+<div class="hbox" id="h-r1">
+E(Rp) = 0.75(8%) + 0.25(15%) = 6% + 3.75% = <strong>9.75%</strong><br><br>
+σp² = (0.75)²(14)² + (0.25)²(40)² + 2(0.75)(0.25)(14)(40)(0.85)<br>
+= 110.25 + 100 + 178.5 = 388.75<br>
+σp = √388.75 = <strong>19.72%</strong>
+</div>
+<div class="abox" id="a-r1"><h4>Answer</h4>
+<div class="ar"><span class="al">E(Rp)</span><span class="av">9.75%</span></div>
+<div class="ar"><span class="al">σp (Portfolio Std Dev)</span><span class="av">19.72%</span></div>
+</div></div></div>
 
-<!-- ============================================================ CH7 ============================================================ -->
+<!-- R2 -->
+<div class="qc" id="r2">
+<div class="qh" onclick="tog('r2')"><span class="qb-badge">Calc</span><span class="qt">Risk 2 — Portfolio Beta & E(Rp) จาก CAPM (3 Assets)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Asset</th><th>Weight</th><th>Beta</th></tr>
+<tr><td>A</td><td>0.20</td><td>0.45</td></tr>
+<tr><td>B</td><td>0.30</td><td>1.10</td></tr>
+<tr><td>C</td><td>0.50</td><td>0.90</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">Rf</span><span class="gv">2.5%</span></div>
+<div class="gr"><span class="gl">Rm</span><span class="gv">10%</span></div>
+</div>
+<div class="ask">❓ จงหา (1) <strong>βp</strong> และ (2) <strong>E(Rp)</strong></div>
+<button class="btn" onclick="sh('h-r2')">💡 Steps</button><button class="btn" onclick="sh('a-r2')">✅ Answer</button>
+<div class="hbox" id="h-r2">
+βp = 0.2(0.45) + 0.3(1.1) + 0.5(0.9) = 0.09 + 0.33 + 0.45 = <strong>0.87</strong><br>
+E(Rp) = Rf + βp(Rm−Rf) = 2.5% + 0.87(10%−2.5%) = 2.5% + 6.525% = <strong>9.025%</strong>
+</div>
+<div class="abox" id="a-r2"><h4>Answer</h4>
+<div class="ar"><span class="al">βp</span><span class="av">0.87</span></div>
+<div class="ar"><span class="al">E(Rp)</span><span class="av">9.025%</span></div>
+</div></div></div>
+
+<!-- R3 MC -->
+<div class="qc" id="r3">
+<div class="qh" onclick="tog('r3')"><span class="qb-badge mc">MC</span><span class="qt">Risk 3 — Market Risk (Systematic Risk) เมื่อลงทุนต่างประเทศ</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ข้อใดต่อไปนี้เป็น <strong>Market Risk</strong> (เลือกทุกข้อที่ถูก)?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) รสนิยมผู้บริโภคที่เปลี่ยนไป (เฉพาะบางอุตสาหกรรม)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ข) อัตราเงินเฟ้อ ✓</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ค) อัตราดอกเบี้ย ✓</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ง) ความไม่มั่นคงทางการเมือง ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">จ) ความผิดพลาดของผู้บริหาร (Firm-specific)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ฉ) รสนิยมผู้บริโภคที่กระทบทุกอุตสาหกรรมทั่วโลก ✓</div>
+</div>
+<div class="step" style="margin-top:8px">💡 Market Risk = Systematic Risk = ส่งผลต่อตลาดทั้งหมด ไม่สามารถ Diversify ได้ &nbsp;| Firm-specific = Unsystematic = กระจายได้</div>
+</div></div>
+
+<!-- R4 MC -->
+<div class="qc" id="r4">
+<div class="qh" onclick="tog('r4')"><span class="qb-badge mc">MC</span><span class="qt">Risk 4 — เรียงลำดับความเสี่ยงจากมากไปน้อย</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ข้อใดเรียงความเสี่ยงจาก<strong>มากไปน้อย</strong>ถูกต้อง? (เลือกทุกข้อที่ถูก)</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">1) ตราสารหนี้รัฐบาล → หนี้เอกชน → หุ้นบุริมสิทธิ์ → หุ้นสามัญ</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">2) หุ้นสามัญ → หนี้เอกชน → หุ้นบุริมสิทธิ์ → หนี้รัฐบาล</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">3) หุ้นสามัญ → หุ้นบุริมสิทธิ์ → หนี้เอกชน → หนี้รัฐบาล ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">4) หุ้นสามัญ → หุ้นบุริมสิทธิ์ → หนี้ callable → หนี้ไม่มีหลักประกัน</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">5) หุ้นสามัญ → หุ้นบุริมสิทธิ์ → หนี้เอกชนระยะยาว → หนี้เอกชนระยะสั้น ✓</div>
+</div>
+<div class="step" style="margin-top:8px">💡 ลำดับการเรียกร้องสิทธิ์: เจ้าหนี้ก่อน → หุ้นบุริมสิทธิ์ → หุ้นสามัญ → ความเสี่ยงสูงสุด</div>
+</div></div>
+
+<!-- R5 -->
+<div class="qc" id="r5">
+<div class="qh" onclick="tog('r5')"><span class="qb-badge">Calc</span><span class="qt">Risk 5 — Mean Return & Std Dev จาก Time Series (12 เดือน)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>ผลตอบแทนรายเดือนของหุ้นสิงห์</h4>
+<table><tr><th>ม.ค.</th><th>ก.พ.</th><th>มี.ค.</th><th>เม.ย.</th><th>พ.ค.</th><th>มิ.ย.</th><th>ก.ค.</th><th>ส.ค.</th><th>ก.ย.</th><th>ต.ค.</th><th>พ.ย.</th><th>ธ.ค.</th></tr>
+<tr><td>4.7%</td><td>−3.2%</td><td>−7.4%</td><td>3.7%</td><td>6.5%</td><td>−1.5%</td><td>−2.8%</td><td>4.5%</td><td>2.5%</td><td>−3.9%</td><td>1.9%</td><td>2.3%</td></tr></table>
+</div>
+<div class="ask">❓ จงหา <strong>ผลตอบแทนเฉลี่ย (Mean)</strong> และ <strong>Std Dev ต่อปี</strong></div>
+<button class="btn" onclick="sh('h-r5')">💡 Steps</button><button class="btn" onclick="sh('a-r5')">✅ Answer</button>
+<div class="hbox" id="h-r5">
+ผลรวม = 4.7−3.2−7.4+3.7+6.5−1.5−2.8+4.5+2.5−3.9+1.9+2.3 = <strong>7.3%</strong><br>
+Mean/เดือน = 7.3/12 = 0.608% &nbsp;→&nbsp; Mean/ปี = ×12 = <strong>7.3%</strong><br>
+SD = √[Σ(Rᵢ−Mean)²/(n−1)] × √12
+</div>
+<div class="abox" id="a-r5"><h4>Answer</h4>
+<div class="ar"><span class="al">Mean Return ต่อปี</span><span class="av">7.3%</span></div>
+<div class="ar"><span class="al">Std Dev ต่อปี</span><span class="av">14.74%</span></div>
+</div></div></div>
+
+<!-- R6 -->
+<div class="qc" id="r6">
+<div class="qh" onclick="tog('r6')"><span class="qb-badge">Calc</span><span class="qt">Risk 6 — Risk Premium จาก Beta × MRP</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">เมื่อตลาดเพิ่ม 1% หุ้นสิงห์เพิ่ม</span><span class="gv">1.4% → Beta = 1.4</span></div>
+<div class="gr"><span class="gl">MRP (Rm − Rf)</span><span class="gv">6% ต่อปี</span></div>
+</div>
+<div class="ask">❓ หุ้นสิงห์ควรให้ผลตอบแทนมากกว่าพันธบัตรรัฐบาล (Rᵢ − Rf) เท่าใด?</div>
+<button class="btn" onclick="sh('h-r6')">💡 Steps</button><button class="btn" onclick="sh('a-r6')">✅ Answer</button>
+<div class="hbox" id="h-r6">
+Rᵢ − Rf = β × MRP = 1.4 × 6% = <strong>8.4%</strong>
+</div>
+<div class="abox" id="a-r6"><h4>Answer</h4>
+<div class="ar"><span class="al">Risk Premium (Rᵢ − Rf)</span><span class="av">8.4%</span></div>
+</div></div></div>
+
+<!-- R7 -->
+<div class="qc" id="r7">
+<div class="qh" onclick="tog('r7')"><span class="qb-badge">Calc</span><span class="qt">Risk 7 — Undervalue / Overvalue / Fairly Value?</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Asset</th><th>Weight</th><th>Beta</th><th>Expected Return</th></tr>
+<tr><td>A</td><td>0.30</td><td>1.25</td><td>10%</td></tr>
+<tr><td>B</td><td>0.30</td><td>1.20</td><td>8%</td></tr>
+<tr><td>C</td><td>0.40</td><td>0.85</td><td>7%</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">Rf</span><span class="gv">2.5%</span></div>
+<div class="gr"><span class="gl">MRP (Rm−Rf)</span><span class="gv">5%</span></div>
+</div>
+<div class="ask">❓ พอร์ตนี้ <strong>Undervalue, Overvalue หรือ Fairly Value?</strong></div>
+<button class="btn" onclick="sh('h-r7')">💡 Steps</button><button class="btn" onclick="sh('a-r7')">✅ Answer</button>
+<div class="hbox" id="h-r7">
+βp = 0.3(1.25)+0.3(1.2)+0.4(0.85) = 0.375+0.36+0.34 = <strong>1.075</strong><br>
+Required Return (CAPM) = 2.5%+1.075×5% = 2.5%+5.375% = <strong>7.875%</strong><br>
+Portfolio Expected Return = 0.3(10%)+0.3(8%)+0.4(7%) = 3+2.4+2.8 = <strong>8.2%</strong><br>
+Expected (8.2%) &gt; Required (7.875%) → <strong>Undervalue</strong>
+</div>
+<div class="abox" id="a-r7"><h4>Answer</h4>
+<div class="ar"><span class="al">βp</span><span class="av">1.075</span></div>
+<div class="ar"><span class="al">Required Return (CAPM)</span><span class="av">7.875%</span></div>
+<div class="ar"><span class="al">Expected Return</span><span class="av">8.2%</span></div>
+<div class="ar"><span class="al">Verdict</span><span class="av">UNDERVALUE ✓</span></div>
+<div class="step">→ Expected &gt; Required → หุ้นให้ผลตอบแทนดีกว่าที่ตลาดต้องการ = Undervalue</div>
+</div></div></div>
+
+<!-- R8 -->
+<div class="qc" id="r8">
+<div class="qh" onclick="tog('r8')"><span class="qb-badge">Calc</span><span class="qt">Risk 8 — Portfolio (2 Stocks + เงินลงทุน + Correlation)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Stock</th><th>Return</th><th>Std Dev</th><th>เงินลงทุน</th></tr>
+<tr><td>A</td><td>8%</td><td>12%</td><td>150,000 บาท</td></tr>
+<tr><td>B</td><td>12%</td><td>16%</td><td>250,000 บาท</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">Correlation ρ(A,B)</span><span class="gv">0.70</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Portfolio Return</strong> และ <strong>Portfolio Risk (σp)</strong></div>
+<button class="btn" onclick="sh('h-r8')">💡 Steps</button><button class="btn" onclick="sh('a-r8')">✅ Answer</button>
+<div class="hbox" id="h-r8">
+Total = 400,000 &nbsp;→&nbsp; wA = 150k/400k = 37.5% &nbsp;|&nbsp; wB = 250k/400k = 62.5%<br>
+E(Rp) = 0.375(8%) + 0.625(12%) = 3% + 7.5% = <strong>10.5%</strong><br>
+σp² = (0.375)²(12)² + (0.625)²(16)² + 2(0.375)(0.625)(12)(16)(0.7)<br>
+= 20.25 + 100 + 63 = 183.25 &nbsp;→&nbsp; σp = √183.25 = <strong>13.54%</strong>
+</div>
+<div class="abox" id="a-r8"><h4>Answer</h4>
+<div class="ar"><span class="al">wA / wB</span><span class="av">37.5% / 62.5%</span></div>
+<div class="ar"><span class="al">Portfolio Return</span><span class="av">10.5%</span></div>
+<div class="ar"><span class="al">Portfolio Risk (σp)</span><span class="av">13.54%</span></div>
+</div></div></div>
+
+<!-- R9 -->
+<div class="qc" id="r9">
+<div class="qh" onclick="tog('r9')"><span class="qb-badge">Calc</span><span class="qt">Risk 9 — Scenario Analysis: Portfolio Return (Boom/Normal/Recession)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — WA = 80%, WB = 20%</h4>
+<table><tr><th>Scenario</th><th>P</th><th>Return A</th><th>Return B</th></tr>
+<tr><td>Boom</td><td>0.25</td><td>8%</td><td>12%</td></tr>
+<tr><td>Normal</td><td>0.50</td><td>6%</td><td>5%</td></tr>
+<tr><td>Recession</td><td>0.25</td><td>3%</td><td>−2%</td></tr></table>
+</div>
+<div class="ask">❓ จงหา <strong>E(Rp) ของ Portfolio</strong></div>
+<button class="btn" onclick="sh('h-r9')">💡 Steps</button><button class="btn" onclick="sh('a-r9')">✅ Answer</button>
+<div class="hbox" id="h-r9">
+คำนวณ E(R) แต่ละหุ้นก่อน:<br>
+E(RA) = 0.25(8)+0.5(6)+0.25(3) = 2+3+0.75 = 5.75%<br>
+E(RB) = 0.25(12)+0.5(5)+0.25(−2) = 3+2.5−0.5 = 5%<br>
+E(Rp) = 0.8(5.75%) + 0.2(5%) = 4.6 + 1 = <strong>5.6%</strong>
+</div>
+<div class="abox" id="a-r9"><h4>Answer</h4>
+<div class="ar"><span class="al">E(Rp)</span><span class="av">5.6%</span></div>
+</div></div></div>
+
+<!-- R10 -->
+<div class="qc" id="r10">
+<div class="qh" onclick="tog('r10')"><span class="qb-badge">Calc</span><span class="qt">Risk 10 — Portfolio 3 Assets + Correlation Matrix</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Asset</th><th>เงินลงทุน</th><th>Return</th><th>Std Dev (σ)</th></tr>
+<tr><td>A</td><td>1,000,000</td><td>6%</td><td>10.5%</td></tr>
+<tr><td>B</td><td>1,500,000</td><td>12%</td><td>18.2%</td></tr>
+<tr><td>C</td><td>2,500,000</td><td>9.5%</td><td>15.4%</td></tr></table>
+<div style="margin-top:8px"><strong style="font-size:11px;color:var(--acc)">Correlation Matrix:</strong>
+<table><tr><th></th><th>A</th><th>B</th><th>C</th></tr>
+<tr><td>A</td><td>1.0</td><td>0.6</td><td>0.8</td></tr>
+<tr><td>B</td><td>0.6</td><td>1.0</td><td>0.7</td></tr>
+<tr><td>C</td><td>0.8</td><td>0.7</td><td>1.0</td></tr></table></div>
+</div>
+<div class="ask">❓ จงหา <strong>Portfolio Return</strong> และ <strong>Portfolio Risk (σp)</strong></div>
+<button class="btn" onclick="sh('h-r10')">💡 Steps</button><button class="btn" onclick="sh('a-r10')">✅ Answer</button>
+<div class="hbox" id="h-r10">
+Total = 5,000,000 &nbsp;→&nbsp; wA=0.20, wB=0.30, wC=0.50<br>
+E(Rp) = 0.2(6)+0.3(12)+0.5(9.5) = 1.2+3.6+4.75 = <strong>9.55%</strong><br>
+σp² = wA²σA² + wB²σB² + wC²σC² + 2wAwBσAσBρAB + 2wBwCσBσCρBC + 2wAwCσAσCρAC<br>
+= 0.04(0.105²)+0.09(0.182²)+0.25(0.154²)+2(0.2)(0.3)(0.105)(0.182)(0.6)+...<br>
+σp = <strong>13.86%</strong>
+</div>
+<div class="abox" id="a-r10"><h4>Answer</h4>
+<div class="ar"><span class="al">E(Rp)</span><span class="av">9.55%</span></div>
+<div class="ar"><span class="al">Portfolio Risk (σp)</span><span class="av">13.86%</span></div>
+</div></div></div>
+
+<!-- R11 MC -->
+<div class="qc" id="r11">
+<div class="qh" onclick="tog('r11')"><span class="qb-badge mc">MC</span><span class="qt">Risk 11 — เส้นใดอธิบายสมการ CAPM?</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">เส้นอะไรต่อไปนี้อธิบายสมการ CAPM?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) เส้น CAL (Capital Allocation Line)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) เส้น CML (Capital Market Line)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ค) เส้น SML (Security Market Line) ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ง) เส้น Efficient Frontier</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">จ) ไม่มีข้อถูก</div>
+</div>
+<div class="step" style="margin-top:8px">💡 SML = CAPM plot (Beta vs Expected Return) &nbsp;| CML = Risk-free + Market portfolio (Total risk σ vs Return)</div>
+</div></div>
+
+<!-- R12 -->
+<div class="qc" id="r12">
+<div class="qh" onclick="tog('r12')"><span class="qb-badge">Calc</span><span class="qt">Risk 12 — Portfolio Beta & E(Rp) CAPM (3 Assets #2)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Asset</th><th>Weight</th><th>Beta</th></tr>
+<tr><td>A</td><td>0.20</td><td>0.55</td></tr>
+<tr><td>B</td><td>0.30</td><td>1.20</td></tr>
+<tr><td>C</td><td>0.50</td><td>0.85</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">Rf</span><span class="gv">2.2%</span></div>
+<div class="gr"><span class="gl">MRP (Rm−Rf)</span><span class="gv">8.2%</span></div>
+</div>
+<div class="ask">❓ จงหา (1) <strong>βp</strong> และ (2) <strong>E(Rp)</strong></div>
+<button class="btn" onclick="sh('h-r12')">💡 Steps</button><button class="btn" onclick="sh('a-r12')">✅ Answer</button>
+<div class="hbox" id="h-r12">
+βp = 0.2(0.55)+0.3(1.2)+0.5(0.85) = 0.11+0.36+0.425 = <strong>0.895</strong><br>
+E(Rp) = 2.2% + 0.895(8.2%) = 2.2% + 7.339% = <strong>9.539%</strong>
+</div>
+<div class="abox" id="a-r12"><h4>Answer</h4>
+<div class="ar"><span class="al">βp</span><span class="av">0.895</span></div>
+<div class="ar"><span class="al">E(Rp)</span><span class="av">9.539%</span></div>
+</div></div></div>
+
+<!-- R13 -->
+<div class="qc" id="r13">
+<div class="qh" onclick="tog('r13')"><span class="qb-badge">Calc</span><span class="qt">Risk 13 — Portfolio Beta & E(Rp) CAPM (3 Assets #3)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Asset</th><th>Weight</th><th>Beta</th></tr>
+<tr><td>A</td><td>0.20</td><td>0.54</td></tr>
+<tr><td>B</td><td>0.30</td><td>1.20</td></tr>
+<tr><td>C</td><td>0.50</td><td>0.88</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">Rf</span><span class="gv">2.57%</span></div>
+<div class="gr"><span class="gl">MRP (Rm−Rf)</span><span class="gv">6.75%</span></div>
+</div>
+<div class="ask">❓ จงหา (1) <strong>βp</strong> และ (2) <strong>E(Rp)</strong></div>
+<button class="btn" onclick="sh('h-r13')">💡 Steps</button><button class="btn" onclick="sh('a-r13')">✅ Answer</button>
+<div class="hbox" id="h-r13">
+βp = 0.2(0.54)+0.3(1.2)+0.5(0.88) = 0.108+0.36+0.44 = <strong>0.908</strong><br>
+E(Rp) = 2.57% + 0.908(6.75%) = 2.57% + 6.129% = <strong>8.699%</strong>
+</div>
+<div class="abox" id="a-r13"><h4>Answer</h4>
+<div class="ar"><span class="al">βp</span><span class="av">0.908</span></div>
+<div class="ar"><span class="al">E(Rp)</span><span class="av">8.699%</span></div>
+</div></div></div>
+
+</div><!-- end ch6 -->
+
+<!-- ======== CH7 ======== -->
 <div id="ch7" class="chapter">
-  <div class="chapter-title">Chapter 7 — Stock Valuation & EMH</div>
-  <div class="chapter-sub">Dividend Discount Model (DDM), P/E Model, Growth Rate, Market Efficiency</div>
-  <div class="formula-bar">
-    <h3>Key Formulas</h3>
-    <div class="formulas">
-      <div class="fml">Gordon Model: P₀ = D₁/(Re − g)</div>
-      <div class="fml">D₁ = D₀ × (1+g)</div>
-      <div class="fml">g = ROE × Retention Ratio</div>
-      <div class="fml">Retention Ratio = 1 − Payout Ratio</div>
-      <div class="fml">P₀ = EPS × P/E</div>
-    </div>
-  </div>
+<div class="ct">Chapter 7 — Stock Valuation & EMH</div>
+<div class="cs">DDM, Gordon Model, P/E Model, Growth Rate, Market Efficiency</div>
+<div class="fb"><h3>Key Formulas</h3><div class="fls">
+<div class="fl">Gordon: P₀ = D₁/(Re−g)</div>
+<div class="fl">D₁ = D₀×(1+g)</div>
+<div class="fl">g = ROE × Retention Ratio</div>
+<div class="fl">RR = 1 − Payout Ratio</div>
+<div class="fl">EPS = NI / Shares Outstanding</div>
+<div class="fl">P₀ = EPS × P/E</div>
+</div></div>
 
-  <!-- Q1 -->
-  <div class="q-card" id="q-ch7-1">
-    <div class="q-header" onclick="toggleQ('ch7-1')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Stock 1 — Two-Stage DDM (High Growth → Constant Growth)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">D₀ (Last Dividend)</span><span class="given-val">3 บาท/share</span></div>
-        <div class="given-row"><span class="given-label">High Growth Rate (g₁)</span><span class="given-val">40% ต่อปี (ปีที่ 1–2)</span></div>
-        <div class="given-row"><span class="given-label">Stable Growth Rate (g₂)</span><span class="given-val">3% ต่อปี (ปีที่ 3 เป็นต้นไป)</span></div>
-        <div class="given-row"><span class="given-label">Required Return (Re)</span><span class="given-val">15%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>ราคาหุ้นที่เหมาะสม (Intrinsic Value)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch7-1')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch7-1')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch7-1">
-        <strong>Phase 1 — High Growth Dividends:</strong><br>
-        D₁ = 3 × 1.40 = 4.20; D₂ = 4.20 × 1.40 = 5.88<br><br>
-        <strong>Phase 2 — Terminal Value (at end of yr 2):</strong><br>
-        D₃ = 5.88 × 1.03 = 6.0564<br>
-        P₂ = D₃ / (Re − g₂) = 6.0564 / (0.15 − 0.03) = 50.47<br><br>
-        <strong>PV of all cash flows:</strong><br>
-        P₀ = D₁/(1.15) + (D₂+P₂)/(1.15)²
-      </div>
-      <div class="ans-box" id="ans-ch7-1">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Intrinsic Value (P₀)</span><span class="ans-val">49.26 บาท</span></div>
-        <div class="step">D₁ = 4.20 → PV = 3.65</div>
-        <div class="step">D₂+P₂ = 5.88+50.47 = 56.35 → PV = 42.62 → รวม ≈ 49.26</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q2 -->
-  <div class="q-card" id="q-ch7-2">
-    <div class="q-header" onclick="toggleQ('ch7-2')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Stock 2 — Negative Growth DDM</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">D₀</span><span class="given-val">10 บาท</span></div>
-        <div class="given-row"><span class="given-label">Growth (ปีที่ 1–6)</span><span class="given-val">−10% ต่อปี</span></div>
-        <div class="given-row"><span class="given-label">Growth (ปีที่ 7+)</span><span class="given-val">+2.5% ต่อปี (perpetual)</span></div>
-        <div class="given-row"><span class="given-label">Required Return (Re)</span><span class="given-val">16%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Intrinsic Value P₀</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch7-2')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch7-2')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch7-2">
-        1. คำนวณ D₁–D₆ โดย Dₜ = D₀ × (0.90)ᵗ<br>
-        2. D₇ = D₆ × 1.025<br>
-        3. P₆ = D₇ / (0.16 − 0.025) = D₇ / 0.135<br>
-        4. P₀ = PV(D₁..D₆) + PV(P₆)
-      </div>
-      <div class="ans-box" id="ans-ch7-2">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Intrinsic Value (P₀)</span><span class="ans-val">53.62 บาท</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q4 -->
-  <div class="q-card" id="q-ch7-4">
-    <div class="q-header" onclick="toggleQ('ch7-4')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Stock 4 — P/E Multiple Model</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">EBIT</span><span class="given-val">10,000,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Interest Expense</span><span class="given-val">2,500,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Tax Rate</span><span class="given-val">20%</span></div>
-        <div class="given-row"><span class="given-label">Shares Outstanding</span><span class="given-val">10,000,000 หุ้น</span></div>
-        <div class="given-row"><span class="given-label">Industry P/E</span><span class="given-val">25×</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>ราคาหุ้น (Stock Price) ที่เหมาะสม</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch7-4')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch7-4')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch7-4">
-        1. EBT = EBIT − Interest = 10M − 2.5M = 7.5M<br>
-        2. Net Income = 7.5M × (1 − 0.20) = 6M บาท<br>
-        3. EPS = NI / Shares = 6M / 10M = 0.60 บาท/หุ้น<br>
-        4. P₀ = EPS × P/E = 0.60 × 25
-      </div>
-      <div class="ans-box" id="ans-ch7-4">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">EPS</span><span class="ans-val">0.60 บาท/หุ้น</span></div>
-        <div class="ans-row"><span class="ans-label">Stock Price</span><span class="ans-val">15.00 บาท</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q6 -->
-  <div class="q-card" id="q-ch7-6">
-    <div class="q-header" onclick="toggleQ('ch7-6')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Stock 6 — Growth Rate + Dividend Payout + Stock Price</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">D₀</span><span class="given-val">11.50 บาท</span></div>
-        <div class="given-row"><span class="given-label">EPS</span><span class="given-val">30 บาท</span></div>
-        <div class="given-row"><span class="given-label">ROE</span><span class="given-val">14%</span></div>
-        <div class="given-row"><span class="given-label">Required Return (Re)</span><span class="given-val">20%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Dividend Payout Ratio, Growth Rate (g), และ Stock Price (P₀)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch7-6')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch7-6')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch7-6">
-        1. Payout Ratio = D₀ / EPS = 11.50 / 30 = 38.33%<br>
-        2. Retention Ratio = 1 − 38.33% = 61.67%<br>
-        3. g = ROE × Retention = 14% × 61.67% = 8.63%<br>
-        4. D₁ = D₀ × (1+g) = 11.50 × 1.0863<br>
-        5. P₀ = D₁ / (Re − g) = D₁ / (0.20 − 0.0863)
-      </div>
-      <div class="ans-box" id="ans-ch7-6">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Dividend Payout Ratio</span><span class="ans-val">38.33%</span></div>
-        <div class="ans-row"><span class="ans-label">Growth Rate (g)</span><span class="ans-val">8.63%</span></div>
-        <div class="ans-row"><span class="ans-label">D₁</span><span class="ans-val">12.49 บาท</span></div>
-        <div class="ans-row"><span class="ans-label">Stock Price (P₀)</span><span class="ans-val">121.41 บาท</span></div>
-      </div>
-    </div>
-  </div>
+<!-- S1 -->
+<div class="qc" id="s1">
+<div class="qh" onclick="tog('s1')"><span class="qb-badge">Calc</span><span class="qt">Stock 1 — Two-Stage DDM (High Growth → Constant Growth)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัทสิงห์โต</h4>
+<div class="gr"><span class="gl">D₀ (เงินปันผลปีนี้)</span><span class="gv">3 บาท/หุ้น</span></div>
+<div class="gr"><span class="gl">g₁ (High growth ปีที่ 1–2)</span><span class="gv">40% ต่อปี</span></div>
+<div class="gr"><span class="gl">g₂ (Stable growth ตลอดไป)</span><span class="gv">3% ต่อปี</span></div>
+<div class="gr"><span class="gl">Re (Required Return)</span><span class="gv">15%</span></div>
 </div>
-<!-- end ch7 -->
+<div class="ask">❓ จงหา <strong>มูลค่าพื้นฐาน Pnxd0</strong> (ยังได้รับเงินปันผลปีนี้)</div>
+<button class="btn" onclick="sh('h-s1')">💡 Steps</button><button class="btn" onclick="sh('a-s1')">✅ Answer</button>
+<div class="hbox" id="h-s1">
+D₁ = 3×1.4 = 4.20 &nbsp;|&nbsp; D₂ = 4.20×1.4 = 5.88 &nbsp;|&nbsp; D₃ = 5.88×1.03 = 6.0564<br>
+P₂ = D₃/(Re−g₂) = 6.0564/(0.15−0.03) = 6.0564/0.12 = <strong>50.47</strong><br>
+<strong>ใช้ CF Function:</strong> CF0=3, CF1=4.2, CF2=5.88+50.47=56.35 &nbsp;→&nbsp; I=15 &nbsp;→&nbsp; CPT NPV
+</div>
+<div class="abox" id="a-s1"><h4>Answer</h4>
+<div class="ar"><span class="al">Pnxd0</span><span class="av">49.26 บาท/หุ้น</span></div>
+<div class="step">D₁=4.20, D₂=5.88, P₂=50.47 → PV all = 49.26</div>
+</div></div></div>
 
-<!-- ============================================================ CH8 ============================================================ -->
+<!-- S2 -->
+<div class="qc" id="s2">
+<div class="qh" onclick="tog('s2')"><span class="qb-badge">Calc</span><span class="qt">Stock 2 — Negative Growth DDM (บริษัทถดถอย)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">D₀</span><span class="gv">10 บาท/หุ้น</span></div>
+<div class="gr"><span class="gl">g₁ (ปีที่ 1–6)</span><span class="gv">−10% ต่อปี</span></div>
+<div class="gr"><span class="gl">g₂ (ปีที่ 7 เป็นต้นไป)</span><span class="gv">+2.5% ต่อปี</span></div>
+<div class="gr"><span class="gl">Re</span><span class="gv">16%</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Pnxd0</strong></div>
+<button class="btn" onclick="sh('h-s2')">💡 Steps</button><button class="btn" onclick="sh('a-s2')">✅ Answer</button>
+<div class="hbox" id="h-s2">
+D₁=9, D₂=8.1, D₃=7.29, D₄=6.561, D₅=5.905, D₆=5.314<br>
+D₇ = 5.314×1.025 = 5.447<br>
+P₆ = D₇/(Re−g₂) = 5.447/(0.16−0.025) = 5.447/0.135 = <strong>40.35</strong><br>
+CF0=10, CF1=9, ..., CF6=5.314+40.35=45.664 &nbsp;→&nbsp; I=16 &nbsp;→&nbsp; CPT NPV
+</div>
+<div class="abox" id="a-s2"><h4>Answer</h4>
+<div class="ar"><span class="al">Pnxd0</span><span class="av">53.62 บาท/หุ้น</span></div>
+</div></div></div>
+
+<!-- S3 -->
+<div class="qc" id="s3">
+<div class="qh" onclick="tog('s3')"><span class="qb-badge">Calc</span><span class="qt">Stock 3 — Retention Growth Rate (g = ROE × RR)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท เอ</h4>
+<div class="gr"><span class="gl">ส่วนของผู้ถือหุ้น (Avg TE)</span><span class="gv">160 ล้านบาท</span></div>
+<div class="gr"><span class="gl">กำไรสุทธิ (NI)</span><span class="gv">20 ล้านบาท</span></div>
+<div class="gr"><span class="gl">เงินปันผลที่จ่าย</span><span class="gv">12 ล้านบาท</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>อัตราการเติบโต g (Retention Growth Rate)</strong></div>
+<button class="btn" onclick="sh('h-s3')">💡 Steps</button><button class="btn" onclick="sh('a-s3')">✅ Answer</button>
+<div class="hbox" id="h-s3">
+ROE = NI/Avg TE = 20/160 = <strong>12.5%</strong><br>
+Payout = Div/NI = 12/20 = 60% &nbsp;→&nbsp; Retention Ratio = 1−60% = <strong>40%</strong><br>
+g = ROE × RR = 12.5% × 40% = <strong>5%</strong>
+</div>
+<div class="abox" id="a-s3"><h4>Answer</h4>
+<div class="ar"><span class="al">ROE</span><span class="av">12.5%</span></div>
+<div class="ar"><span class="al">Retention Ratio</span><span class="av">40%</span></div>
+<div class="ar"><span class="al">Growth Rate (g)</span><span class="av">5%</span></div>
+</div></div></div>
+
+<!-- S4 -->
+<div class="qc" id="s4">
+<div class="qh" onclick="tog('s4')"><span class="qb-badge">Calc</span><span class="qt">Stock 4 — P/E Multiple Model</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท A</h4>
+<div class="gr"><span class="gl">EBIT</span><span class="gv">10,000,000 บาท</span></div>
+<div class="gr"><span class="gl">Interest (ค่าใช้จ่ายทางการเงิน)</span><span class="gv">2,500,000 บาท</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+<div class="gr"><span class="gl">จำนวนหุ้น (Shares Outstanding)</span><span class="gv">10,000,000 หุ้น</span></div>
+<div class="gr"><span class="gl">P/E Ratio (Industry)</span><span class="gv">25×</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>ราคาหุ้นที่เหมาะสม (MPS)</strong></div>
+<button class="btn" onclick="sh('h-s4')">💡 Steps</button><button class="btn" onclick="sh('a-s4')">✅ Answer</button>
+<div class="hbox" id="h-s4">
+EBT = 10M − 2.5M = 7.5M<br>
+NI = 7.5M × (1−0.20) = <strong>6,000,000 บาท</strong><br>
+EPS = 6M / 10M = <strong>0.60 บาท/หุ้น</strong><br>
+MPS = EPS × P/E = 0.60 × 25 = <strong>15 บาท</strong>
+</div>
+<div class="abox" id="a-s4"><h4>Answer</h4>
+<div class="ar"><span class="al">NI</span><span class="av">6,000,000 บาท</span></div>
+<div class="ar"><span class="al">EPS</span><span class="av">0.60 บาท/หุ้น</span></div>
+<div class="ar"><span class="al">MPS (ราคาที่เหมาะสม)</span><span class="av">15.00 บาท</span></div>
+</div></div></div>
+
+<!-- S5 -->
+<div class="qc" id="s5">
+<div class="qh" onclick="tog('s5')"><span class="qb-badge">Calc</span><span class="qt">Stock 5 — Gordon Model แบบ Solve for D₁</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัทกูดดี้</h4>
+<div class="gr"><span class="gl">Re (Required Return)</span><span class="gv">8%</span></div>
+<div class="gr"><span class="gl">ราคาตลาด (MPS = Pxd0)</span><span class="gv">25 บาท/หุ้น</span></div>
+<div class="gr"><span class="gl">Growth Rate (g)</span><span class="gv">4% ต่อปี (คงที่ตลอด)</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>D₁ (เงินปันผลที่จ่ายปีนี้)</strong></div>
+<button class="btn" onclick="sh('h-s5')">💡 Steps</button><button class="btn" onclick="sh('a-s5')">✅ Answer</button>
+<div class="hbox" id="h-s5">
+สูตร: P₀ = D₁/(Re−g)<br>
+25 = D₁/(0.08−0.04) = D₁/0.04<br>
+D₁ = 25 × 0.04 = <strong>1 บาท/หุ้น</strong>
+</div>
+<div class="abox" id="a-s5"><h4>Answer</h4>
+<div class="ar"><span class="al">D₁</span><span class="av">1.00 บาท/หุ้น</span></div>
+</div></div></div>
+
+<!-- S6 -->
+<div class="qc" id="s6">
+<div class="qh" onclick="tog('s6')"><span class="qb-badge">Calc</span><span class="qt">Stock 6 — Payout Ratio + Growth Rate + Pnxd0</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท XY (ยังไม่ XD)</h4>
+<div class="gr"><span class="gl">D₀ (ปันผลปีที่ผ่านมา)</span><span class="gv">11.50 บาท/หุ้น</span></div>
+<div class="gr"><span class="gl">EPS</span><span class="gv">30.00 บาท/หุ้น</span></div>
+<div class="gr"><span class="gl">ROE</span><span class="gv">14% ต่อปี</span></div>
+<div class="gr"><span class="gl">Re</span><span class="gv">20% ต่อปี</span></div>
+<div class="gr"><span class="gl">หมายเหตุ</span><span class="gv">ไม่ออกหุ้นเพิ่มทุน, D/E คงที่</span></div>
+</div>
+<div class="ask">❓ จงหา (1) <strong>Payout Ratio</strong> (2) <strong>g</strong> (3) <strong>Pnxd0</strong></div>
+<button class="btn" onclick="sh('h-s6')">💡 Steps</button><button class="btn" onclick="sh('a-s6')">✅ Answer</button>
+<div class="hbox" id="h-s6">
+DP = D₀/EPS = 11.50/30 = <strong>38.33%</strong><br>
+RR = 1−38.33% = 61.67%<br>
+g = ROE×RR = 14%×61.67% = <strong>8.633%</strong><br>
+D₁ = 11.50×(1+0.08633) = <strong>12.493 บาท</strong><br>
+Pnxd0 = D₀ + D₁/(Re−g) = 11.50 + 12.493/(0.20−0.08633)
+</div>
+<div class="abox" id="a-s6"><h4>Answer</h4>
+<div class="ar"><span class="al">Dividend Payout Ratio</span><span class="av">38.33%</span></div>
+<div class="ar"><span class="al">Retention Ratio</span><span class="av">61.67%</span></div>
+<div class="ar"><span class="al">Growth Rate (g)</span><span class="av">8.633%</span></div>
+<div class="ar"><span class="al">Pnxd0 (ยังได้รับ D₀)</span><span class="av">121.41 บาท/หุ้น</span></div>
+</div></div></div>
+
+<!-- S7 MC -->
+<div class="qc" id="s7">
+<div class="qh" onclick="tog('s7')"><span class="qb-badge mc">MC</span><span class="qt">Stock 7 — Corporate Governance ที่ดีคืออะไร?</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ข้อใดแสดงว่าบริษัทมี <strong>บรรษัทภิบาล (Corporate Governance) ที่ดี</strong>? (เลือกทุกข้อที่ถูก)</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) CEO เป็นประธานกรรมการด้วย</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) มีการแต่งตั้งกรรมการอิสระเพิ่ม 2 คน (ยังไม่เพียงพอ)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ค) คณะกรรมการตรวจสอบมาจากฝ่ายบริหาร</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ง) เปิดเผยข้อมูล Related Party Transactions ✓</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">จ) คณะกรรมการเท่านั้นที่อนุมัติการลงทุนขนาดใหญ่ ✓</div>
+</div>
+<div class="step" style="margin-top:8px">💡 Good CG: Independent board, Transparency, Separation of CEO/Chairman, Audit committee independent</div>
+</div></div>
+
+<!-- S8 -->
+<div class="qc" id="s8">
+<div class="qh" onclick="tog('s8')"><span class="qb-badge tf">Match</span><span class="qt">Stock 8 — ระดับ Market Efficiency จากสถานการณ์</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">จากสถานการณ์ต่อไปนี้ บอกระดับ Market Efficiency (Inefficient / Weak / Semi-strong / Strong)</div>
+<div class="gbox" style="margin-top:10px">
+<div class="gr"><span class="gl">นาย A ดูกราฟ Technical แล้วกำไรหลายเท่า</span><span class="gv" style="color:var(--red)">Inefficient</span></div>
+<div class="gr"><span class="gl">นาย B เป็นผู้สอบบัญชีรู้ข้อมูลก่อน แต่กำไรไม่ได้มาก</span><span class="gv" style="color:var(--grn)">Strong Form Efficient</span></div>
+<div class="gr"><span class="gl">นาย C วิเคราะห์ทั้ง Technical + VI (ดูงบ) แต่กำไรไม่ได้มาก</span><span class="gv" style="color:var(--grn)">Semi-Strong Form Efficient</span></div>
+<div class="gr"><span class="gl">นาย D ดูกราฟไม่กำไร เปลี่ยนมา VI วิเคราะห์งบ กลับได้กำไร</span><span class="gv" style="color:var(--yel)">Weak Form Efficient</span></div>
+</div>
+<div class="step">💡 Weak: Price reflect past data only &nbsp;| Semi-strong: all public info &nbsp;| Strong: all info incl. insider</div>
+</div></div>
+
+<!-- S9 MC -->
+<div class="qc" id="s9">
+<div class="qh" onclick="tog('s9')"><span class="qb-badge mc">MC</span><span class="qt">Stock 9 — คุณสมบัติของหุ้นบุริมสิทธิ์ (Preferred Stock)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ข้อใดคือ<strong>คุณสมบัติ</strong>ของหุ้นบุริมสิทธิ์? (เลือกทุกข้อที่ถูก)</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="true" onclick="pickMC(this)">1) จ่ายเงินปันผลสม่ำเสมอเท่ากันทุกปี ✓</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">2) ความเสี่ยงมากกว่าตราสารหนี้ ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">3) มีสิทธิเรียกร้องก่อนเจ้าหนี้ (ผิด — เจ้าหนี้มีสิทธิก่อน)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">4) มีสิทธิออกเสียงโหวตเลือกกรรมการ (ผิด — หุ้นสามัญเท่านั้น)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">5) บริษัทสามารถเลือกไม่จ่ายปันผลได้ถ้าขาดทุน ✓</div>
+</div>
+<div class="step" style="margin-top:8px">💡 Preferred Stock: fixed dividend, no voting right, claim after debt holders, before common stockholders</div>
+</div></div>
+
+<!-- S10 MC -->
+<div class="qc" id="s10">
+<div class="qh" onclick="tog('s10')"><span class="qb-badge mc">MC</span><span class="qt">Stock 10 — ลักษณะเฉพาะของหุ้นสามัญ (Common Stock)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ข้อใดเป็นลักษณะเฉพาะของ<strong>หุ้นสามัญ</strong>? (เลือกทุกข้อที่ถูก)</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="true" onclick="pickMC(this)">1) Limited liability — ความรับผิดจำกัด ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">2) ความเสี่ยงน้อยกว่าตราสารหนี้ (ผิด — เสี่ยงกว่า)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">3) ได้รับปันผลเท่ากันทุกปี (ผิด — นั่นคือ Preferred)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">4) มีสิทธิเรียกร้องมากกว่าหุ้นบุริมสิทธิ์ (ผิด — น้อยกว่า)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">5) ผลตอบแทนมาจากปันผล + Capital Gain ✓</div>
+</div>
+</div></div>
+
+</div><!-- end ch7 -->
+
+<!-- ======== CH8 ======== -->
 <div id="ch8" class="chapter">
-  <div class="chapter-title">Chapter 8 — WACC (Weighted Average Cost of Capital)</div>
-  <div class="chapter-sub">Cost of Debt, Equity, Preferred Stock — รวมเป็น WACC</div>
-  <div class="formula-bar">
-    <h3>Key Formulas</h3>
-    <div class="formulas">
-      <div class="fml">WACC = Wd×Rd(1−T) + Wp×Rp + We×Re</div>
-      <div class="fml">Re (CAPM) = Rf + β×MRP</div>
-      <div class="fml">Re (DDM) = D₁/P₀ + g</div>
-      <div class="fml">Rp (Preferred) = Dp / P₀</div>
-      <div class="fml">g = ROE × (1 − Payout)</div>
-    </div>
-  </div>
+<div class="ct">Chapter 8 — WACC</div>
+<div class="cs">Cost of Debt, Equity, Preferred Stock — รวมเป็น Weighted Average Cost of Capital</div>
+<div class="fb"><h3>Key Formulas</h3><div class="fls">
+<div class="fl">WACC = Wd·Rd(1−T) + Wp·Rp + We·Re</div>
+<div class="fl">Re(CAPM) = Rf + β·MRP</div>
+<div class="fl">Re(DDM) = D₁/[P₀(1−f)] + g</div>
+<div class="fl">Re(Own Bond+) = Rd + MRP</div>
+<div class="fl">Rp = Dp/[Pp(1−f)]</div>
+<div class="fl">g = ROE×(1−Payout)</div>
+</div></div>
 
-  <!-- Q1 -->
-  <div class="q-card" id="q-ch8-1">
-    <div class="q-header" onclick="toggleQ('ch8-1')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">WACC 1 — Full WACC (Market Value Weights)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Stock Price</span><span class="given-val">35 บาท</span></div>
-        <div class="given-row"><span class="given-label">Shares Outstanding</span><span class="given-val">150 ล้านหุ้น</span></div>
-        <div class="given-row"><span class="given-label">Total Debt (Book)</span><span class="given-val">3,400 ล้านบาท</span></div>
-        <div class="given-row"><span class="given-label">Beta (β)</span><span class="given-val">1.55</span></div>
-        <div class="given-row"><span class="given-label">Risk-free Rate (Rf)</span><span class="given-val">3.45%</span></div>
-        <div class="given-row"><span class="given-label">Market Risk Premium (MRP)</span><span class="given-val">6.35%</span></div>
-        <div class="given-row"><span class="given-label">Before-tax Cost of Debt (Rd)</span><span class="given-val">5.95%</span></div>
-        <div class="given-row"><span class="given-label">Tax Rate</span><span class="given-val">20%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>WACC</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch8-1')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch8-1')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch8-1">
-        1. Market Cap (E) = 35 × 150M = <strong>5,250 ล้าน</strong><br>
-        2. Firm Value (V) = 5,250 + 3,400 = <strong>8,650 ล้าน</strong><br>
-        3. We = 5,250/8,650 = 60.69%; Wd = 3,400/8,650 = 39.31%<br>
-        4. Re = 3.45% + 1.55 × 6.35% = <strong>13.29%</strong><br>
-        5. After-tax Rd = 5.95% × (1−0.20) = <strong>4.76%</strong><br>
-        6. WACC = 0.3931 × 4.76% + 0.6069 × 13.29%
-      </div>
-      <div class="ans-box" id="ans-ch8-1">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Market Cap (E)</span><span class="ans-val">5,250 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">Re (CAPM)</span><span class="ans-val">13.29%</span></div>
-        <div class="ans-row"><span class="ans-label">WACC</span><span class="ans-val">9.94%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q4 -->
-  <div class="q-card" id="q-ch8-4">
-    <div class="q-header" onclick="toggleQ('ch8-4')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">WACC 4 — Unquoted Company WACC (MLR + Spread)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">MLR (Minimum Lending Rate)</span><span class="given-val">6.25%</span></div>
-        <div class="given-row"><span class="given-label">Credit Spread</span><span class="given-val">1.75%</span></div>
-        <div class="given-row"><span class="given-label">Tax Rate</span><span class="given-val">20%</span></div>
-        <div class="given-row"><span class="given-label">Weight of Debt (Wd)</span><span class="given-val">40%</span></div>
-        <div class="given-row"><span class="given-label">Weight of Equity (We)</span><span class="given-val">60%</span></div>
-        <div class="given-row"><span class="given-label">Beta (β)</span><span class="given-val">1.6</span></div>
-        <div class="given-row"><span class="given-label">Rf</span><span class="given-val">2%</span></div>
-        <div class="given-row"><span class="given-label">MRP</span><span class="given-val">6.25%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>WACC</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch8-4')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch8-4')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch8-4">
-        1. Rd = MLR + Spread = 6.25% + 1.75% = <strong>8%</strong><br>
-        2. After-tax Rd = 8% × (1−0.20) = <strong>6.4%</strong><br>
-        3. Re = 2% + 1.6 × 6.25% = 2% + 10% = <strong>12%</strong> (note: answer gives 14.25%)<br>
-        4. WACC = 0.40 × 6.4% + 0.60 × Re
-      </div>
-      <div class="ans-box" id="ans-ch8-4">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Rd (before-tax)</span><span class="ans-val">8%</span></div>
-        <div class="ans-row"><span class="ans-label">After-tax Rd</span><span class="ans-val">6.4%</span></div>
-        <div class="ans-row"><span class="ans-label">Re (CAPM)</span><span class="ans-val">14.25%</span></div>
-        <div class="ans-row"><span class="ans-label">WACC</span><span class="ans-val">11.11%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q8 -->
-  <div class="q-card" id="q-ch8-8">
-    <div class="q-header" onclick="toggleQ('ch8-8')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">WACC 8 — Simple WACC Calculation</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Wd (Weight of Debt)</span><span class="given-val">50%</span></div>
-        <div class="given-row"><span class="given-label">Rd (Cost of Debt)</span><span class="given-val">8.5%</span></div>
-        <div class="given-row"><span class="given-label">We (Weight of Equity)</span><span class="given-val">50%</span></div>
-        <div class="given-row"><span class="given-label">Re (Cost of Equity)</span><span class="given-val">15%</span></div>
-        <div class="given-row"><span class="given-label">Tax Rate</span><span class="given-val">40%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>WACC</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch8-8')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch8-8')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch8-8">
-        WACC = Wd × Rd × (1−T) + We × Re<br>
-        = 0.50 × 8.5% × (1−0.40) + 0.50 × 15%<br>
-        = 0.50 × 5.1% + 0.50 × 15%
-      </div>
-      <div class="ans-box" id="ans-ch8-8">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">WACC</span><span class="ans-val">10.05%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q9 -->
-  <div class="q-card" id="q-ch8-9">
-    <div class="q-header" onclick="toggleQ('ch8-9')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">WACC 9 — Solve for Cost of Equity (Re)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Wd</span><span class="given-val">40%</span></div>
-        <div class="given-row"><span class="given-label">Rd (before-tax)</span><span class="given-val">5%</span></div>
-        <div class="given-row"><span class="given-label">Tax Rate</span><span class="given-val">20%</span></div>
-        <div class="given-row"><span class="given-label">WACC</span><span class="given-val">8.5%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Re (Cost of Equity)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch8-9')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch8-9')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch8-9">
-        We = 1 − 0.40 = 60%<br>
-        8.5% = 0.40 × 5% × (1−0.20) + 0.60 × Re<br>
-        8.5% = 1.6% + 0.60 × Re<br>
-        Re = (8.5% − 1.6%) / 0.60
-      </div>
-      <div class="ans-box" id="ans-ch8-9">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Re (Cost of Equity)</span><span class="ans-val">11.5%</span></div>
-      </div>
-    </div>
-  </div>
+<!-- W1 -->
+<div class="qc" id="w1">
+<div class="qh" onclick="tog('w1')"><span class="qb-badge">Calc</span><span class="qt">WACC 1 — Full WACC คำนวณครบทุก Component</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท Leo</h4>
+<div class="gr"><span class="gl">ราคาหุ้น</span><span class="gv">35 บาท</span></div>
+<div class="gr"><span class="gl">จำนวนหุ้น</span><span class="gv">150 ล้านหุ้น</span></div>
+<div class="gr"><span class="gl">หนี้ที่มีดอกเบี้ย (Interest-bearing debt)</span><span class="gv">3,400 ล้านบาท</span></div>
+<div class="gr"><span class="gl">Beta (β)</span><span class="gv">1.55</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+<div class="gr"><span class="gl">Rf (พันธบัตรรัฐบาล)</span><span class="gv">3.45%</span></div>
+<div class="gr"><span class="gl">MRP (Rm−Rf)</span><span class="gv">6.35%</span></div>
+<div class="gr"><span class="gl">Yield Spread</span><span class="gv">2.5% → Rd = Rf + Spread</span></div>
 </div>
-<!-- end ch8 -->
+<div class="ask">❓ จงหา Market Cap, Firm Value, Rd, Re, Wd, We และ <strong>WACC</strong></div>
+<button class="btn" onclick="sh('h-w1')">💡 Steps</button><button class="btn" onclick="sh('a-w1')">✅ Answer</button>
+<div class="hbox" id="h-w1">
+1. Market Cap (E) = 35×150M = <strong>5,250 ล้าน</strong><br>
+2. Firm Value (V) = 5,250+3,400 = <strong>8,650 ล้าน</strong><br>
+3. Rd = Rf+Spread = 3.45%+2.5% = <strong>5.95%</strong><br>
+4. After-tax Rd = 5.95%×(1−0.20) = <strong>4.76%</strong><br>
+5. Re = 3.45%+1.55×6.35% = 3.45%+9.8425% = <strong>13.29%</strong><br>
+6. Wd=3400/8650=39.31%, We=5250/8650=60.69%<br>
+7. WACC = 0.3931×4.76% + 0.6069×13.29%
+</div>
+<div class="abox" id="a-w1"><h4>Answer</h4>
+<div class="ar"><span class="al">Market Cap (E)</span><span class="av">5,250 ล้านบาท</span></div>
+<div class="ar"><span class="al">Firm Value (V)</span><span class="av">8,650 ล้านบาท</span></div>
+<div class="ar"><span class="al">Rd (before-tax)</span><span class="av">5.95%</span></div>
+<div class="ar"><span class="al">Re (CAPM)</span><span class="av">13.29%</span></div>
+<div class="ar"><span class="al">Wd / We</span><span class="av">39.31% / 60.69%</span></div>
+<div class="ar"><span class="al">WACC</span><span class="av">9.94%</span></div>
+</div></div></div>
 
-<!-- ============================================================ CH9 ============================================================ -->
+<!-- W2 -->
+<div class="qc" id="w2">
+<div class="qh" onclick="tog('w2')"><span class="qb-badge">Calc</span><span class="qt">WACC 2 — Re จากการออกหุ้นใหม่ (DDM + Floatation Cost)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัทสิงห์ (ออกหุ้นเพิ่มทุน, XD แล้ว)</h4>
+<div class="gr"><span class="gl">Underwritten Price (Pxd0)</span><span class="gv">40 บาท</span></div>
+<div class="gr"><span class="gl">Floatation Cost (f)</span><span class="gv">1%</span></div>
+<div class="gr"><span class="gl">D₀ (ประกาศ XD แล้ว)</span><span class="gv">3.20 บาท</span></div>
+<div class="gr"><span class="gl">ROE</span><span class="gv">14%</span></div>
+<div class="gr"><span class="gl">Payout Ratio</span><span class="gv">65%</span></div>
+</div>
+<div class="ask">❓ จงหา (1) g (2) D₁ (3) <strong>Re (with floatation)</strong></div>
+<button class="btn" onclick="sh('h-w2')">💡 Steps</button><button class="btn" onclick="sh('a-w2')">✅ Answer</button>
+<div class="hbox" id="h-w2">
+g = ROE×(1−Payout) = 14%×(1−0.65) = 14%×0.35 = <strong>4.9%</strong><br>
+D₁ = D₀×(1+g) = 3.20×1.049 = <strong>3.357 บาท</strong><br>
+Re = D₁/[Pxd0×(1−f)] + g = 3.357/[40×0.99] + 0.049<br>
+= 3.357/39.6 + 4.9% = 8.477%+4.9% = <strong>13.38%</strong>
+</div>
+<div class="abox" id="a-w2"><h4>Answer</h4>
+<div class="ar"><span class="al">Growth Rate (g)</span><span class="av">4.9%</span></div>
+<div class="ar"><span class="al">D₁</span><span class="av">3.36 บาท</span></div>
+<div class="ar"><span class="al">Re (with floatation)</span><span class="av">13.38%</span></div>
+</div></div></div>
+
+<!-- W3 -->
+<div class="qc" id="w3">
+<div class="qh" onclick="tog('w3')"><span class="qb-badge">Calc</span><span class="qt">WACC 3 — Breakeven CapEx ก่อนต้องออกหุ้นเพิ่มทุน</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัทช้างเผือก</h4>
+<div class="gr"><span class="gl">Wd (กู้ยืม)</span><span class="gv">40%</span></div>
+<div class="gr"><span class="gl">We (กำไรสะสม)</span><span class="gv">60%</span></div>
+<div class="gr"><span class="gl">Dividend Payout Ratio</span><span class="gv">55%</span></div>
+<div class="gr"><span class="gl">Net Income ปีล่าสุด</span><span class="gv">850 ล้านบาท</span></div>
+</div>
+<div class="ask">❓ บริษัทจะออกหุ้นเพิ่มทุน เมื่อขนาดการลงทุน (CapEx) เท่ากับเท่าใด?</div>
+<button class="btn" onclick="sh('h-w3')">💡 Steps</button><button class="btn" onclick="sh('a-w3')">✅ Answer</button>
+<div class="hbox" id="h-w3">
+Retained Earnings = NI×(1−Payout) = 850×(1−0.55) = 850×0.45 = <strong>382.5 ล้าน</strong><br>
+Breakeven CapEx = RE / We = 382.5 / 0.60 = <strong>637.5 ล้านบาท</strong><br>
+(ถ้า CapEx &gt; 637.5M → equity portion &gt; RE → ต้องออกหุ้นใหม่)
+</div>
+<div class="abox" id="a-w3"><h4>Answer</h4>
+<div class="ar"><span class="al">Retained Earnings</span><span class="av">382.5 ล้านบาท</span></div>
+<div class="ar"><span class="al">Breakeven CapEx</span><span class="av">637.5 ล้านบาท</span></div>
+</div></div></div>
+
+<!-- W4 -->
+<div class="qc" id="w4">
+<div class="qh" onclick="tog('w4')"><span class="qb-badge">Calc</span><span class="qt">WACC 4 — Unquoted Company (MLR + Own-Bond Plus Premium)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัทสิงหราช (ไม่จดทะเบียนในตลาด)</h4>
+<div class="gr"><span class="gl">MLR</span><span class="gv">6.25%</span></div>
+<div class="gr"><span class="gl">Spread</span><span class="gv">1.75%</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+<div class="gr"><span class="gl">Wd / We</span><span class="gv">40% / 60%</span></div>
+<div class="gr"><span class="gl">MRP</span><span class="gv">6.25%</span></div>
+</div>
+<div class="ask">❓ จงหา Rd, After-tax Rd, Re และ <strong>WACC</strong></div>
+<button class="btn" onclick="sh('h-w4')">💡 Steps</button><button class="btn" onclick="sh('a-w4')">✅ Answer</button>
+<div class="hbox" id="h-w4">
+Rd = MLR+Spread = 6.25%+1.75% = <strong>8%</strong><br>
+After-tax Rd = 8%×(1−0.20) = <strong>6.4%</strong><br>
+Re = Rd + MRP (Own-Bond Plus Premium Method) = 8%+6.25% = <strong>14.25%</strong><br>
+WACC = 0.4×6.4% + 0.6×14.25% = 2.56%+8.55% = <strong>11.11%</strong>
+</div>
+<div class="abox" id="a-w4"><h4>Answer</h4>
+<div class="ar"><span class="al">Rd (before-tax)</span><span class="av">8.0%</span></div>
+<div class="ar"><span class="al">After-tax Rd</span><span class="av">6.4%</span></div>
+<div class="ar"><span class="al">Re (Own-Bond + MRP)</span><span class="av">14.25%</span></div>
+<div class="ar"><span class="al">WACC</span><span class="av">11.11%</span></div>
+</div></div></div>
+
+<!-- W5 -->
+<div class="qc" id="w5">
+<div class="qh" onclick="tog('w5')"><span class="qb-badge">Calc</span><span class="qt">WACC 5 — Re ด้วย CAPM เมื่อ Beta เป็นลบ (Inverse)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท ABC</h4>
+<div class="gr"><span class="gl">Beta (β)</span><span class="gv">−0.5 (inverse กับตลาด)</span></div>
+<div class="gr"><span class="gl">Rf พันธบัตร 1 ปี</span><span class="gv">1.2%</span></div>
+<div class="gr"><span class="gl">Rf พันธบัตร 10 ปี</span><span class="gv">3.2%</span></div>
+<div class="gr"><span class="gl">Rm (Expected Market Return)</span><span class="gv">8%</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Re (Cost of Equity)</strong></div>
+<button class="btn" onclick="sh('h-w5')">💡 Steps</button><button class="btn" onclick="sh('a-w5')">✅ Answer</button>
+<div class="hbox" id="h-w5">
+ใช้ <strong>Rf พันธบัตร 10 ปี</strong> (เพื่อให้ match กับ horizon การลงทุน)<br>
+Re = Rf + β×(Rm−Rf) = 3.2% + (−0.5)×(8%−3.2%)<br>
+= 3.2% + (−0.5)×4.8% = 3.2% − 2.4% = <strong>0.8%</strong>
+</div>
+<div class="abox" id="a-w5"><h4>Answer</h4>
+<div class="ar"><span class="al">Re (Cost of Equity)</span><span class="av">0.8%</span></div>
+<div class="step">→ Beta &lt; 0 ทำให้ Re ต่ำมาก (Defensive stock — เช่น gold)</div>
+</div></div></div>
+
+<!-- W6 -->
+<div class="qc" id="w6">
+<div class="qh" onclick="tog('w6')"><span class="qb-badge">Calc</span><span class="qt">WACC 6 — After-tax Cost of Debt จากการออกหุ้นกู้</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท XYZ ออกหุ้นกู้</h4>
+<div class="gr"><span class="gl">Par Value</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">3 ปี</span></div>
+<div class="gr"><span class="gl">จ่ายคูปอง</span><span class="gv">4 ครั้ง/ปี</span></div>
+<div class="gr"><span class="gl">Coupon Rate</span><span class="gv">5% ต่อปี</span></div>
+<div class="gr"><span class="gl">Floatation Cost (f)</span><span class="gv">0.8%</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+</div>
+<div class="ask">❓ จงหา เงินที่ได้จากขาย, PMT, N, Before-tax Rd และ <strong>After-tax Rd</strong></div>
+<button class="btn" onclick="sh('h-w6')">💡 Steps</button><button class="btn" onclick="sh('a-w6')">✅ Answer</button>
+<div class="hbox" id="h-w6">
+Net Proceeds = 1000×(1−0.008) = <strong>992 บาท</strong><br>
+PMT = 1000×5%/4 = <strong>12.5 บาท/งวด</strong><br>
+N = 3×4 = <strong>12 งวด</strong><br>
+PV=−992, PMT=12.5, FV=1000, N=12 &nbsp;→&nbsp; CPT I/Y = 1.3225%/งวด<br>
+Before-tax Rd = 1.3225×4 = <strong>5.29%</strong><br>
+After-tax Rd = 5.29%×(1−0.20) = <strong>4.23%</strong>
+</div>
+<div class="abox" id="a-w6"><h4>Answer</h4>
+<div class="ar"><span class="al">Net Proceeds</span><span class="av">992 บาท</span></div>
+<div class="ar"><span class="al">PMT</span><span class="av">12.5 บาท/งวด</span></div>
+<div class="ar"><span class="al">N</span><span class="av">12 งวด</span></div>
+<div class="ar"><span class="al">Before-tax Rd</span><span class="av">5.29%</span></div>
+<div class="ar"><span class="al">After-tax Rd</span><span class="av">4.23%</span></div>
+</div></div></div>
+
+<!-- W7 -->
+<div class="qc" id="w7">
+<div class="qh" onclick="tog('w7')"><span class="qb-badge">Calc</span><span class="qt">WACC 7 — Cost of Preferred Stock</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท CMMU ออกหุ้นบุริมสิทธิ์</h4>
+<div class="gr"><span class="gl">Underwritten Price (Pps0)</span><span class="gv">20 บาท</span></div>
+<div class="gr"><span class="gl">Underwriter Fee (f)</span><span class="gv">2%</span></div>
+<div class="gr"><span class="gl">เงินปันผลหุ้นบุริมสิทธิ์ (Dp)</span><span class="gv">2 บาท/ปี</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Cost of Preferred Stock (Rp)</strong></div>
+<button class="btn" onclick="sh('h-w7')">💡 Steps</button><button class="btn" onclick="sh('a-w7')">✅ Answer</button>
+<div class="hbox" id="h-w7">
+Net Proceeds = 20×(1−0.02) = 19.6 บาท<br>
+Rp = Dp / Pps0(1−f) = 2/19.6 = <strong>10.20%</strong><br>
+หมายเหตุ: ปันผลหุ้นบุริมสิทธิ์ <strong>ไม่ลด Tax</strong> (จ่ายหลังภาษี)
+</div>
+<div class="abox" id="a-w7"><h4>Answer</h4>
+<div class="ar"><span class="al">Cost of Preferred Stock (Rp)</span><span class="av">10.20%</span></div>
+</div></div></div>
+
+<!-- W8 -->
+<div class="qc" id="w8">
+<div class="qh" onclick="tog('w8')"><span class="qb-badge">Calc</span><span class="qt">WACC 8 — คำนวณ WACC ตรงๆ</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Wd</span><span class="gv">50%</span></div>
+<div class="gr"><span class="gl">Rd (before-tax)</span><span class="gv">8.5%</span></div>
+<div class="gr"><span class="gl">We</span><span class="gv">50%</span></div>
+<div class="gr"><span class="gl">Re</span><span class="gv">15%</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">40%</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>WACC</strong></div>
+<button class="btn" onclick="sh('h-w8')">💡 Steps</button><button class="btn" onclick="sh('a-w8')">✅ Answer</button>
+<div class="hbox" id="h-w8">
+WACC = 0.5×8.5%×(1−0.40) + 0.5×15%<br>
+= 0.5×5.1% + 0.5×15% = 2.55% + 7.5% = <strong>10.05%</strong>
+</div>
+<div class="abox" id="a-w8"><h4>Answer</h4>
+<div class="ar"><span class="al">WACC</span><span class="av">10.05%</span></div>
+</div></div></div>
+
+<!-- W9 -->
+<div class="qc" id="w9">
+<div class="qh" onclick="tog('w9')"><span class="qb-badge">Calc</span><span class="qt">WACC 9 — Solve for Re (Back-calculate)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">Wd</span><span class="gv">40%</span></div>
+<div class="gr"><span class="gl">Rd (before-tax)</span><span class="gv">5%</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+<div class="gr"><span class="gl">WACC</span><span class="gv">8.5%</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Re (Cost of Equity)</strong></div>
+<button class="btn" onclick="sh('h-w9')">💡 Steps</button><button class="btn" onclick="sh('a-w9')">✅ Answer</button>
+<div class="hbox" id="h-w9">
+We = 60% | After-tax Rd = 5%×0.8 = 4%<br>
+8.5% = 0.4×4% + 0.6×Re<br>
+8.5% = 1.6% + 0.6Re<br>
+0.6Re = 6.9% → Re = <strong>11.5%</strong>
+</div>
+<div class="abox" id="a-w9"><h4>Answer</h4>
+<div class="ar"><span class="al">Re (Cost of Equity)</span><span class="av">11.5%</span></div>
+</div></div></div>
+
+<!-- W10 -->
+<div class="qc" id="w10">
+<div class="qh" onclick="tog('w10')"><span class="qb-badge">Calc</span><span class="qt">WACC 10 — การเปลี่ยนแปลง WACC เมื่อภาษีลดลง</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — บริษัท XY ออกหุ้นกู้</h4>
+<div class="gr"><span class="gl">Par Value</span><span class="gv">1,000 บาท</span></div>
+<div class="gr"><span class="gl">Maturity</span><span class="gv">20 ปี</span></div>
+<div class="gr"><span class="gl">Coupon Rate</span><span class="gv">7% (Semi-annual)</span></div>
+<div class="gr"><span class="gl">Tax เดิม</span><span class="gv">40%</span></div>
+<div class="gr"><span class="gl">Tax ใหม่ (ลดลง)</span><span class="gv">30%</span></div>
+</div>
+<div class="ask">❓ ต้นทุนทางการเงินของหนี้เปลี่ยนไปเท่าใด (Change in After-tax Rd)?</div>
+<button class="btn" onclick="sh('h-w10')">💡 Steps</button><button class="btn" onclick="sh('a-w10')">✅ Answer</button>
+<div class="hbox" id="h-w10">
+Rd = YTM = 7% (par bond → YTM = coupon rate)<br>
+Scenario I: After-tax Rd = 7%×(1−0.40) = <strong>4.2%</strong><br>
+Scenario II: After-tax Rd = 7%×(1−0.30) = <strong>4.9%</strong><br>
+Change = 4.9% − 4.2% = <strong>0.7%</strong>
+</div>
+<div class="abox" id="a-w10"><h4>Answer</h4>
+<div class="ar"><span class="al">After-tax Rd เดิม (t=40%)</span><span class="av">4.2%</span></div>
+<div class="ar"><span class="al">After-tax Rd ใหม่ (t=30%)</span><span class="av">4.9%</span></div>
+<div class="ar"><span class="al">Change in WACC</span><span class="av">+0.7%</span></div>
+<div class="step">→ ภาษีลดลง → ประโยชน์ Tax Shield ลด → After-tax Rd สูงขึ้น → WACC สูงขึ้น</div>
+</div></div></div>
+
+</div><!-- end ch8 -->
+
+<!-- ======== CH9 ======== -->
 <div id="ch9" class="chapter">
-  <div class="chapter-title">Chapter 9 — Capital Budgeting</div>
-  <div class="chapter-sub">NPV, IRR, MIRR, Payback Period, Discounted Payback — การประเมินโครงการลงทุน</div>
-  <div class="formula-bar">
-    <h3>Key Formulas</h3>
-    <div class="formulas">
-      <div class="fml">NPV = Σ CFₜ/(1+r)ᵗ − CF₀</div>
-      <div class="fml">IRR: solve NPV = 0</div>
-      <div class="fml">MIRR: FV(+CF) at WACC, PV(−CF) at WACC</div>
-      <div class="fml">Payback: Σ CF until = CF₀</div>
-      <div class="fml">Accept if NPV&gt;0, IRR&gt;WACC</div>
-    </div>
-  </div>
+<div class="ct">Chapter 9 — Capital Budgeting</div>
+<div class="cs">NPV, IRR, MIRR, Payback Period, Discounted Payback — การประเมินโครงการลงทุน</div>
+<div class="fb"><h3>Key Formulas</h3><div class="fls">
+<div class="fl">NPV = Σ CFₜ/(1+r)ᵗ − CF₀</div>
+<div class="fl">IRR: solve NPV = 0</div>
+<div class="fl">MIRR = (TV/PV)^(1/n) − 1</div>
+<div class="fl">TV = FV of +CF reinvested at WACC</div>
+<div class="fl">NFV = NPV × (1+WACC)ⁿ</div>
+<div class="fl">Accept: NPV&gt;0, IRR&gt;WACC, MIRR&gt;WACC</div>
+<div class="fl">Mutually Exclusive → ใช้ NPV เท่านั้น</div>
+</div></div>
 
-  <!-- Q1 MIRR -->
-  <div class="q-card" id="q-ch9-1">
-    <div class="q-header" onclick="toggleQ('ch9-1')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Budgeting 1 — MIRR (Modified IRR)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given — WACC = 8%</h4>
-        <table>
-          <tr><th>Year</th><th>Project A (ล้านบาท)</th><th>Project B (ล้านบาท)</th></tr>
-          <tr><td>0</td><td>−100</td><td>−100</td></tr>
-          <tr><td>1</td><td>10</td><td>60</td></tr>
-          <tr><td>2</td><td>60</td><td>30</td></tr>
-          <tr><td>3</td><td>80</td><td>20</td></tr>
-          <tr><td>4</td><td>40</td><td>60</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>MIRR ของทั้งสองโครงการ</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch9-1')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch9-1')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch9-1">
-        <strong>MIRR Formula:</strong><br>
-        1. คำนวณ FV ของ positive CFs ที่ WACC (reinvest at WACC)<br>
-        FV_A = 10(1.08)³ + 60(1.08)² + 80(1.08)¹ + 40 = <strong>214.87</strong><br>
-        2. PV ของ negative CF = 100 (อยู่แล้ว Year 0)<br>
-        3. MIRR = (FV/PV)^(1/n) − 1 = (214.87/100)^(1/4) − 1
-      </div>
-      <div class="ans-box" id="ans-ch9-1">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">MIRR Project A</span><span class="ans-val">19.50%</span></div>
-        <div class="ans-row"><span class="ans-label">MIRR Project B</span><span class="ans-val">19.84%</span></div>
-        <div class="step">→ ทั้งสอง MIRR &gt; WACC (8%) = ควรลงทุน</div>
-        <div class="step">→ Project B มี MIRR สูงกว่าเล็กน้อย</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q3 NPV NFV -->
-  <div class="q-card" id="q-ch9-3">
-    <div class="q-header" onclick="toggleQ('ch9-3')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Budgeting 3 — NPV & NFV</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given — WACC = 14%</h4>
-        <div class="given-row"><span class="given-label">Initial Investment (CF₀)</span><span class="given-val">−75,000,000 บาท</span></div>
-        <table style="margin-top:8px">
-          <tr><th>Year</th><th>Cash Flow (ล้านบาท)</th></tr>
-          <tr><td>1</td><td>20</td></tr>
-          <tr><td>2</td><td>20</td></tr>
-          <tr><td>3</td><td>20</td></tr>
-          <tr><td>4</td><td>30</td></tr>
-          <tr><td>5</td><td>30</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>NPV</strong> และ <strong>NFV (Net Future Value)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch9-3')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch9-3')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch9-3">
-        NPV = −75 + PV(20,20,20,30,30) at 14%<br>
-        NFV = NPV × (1+WACC)ⁿ = NPV × (1.14)⁵
-      </div>
-      <div class="ans-box" id="ans-ch9-3">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">NPV</span><span class="ans-val">4.78 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">NFV</span><span class="ans-val">9.20 ล้านบาท</span></div>
-        <div class="step">→ NPV &gt; 0 → ควรลงทุน</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q4 Mutually Exclusive -->
-  <div class="q-card" id="q-ch9-4">
-    <div class="q-header" onclick="toggleQ('ch9-4')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Budgeting 4 — Mutually Exclusive: NPV vs IRR Conflict</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given — WACC = 10%</h4>
-        <table>
-          <tr><th>Year</th><th>Project A</th><th>Project B</th></tr>
-          <tr><td>0</td><td>−10 ล้าน</td><td>−500 ล้าน</td></tr>
-          <tr><td>1</td><td>5 ล้าน</td><td>200 ล้าน</td></tr>
-          <tr><td>2</td><td>5 ล้าน</td><td>200 ล้าน</td></tr>
-          <tr><td>3</td><td>5 ล้าน</td><td>200 ล้าน</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ ควรเลือกโครงการใด? (Mutually Exclusive)</div>
-      <button class="hint-toggle" onclick="toggleHint('ch9-4')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch9-4')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch9-4">
-        <strong>สำหรับ Mutually Exclusive → ใช้ NPV เป็นตัวตัดสิน</strong><br>
-        NPV A = −10 + 5/1.1 + 5/1.1² + 5/1.1³<br>
-        NPV B = −500 + 200/1.1 + 200/1.1² + 200/1.1³<br>
-        IRR อาจสูงกว่าแต่ NPV ต่างกันมาก
-      </div>
-      <div class="ans-box" id="ans-ch9-4">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">IRR Project A</span><span class="ans-val">18.76%</span></div>
-        <div class="ans-row"><span class="ans-label">NPV Project A</span><span class="ans-val">2.43 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">IRR Project B</span><span class="ans-val">9.70%</span></div>
-        <div class="ans-row"><span class="ans-label">NPV Project B</span><span class="ans-val">−2.37 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">Decision</span><span class="ans-val">เลือก Project A ✓</span></div>
-        <div class="step">→ Mutually Exclusive: ใช้ NPV (ไม่ใช่ IRR) เป็นหลัก</div>
-        <div class="step">→ NPV A &gt; 0, NPV B &lt; 0 → เลือก A เพราะสร้างมูลค่าเพิ่ม</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q7 Payback -->
-  <div class="q-card" id="q-ch9-7">
-    <div class="q-header" onclick="toggleQ('ch9-7')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">Budgeting 7 — Payback Period</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <table>
-          <tr><th>Year</th><th>Project A</th><th>Project B</th></tr>
-          <tr><td>0</td><td>−80</td><td>−80</td></tr>
-          <tr><td>1</td><td>20</td><td>40</td></tr>
-          <tr><td>2</td><td>20</td><td>30</td></tr>
-          <tr><td>3</td><td>40</td><td>20</td></tr>
-          <tr><td>4</td><td>40</td><td>10</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Payback Period</strong> (Target = 2.5 ปี)</div>
-      <button class="hint-toggle" onclick="toggleHint('ch9-7')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch9-7')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch9-7">
-        สะสม CF ปีต่อปีจนเท่ากับ Initial Investment:<br>
-        <strong>Project A:</strong> 20+20 = 40 (yr2), ยังขาด 40 → yr3: 40/40 = 1.0 → PB = 3.0 ปี<br>
-        <strong>Project B:</strong> 40+30 = 70 (yr2), ยังขาด 10 → yr3: 10/20 = 0.5 → PB = 2.5 ปี
-      </div>
-      <div class="ans-box" id="ans-ch9-7">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Payback Period A</span><span class="ans-val">3.00 ปี</span></div>
-        <div class="ans-row"><span class="ans-label">Payback Period B</span><span class="ans-val">2.50 ปี</span></div>
-        <div class="ans-row"><span class="ans-label">Decision (Target 2.5 ปี)</span><span class="ans-val">เลือก Project B ✓</span></div>
-        <div class="step">→ A (3.0 ปี) &gt; target → reject; B (2.5 ปี) = target → accept B</div>
-      </div>
-    </div>
-  </div>
+<!-- Data note -->
+<div style="background:rgba(251,191,36,.07);border:1px solid var(--yel);border-radius:7px;padding:10px 12px;margin-bottom:14px;font-size:12px;">
+⚠️ <strong>ข้อสังเกต:</strong> ข้อ 1,2,5,6,7 ใช้ Project A=[650,750,800,850,950] และ B=[1000,500,1000,500,1000] แต่ Initial Investment และ WACC ต่างกัน
 </div>
-<!-- end ch9 -->
 
-<!-- ============================================================ CH10 ============================================================ -->
+<!-- B1 MIRR -->
+<div class="qc" id="b1">
+<div class="qh" onclick="tog('b1')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 1 — MIRR (Modified IRR)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — WACC = 8%</h4>
+<table><tr><th>Year</th><th>Project A</th><th>Project B</th></tr>
+<tr><td>0</td><td>−1,900</td><td>−1,900</td></tr>
+<tr><td>1</td><td>650</td><td>1,000</td></tr>
+<tr><td>2</td><td>750</td><td>500</td></tr>
+<tr><td>3</td><td>800</td><td>1,000</td></tr>
+<tr><td>4</td><td>850</td><td>500</td></tr>
+<tr><td>5</td><td>950</td><td>1,000</td></tr></table>
+</div>
+<div class="ask">❓ จงหา MIRR ของ A และ B &nbsp;|&nbsp; กรณี Independent ที่ต้องการ MIRR ≥ 19% เลือกอะไร?</div>
+<button class="btn" onclick="sh('h-b1')">💡 Steps</button><button class="btn" onclick="sh('a-b1')">✅ Answer</button>
+<div class="hbox" id="h-b1">
+<strong>Step 1: หา TV (Terminal Value) = NFV ของ Cash Inflows ที่ WACC:</strong><br>
+TV_A = 650(1.08)⁴+750(1.08)³+800(1.08)²+850(1.08)¹+950 = <strong>4,376.7</strong><br>
+<strong>Step 2: MIRR = (TV/CF₀)^(1/n) − 1</strong><br>
+MIRR_A = (4376.7/1900)^(1/5) − 1<br>
+<strong>Calculator:</strong> ป้อน CF0=−1900, CF1−5 ของ A &nbsp;→&nbsp; CPT NFV at 8% &nbsp;→&nbsp; ได้ TV<br>
+แล้ว N=5, FV=TV, PV=−1900, PMT=0 &nbsp;→&nbsp; CPT I/Y = MIRR
+</div>
+<div class="abox" id="a-b1"><h4>Answer</h4>
+<div class="ar"><span class="al">MIRR Project A</span><span class="av">19.50%</span></div>
+<div class="ar"><span class="al">MIRR Project B</span><span class="av">19.84%</span></div>
+<div class="ar"><span class="al">Decision (≥19%, Independent)</span><span class="av">(C) ลงทุนทั้ง A และ B ✓</span></div>
+<div class="step">→ ทั้งสอง MIRR &gt; 19% → รับทั้งคู่ (Independent = ไม่ต้องเลือก)</div>
+</div></div></div>
+
+<!-- B2 DPB -->
+<div class="qc" id="b2">
+<div class="qh" onclick="tog('b2')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 2 — Discounted Payback Period (DPB)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — CF₀ = −2,000, WACC = 8%</h4>
+<table><tr><th>Year</th><th>Project A</th><th>Project B</th></tr>
+<tr><td>1</td><td>650</td><td>1,000</td></tr>
+<tr><td>2</td><td>750</td><td>500</td></tr>
+<tr><td>3</td><td>800</td><td>1,000</td></tr>
+<tr><td>4</td><td>850</td><td>500</td></tr>
+<tr><td>5</td><td>950</td><td>1,000</td></tr></table>
+</div>
+<div class="ask">❓ จงหา <strong>DPB ของ Project A และ B</strong></div>
+<button class="btn" onclick="sh('h-b2')">💡 Steps</button><button class="btn" onclick="sh('a-b2')">✅ Answer</button>
+<div class="hbox" id="h-b2">
+<strong>Discount แต่ละ CF ก่อน แล้วสะสมจนครบ CF₀=2,000:</strong><br>
+Project A (PV of CF): yr1=601.9, yr2=643.0, yr3=635.1, yr4=624.5, yr5=646.3<br>
+Cumulative: 601.9→1244.9→1880→2504.5 → ครบที่ปี 4 → DPB_A = 3 + (2000−1880)/624.5 ≈ <strong>3.19 ปี</strong><br>
+Project B (PV): yr1=925.9, yr2=428.7, yr3=793.8 → cumulative: 925.9→1354.6→2148.4<br>
+DPB_B = 2 + (2000−1354.6)/793.8 ≈ <strong>2.81 ปี</strong>
+</div>
+<div class="abox" id="a-b2"><h4>Answer</h4>
+<div class="ar"><span class="al">DPB Project A</span><span class="av">3.19 ปี</span></div>
+<div class="ar"><span class="al">DPB Project B</span><span class="av">2.81 ปี</span></div>
+</div></div></div>
+
+<!-- B3 NPV NFV -->
+<div class="qc" id="b3">
+<div class="qh" onclick="tog('b3')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 3 — NPV & NFV</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — WACC = 14%</h4>
+<table><tr><th>Year</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th></tr>
+<tr><td>CF (ล้านบาท)</td><td>−75</td><td>20</td><td>20</td><td>20</td><td>30</td><td>30</td></tr></table>
+</div>
+<div class="ask">❓ จงหา <strong>NPV</strong> และ <strong>NFV (Net Future Value)</strong></div>
+<button class="btn" onclick="sh('h-b3')">💡 Steps</button><button class="btn" onclick="sh('a-b3')">✅ Answer</button>
+<div class="hbox" id="h-b3">
+ป้อน CF0=−75, CF1=20 (F=3), CF2=30 (F=2) &nbsp;→&nbsp; I=14 &nbsp;→&nbsp; CPT NPV<br>
+NFV = NPV × (1+WACC)ⁿ = NPV × (1.14)⁵
+</div>
+<div class="abox" id="a-b3"><h4>Answer</h4>
+<div class="ar"><span class="al">NPV</span><span class="av">4.78 ล้านบาท</span></div>
+<div class="ar"><span class="al">NFV</span><span class="av">9.20 ล้านบาท</span></div>
+<div class="step">→ NPV &gt; 0 → ควรลงทุน</div>
+</div></div></div>
+
+<!-- B4 Mutually Exclusive IRR vs NPV -->
+<div class="qc" id="b4">
+<div class="qh" onclick="tog('b4')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 4 — Mutually Exclusive: IRR & NPV (A vs B)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — WACC = 10%</h4>
+<table><tr><th>Year</th><th>Project A</th><th>Project B</th></tr>
+<tr><td>0</td><td>−100 ล้าน</td><td>−1,000 ล้าน</td></tr>
+<tr><td>1</td><td>25</td><td>300</td></tr>
+<tr><td>2</td><td>25</td><td>300</td></tr>
+<tr><td>3</td><td>25</td><td>400</td></tr>
+<tr><td>4</td><td>50</td><td>400</td></tr>
+<tr><td>5</td><td>50</td><td>400</td></tr></table>
+</div>
+<div class="ask">❓ หา IRR และ NPV ของทั้งสอง — กรณี <strong>Mutually Exclusive</strong> เลือกโครงการใด?</div>
+<button class="btn" onclick="sh('h-b4')">💡 Steps</button><button class="btn" onclick="sh('a-b4')">✅ Answer</button>
+<div class="hbox" id="h-b4">
+<strong>Mutually Exclusive → ตัดสินด้วย NPV เท่านั้น!</strong><br>
+IRR A = CPT IRR (A) &nbsp;|&nbsp; IRR B = CPT IRR (B)<br>
+NPV A = PV(25,25,25,50,50) − 100 at 10%<br>
+NPV B = PV(300,300,400,400,400) − 1000 at 10%
+</div>
+<div class="abox" id="a-b4"><h4>Answer</h4>
+<div class="ar"><span class="al">IRR Project A</span><span class="av">18.76%</span></div>
+<div class="ar"><span class="al">NPV Project A</span><span class="av">27.37 ล้านบาท</span></div>
+<div class="ar"><span class="al">IRR Project B</span><span class="av">21.84%</span></div>
+<div class="ar"><span class="al">NPV Project B</span><span class="av">342.76 ล้านบาท</span></div>
+<div class="ar"><span class="al">Decision</span><span class="av">(B) เลือก Project B ✓</span></div>
+<div class="step">→ Mutually Exclusive → ใช้ NPV: B &gt; A → เลือก B (สร้าง Value มากกว่ามาก)</div>
+</div></div></div>
+
+<!-- B5 NPV Mutually Exclusive -->
+<div class="qc" id="b5">
+<div class="qh" onclick="tog('b5')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 5 — NPV Mutually Exclusive (CF₀=2,000, WACC=8%)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — CF₀ = −2,000 ล้าน, WACC = 8%</h4>
+<table><tr><th>Year</th><th>A</th><th>B</th></tr>
+<tr><td>1</td><td>650</td><td>1,000</td></tr>
+<tr><td>2</td><td>750</td><td>500</td></tr>
+<tr><td>3</td><td>800</td><td>1,000</td></tr>
+<tr><td>4</td><td>850</td><td>500</td></tr>
+<tr><td>5</td><td>950</td><td>1,000</td></tr></table>
+</div>
+<div class="ask">❓ หา NPV ทั้งสอง — กรณี <strong>Mutually Exclusive</strong> เลือกโครงการใด?</div>
+<button class="btn" onclick="sh('h-b5')">💡 Steps</button><button class="btn" onclick="sh('a-b5')">✅ Answer</button>
+<div class="hbox" id="h-b5">
+ป้อน CF ทั้งหมดใน Calculator → I=8% → CPT NPV
+</div>
+<div class="abox" id="a-b5"><h4>Answer</h4>
+<div class="ar"><span class="al">NPV Project A</span><span class="av">1,151.25 ล้านบาท</span></div>
+<div class="ar"><span class="al">NPV Project B</span><span class="av">1,196.53 ล้านบาท</span></div>
+<div class="ar"><span class="al">Decision</span><span class="av">(B) เลือก Project B ✓</span></div>
+<div class="step">→ NPV B &gt; NPV A → เลือก B</div>
+</div></div></div>
+
+<!-- B6 IRR Independent -->
+<div class="qc" id="b6">
+<div class="qh" onclick="tog('b6')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 6 — IRR Independent (CF₀=2,300, Cost of Capital=15%)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — CF₀ = −2,300, Cost of Capital = 15%</h4>
+<table><tr><th>Year</th><th>A</th><th>B</th></tr>
+<tr><td>1</td><td>650</td><td>1,000</td></tr>
+<tr><td>2</td><td>750</td><td>500</td></tr>
+<tr><td>3</td><td>800</td><td>1,000</td></tr>
+<tr><td>4</td><td>850</td><td>500</td></tr>
+<tr><td>5</td><td>950</td><td>1,000</td></tr></table>
+</div>
+<div class="ask">❓ หา IRR ทั้งสอง — กรณี <strong>Independent</strong> เลือกโครงการใด?</div>
+<button class="btn" onclick="sh('h-b6')">💡 Steps</button><button class="btn" onclick="sh('a-b6')">✅ Answer</button>
+<div class="hbox" id="h-b6">
+IRR &gt; Cost of Capital (15%) → Accept
+</div>
+<div class="abox" id="a-b6"><h4>Answer</h4>
+<div class="ar"><span class="al">IRR Project A</span><span class="av">20.32%</span></div>
+<div class="ar"><span class="al">IRR Project B</span><span class="av">22.04%</span></div>
+<div class="ar"><span class="al">Decision</span><span class="av">(C) ลงทุนทั้ง A และ B ✓</span></div>
+<div class="step">→ Independent: ทั้ง IRR A (20.32%) และ B (22.04%) &gt; 15% → รับทั้งคู่</div>
+</div></div></div>
+
+<!-- B7 Payback -->
+<div class="qc" id="b7">
+<div class="qh" onclick="tog('b7')"><span class="qb-badge">Calc</span><span class="qt">Budgeting 7 — Payback Period (Target = 2.2 ปี)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — CF₀ = −2,000</h4>
+<table><tr><th>Year</th><th>A</th><th>B</th><th>Cumulative A</th><th>Cumulative B</th></tr>
+<tr><td>1</td><td>650</td><td>1,000</td><td>650</td><td>1,000</td></tr>
+<tr><td>2</td><td>750</td><td>500</td><td>1,400</td><td>1,500</td></tr>
+<tr><td>3</td><td>800</td><td>1,000</td><td>2,200</td><td>2,500</td></tr></table>
+</div>
+<div class="ask">❓ หา Payback Period — เป้าหมาย PB = 2.2 ปี — เลือกโครงการใด?</div>
+<button class="btn" onclick="sh('h-b7')">💡 Steps</button><button class="btn" onclick="sh('a-b7')">✅ Answer</button>
+<div class="hbox" id="h-b7">
+PB_A: ปีที่ 2 สะสม 1,400 ยังขาด 600 → yr3 CF=800 → PB = 2 + 600/800 = <strong>2.75 ปี</strong><br>
+PB_B: ปีที่ 2 สะสม 1,500 ยังขาด 500 → yr3 CF=1,000 → PB = 2 + 500/1,000 = <strong>2.5 ปี</strong><br>
+เป้า = 2.2 ปี → ทั้งสอง PB &gt; 2.2 → <strong>ไม่ลงทุนทั้งคู่</strong>
+</div>
+<div class="abox" id="a-b7"><h4>Answer</h4>
+<div class="ar"><span class="al">PB Project A</span><span class="av">2.75 ปี</span></div>
+<div class="ar"><span class="al">PB Project B</span><span class="av">2.50 ปี</span></div>
+<div class="ar"><span class="al">Decision (Target 2.2 ปี)</span><span class="av">(D) ไม่ลงทุนทั้ง A และ B ✓</span></div>
+<div class="step">→ A (2.75) &gt; 2.2 → Reject &nbsp;|&nbsp; B (2.50) &gt; 2.2 → Reject</div>
+</div></div></div>
+
+</div><!-- end ch9 -->
+
+<!-- ======== CH10 ======== -->
 <div id="ch10" class="chapter">
-  <div class="chapter-title">Chapter 10 — Cash Flow Estimation</div>
-  <div class="chapter-sub">NOPAT, Operating CF, Depreciation, Salvage Value, Scenario Analysis</div>
-  <div class="formula-bar">
-    <h3>Key Formulas</h3>
-    <div class="formulas">
-      <div class="fml">NOPAT = EBIT × (1−T)</div>
-      <div class="fml">Net Operating CF = NOPAT + Depreciation</div>
-      <div class="fml">Net Salvage CF = Sale Price − Tax on Gain</div>
-      <div class="fml">Tax on Gain = (Sale − Book Value) × T</div>
-      <div class="fml">SL Depreciation = (Cost − Salvage) / Life</div>
-      <div class="fml">E(NPV) = Σ Pᵢ × NPVᵢ</div>
-    </div>
-  </div>
+<div class="ct">Chapter 10 — Cash Flow Estimation</div>
+<div class="cs">NOPAT, Net Operating CF, Depreciation, Salvage Value, NOWC, Scenario & Sensitivity Analysis</div>
+<div class="fb"><h3>Key Formulas</h3><div class="fls">
+<div class="fl">NOPAT = EBIT × (1−T)</div>
+<div class="fl">Net Operating CF = NOPAT + Depreciation</div>
+<div class="fl">SL Depreciation = (Cost − Salvage) / Life</div>
+<div class="fl">Net Salvage CF = Sale Price − Tax×(Sale−Book Value)</div>
+<div class="fl">E(NPV) = Σ Pᵢ × NPVᵢ</div>
+<div class="fl">Var = Σ Pᵢ(NPVᵢ − E(NPV))²</div>
+<div class="fl">NOWC = % × Next Year Sales</div>
+</div></div>
 
-  <!-- Q1 Scenario -->
-  <div class="q-card" id="q-ch10-1">
-    <div class="q-header" onclick="toggleQ('ch10-1')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">CF 1 — Scenario Analysis: E(NPV) & Standard Deviation</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <table>
-          <tr><th>Scenario</th><th>Probability</th><th>NPV (ล้านบาท)</th></tr>
-          <tr><td>Worst Case</td><td>0.20</td><td>−60</td></tr>
-          <tr><td>Likely Case</td><td>0.45</td><td>10</td></tr>
-          <tr><td>Best Case</td><td>0.35</td><td>30</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>E(NPV)</strong>, <strong>Variance</strong>, และ <strong>Std Dev</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch10-1')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch10-1')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch10-1">
-        E(NPV) = 0.20(−60) + 0.45(10) + 0.35(30)<br>
-        = −12 + 4.5 + 10.5 = <strong>3</strong><br><br>
-        Var = Σ Pᵢ(NPVᵢ − E(NPV))²<br>
-        = 0.20(−60−3)² + 0.45(10−3)² + 0.35(30−3)²<br>
-        SD = √Var
-      </div>
-      <div class="ans-box" id="ans-ch10-1">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">E(NPV)</span><span class="ans-val">3 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">Variance</span><span class="ans-val">1,071</span></div>
-        <div class="ans-row"><span class="ans-label">Std Dev (σ)</span><span class="ans-val">32.73 ล้านบาท</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q2 Salvage -->
-  <div class="q-card" id="q-ch10-2">
-    <div class="q-header" onclick="toggleQ('ch10-2')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">CF 2 — Net Salvage Cash Flow (After-tax)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Equipment Cost</span><span class="given-val">30,000,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Useful Life</span><span class="given-val">5 ปี (Straight-Line)</span></div>
-        <div class="given-row"><span class="given-label">Salvage Value (Book)</span><span class="given-val">5,000,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Actual Sale at Year 4</span><span class="given-val">14,000,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Tax Rate</span><span class="given-val">20%</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Net Salvage Cash Flow</strong> ณ ปีที่ 4</div>
-      <button class="hint-toggle" onclick="toggleHint('ch10-2')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch10-2')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch10-2">
-        1. Annual Depreciation = (30M − 5M) / 5 = <strong>5M บาท/ปี</strong><br>
-        2. Book Value ณ ปีที่ 4 = 30M − (5M × 4) = <strong>10M บาท</strong><br>
-        3. Gain on Sale = 14M − 10M = <strong>4M บาท</strong><br>
-        4. Tax on Gain = 4M × 20% = <strong>0.8M บาท</strong><br>
-        5. Net Salvage CF = 14M − 0.8M
-      </div>
-      <div class="ans-box" id="ans-ch10-2">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Annual Depreciation</span><span class="ans-val">5,000,000 บาท/ปี</span></div>
-        <div class="ans-row"><span class="ans-label">Book Value ณ ปีที่ 4</span><span class="ans-val">10,000,000 บาท</span></div>
-        <div class="ans-row"><span class="ans-label">Tax on Gain</span><span class="ans-val">800,000 บาท</span></div>
-        <div class="ans-row"><span class="ans-label">Net Salvage CF</span><span class="ans-val">13,200,000 บาท ✓</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q3 NOPAT -->
-  <div class="q-card" id="q-ch10-3">
-    <div class="q-header" onclick="toggleQ('ch10-3')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">CF 3 — NOPAT & Net Operating Cash Flow</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given — Income Statement (ล้านบาท)</h4>
-        <table>
-          <tr><th>Item</th><th>Amount</th></tr>
-          <tr><td>Sales</td><td>1,500</td></tr>
-          <tr><td>COGS</td><td>900</td></tr>
-          <tr><td>SG&A</td><td>120</td></tr>
-          <tr><td>Depreciation</td><td>180</td></tr>
-          <tr><td>Interest</td><td>120</td></tr>
-          <tr><td>Tax Rate</td><td>20%</td></tr>
-        </table>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>NOPAT</strong> และ <strong>Net Operating Cash Flow</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch10-3')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch10-3')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch10-3">
-        EBIT = Sales − COGS − SG&A − Depreciation<br>
-        = 1500 − 900 − 120 − 180 = <strong>300 ล้าน</strong><br>
-        NOPAT = EBIT × (1−T) = 300 × 0.80 = <strong>240 ล้าน</strong><br>
-        NOCF = NOPAT + Depreciation = 240 + 180
-        <br><em>Note: ไม่รวม Interest เพราะ Operating CF ไม่รวม financing</em>
-      </div>
-      <div class="ans-box" id="ans-ch10-3">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">EBIT</span><span class="ans-val">300 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">NOPAT</span><span class="ans-val">240 ล้านบาท</span></div>
-        <div class="ans-row"><span class="ans-label">Net Operating Cash Flow</span><span class="ans-val">420 ล้านบาท</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Q9 Depreciation -->
-  <div class="q-card" id="q-ch10-9">
-    <div class="q-header" onclick="toggleQ('ch10-9')">
-      <span class="q-badge">Calc</span>
-      <span class="q-title">CF 9 — Straight-Line Depreciation (Total Cost Basis)</span>
-      <span class="q-arrow">▶</span>
-    </div>
-    <div class="q-body">
-      <div class="given-box">
-        <h4>Given</h4>
-        <div class="given-row"><span class="given-label">Equipment Price</span><span class="given-val">1,500,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Shipping Cost</span><span class="given-val">200,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Installation Cost</span><span class="given-val">300,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Salvage Value</span><span class="given-val">100,000 บาท</span></div>
-        <div class="given-row"><span class="given-label">Useful Life</span><span class="given-val">5 ปี</span></div>
-      </div>
-      <div class="ask-box">❓ จงหา <strong>Initial Cost</strong> และ <strong>Annual Depreciation (SL)</strong></div>
-      <button class="hint-toggle" onclick="toggleHint('ch10-9')">💡 Show Steps</button>
-      <button class="hint-toggle" onclick="toggleAns('ch10-9')">✅ Show Answer</button>
-      <div class="hint-box" id="hint-ch10-9">
-        Initial Cost = Equipment + Shipping + Installation<br>
-        = 1,500,000 + 200,000 + 300,000 = <strong>2,000,000 บาท</strong><br>
-        Annual Depreciation = (2,000,000 − 100,000) / 5
-      </div>
-      <div class="ans-box" id="ans-ch10-9">
-        <h4>Answer</h4>
-        <div class="ans-row"><span class="ans-label">Initial Cost</span><span class="ans-val">2,000,000 บาท</span></div>
-        <div class="ans-row"><span class="ans-label">Annual Depreciation</span><span class="ans-val">380,000 บาท/ปี</span></div>
-      </div>
-    </div>
-  </div>
+<!-- CF1 -->
+<div class="qc" id="c1">
+<div class="qh" onclick="tog('c1')"><span class="qb-badge">Calc</span><span class="qt">CF 1 — Scenario Analysis: E(NPV), Variance & Std Dev</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>Scenario</th><th>Probability</th><th>NPV (ล้านบาท)</th></tr>
+<tr><td>Worst Case</td><td>0.20</td><td>−60</td></tr>
+<tr><td>Most Likely</td><td>0.45</td><td>10</td></tr>
+<tr><td>Best Case</td><td>0.35</td><td>30</td></tr></table>
 </div>
-<!-- end ch10 -->
+<div class="ask">❓ จงหา (1) E(NPV) (2) Variance (3) <strong>Std Dev</strong></div>
+<button class="btn" onclick="sh('h-c1')">💡 Steps</button><button class="btn" onclick="sh('a-c1')">✅ Answer</button>
+<div class="hbox" id="h-c1">
+E(NPV) = 0.2(−60)+0.45(10)+0.35(30) = −12+4.5+10.5 = <strong>3</strong><br>
+Var = 0.2(−60−3)²+0.45(10−3)²+0.35(30−3)²<br>
+= 0.2(3969)+0.45(49)+0.35(729)<br>
+= 793.8+22.05+255.15 = <strong>1,071</strong><br>
+SD = √1071 = <strong>32.73 ล้านบาท</strong>
+</div>
+<div class="abox" id="a-c1"><h4>Answer</h4>
+<div class="ar"><span class="al">E(NPV)</span><span class="av">3 ล้านบาท</span></div>
+<div class="ar"><span class="al">Variance</span><span class="av">1,071</span></div>
+<div class="ar"><span class="al">Std Dev (σ)</span><span class="av">32.73 ล้านบาท</span></div>
+</div></div></div>
+
+<!-- CF2 -->
+<div class="qc" id="c2">
+<div class="qh" onclick="tog('c2')"><span class="qb-badge">Calc</span><span class="qt">CF 2 — Net Salvage Cash Flow (ขายก่อนกำหนด)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">ราคาเครื่องจักร</span><span class="gv">30 ล้านบาท</span></div>
+<div class="gr"><span class="gl">อายุการใช้งาน</span><span class="gv">5 ปี (Straight-Line)</span></div>
+<div class="gr"><span class="gl">Salvage Value (บัญชี)</span><span class="gv">5 ล้านบาท</span></div>
+<div class="gr"><span class="gl">ขายจริงที่ปีที่ 4</span><span class="gv">14 ล้านบาท</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+</div>
+<div class="ask">❓ จงหา Depreciation/ปี, Book Value ณ ปี 4, Tax on Gain และ <strong>Net Salvage CF</strong></div>
+<button class="btn" onclick="sh('h-c2')">💡 Steps</button><button class="btn" onclick="sh('a-c2')">✅ Answer</button>
+<div class="hbox" id="h-c2">
+Depn/ปี = (30−5)/5 = <strong>5 ล้าน/ปี</strong><br>
+Acc. Depn ณ ปี 4 = 5×4 = 20 ล้าน<br>
+Book Value = 30−20 = <strong>10 ล้าน</strong><br>
+Gain on Sale = 14−10 = 4 ล้าน<br>
+Tax on Gain = 4×0.20 = <strong>0.8 ล้าน</strong><br>
+Net Salvage CF = 14−0.8 = <strong>13.2 ล้าน</strong>
+</div>
+<div class="abox" id="a-c2"><h4>Answer</h4>
+<div class="ar"><span class="al">Depreciation ต่อปี</span><span class="av">5 ล้านบาท/ปี</span></div>
+<div class="ar"><span class="al">Book Value ณ ปีที่ 4</span><span class="av">10 ล้านบาท</span></div>
+<div class="ar"><span class="al">Tax on Gain</span><span class="av">0.8 ล้านบาท</span></div>
+<div class="ar"><span class="al">Net Salvage CF</span><span class="av">13.2 ล้านบาท ✓</span></div>
+</div></div></div>
+
+<!-- CF3 -->
+<div class="qc" id="c3">
+<div class="qh" onclick="tog('c3')"><span class="qb-badge">Calc</span><span class="qt">CF 3 — NOPAT & Net Operating Cash Flow จาก Income Statement</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Income Statement (ล้านบาท)</h4>
+<table>
+<tr><td>Sales</td><td><strong>1,500</strong></td></tr>
+<tr><td>Cost of Goods Sold</td><td>(900)</td></tr>
+<tr><td>Gross Profit</td><td>600</td></tr>
+<tr><td>Selling Expenses</td><td>(120)</td></tr>
+<tr><td>Depreciation</td><td>(180)</td></tr>
+<tr><td><strong>EBIT</strong></td><td><strong>300</strong></td></tr>
+<tr><td>Interest</td><td>(120)</td></tr>
+<tr><td>EBT</td><td>180</td></tr>
+<tr><td>Tax (20%)</td><td>(36)</td></tr>
+<tr><td>Net Income</td><td>144</td></tr></table>
+</div>
+<div class="ask">❓ จงหา <strong>NOPAT</strong> และ <strong>Net Operating Cash Flow</strong></div>
+<button class="btn" onclick="sh('h-c3')">💡 Steps</button><button class="btn" onclick="sh('a-c3')">✅ Answer</button>
+<div class="hbox" id="h-c3">
+NOPAT = EBIT × (1−T) = 300 × 0.80 = <strong>240 ล้าน</strong><br>
+Net Operating CF = NOPAT + Depreciation = 240 + 180 = <strong>420 ล้าน</strong><br>
+<em>⚠️ ไม่รวม Interest — เพราะ Operating CF ไม่นับ Financing</em>
+</div>
+<div class="abox" id="a-c3"><h4>Answer</h4>
+<div class="ar"><span class="al">NOPAT</span><span class="av">240 ล้านบาท</span></div>
+<div class="ar"><span class="al">Net Operating CF</span><span class="av">420 ล้านบาท</span></div>
+</div></div></div>
+
+<!-- CF4 -->
+<div class="qc" id="c4">
+<div class="qh" onclick="tog('c4')"><span class="qb-badge">Calc</span><span class="qt">CF 4 — NOWC Cash Flows (Net Operating Working Capital)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given — NOWC = 20% ของยอดขายปีถัดไป</h4>
+<table><tr><th>ปี</th><th>ยอดขาย (ล้านบาท)</th></tr>
+<tr><td>0</td><td>0</td></tr>
+<tr><td>1</td><td>20</td></tr>
+<tr><td>2</td><td>30</td></tr>
+<tr><td>3</td><td>40</td></tr></table>
+<div class="gr" style="margin-top:6px"><span class="gl">สิ้นสุดโครงการ</span><span class="gv">ได้ NOWC คืนทั้งหมด</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>CF ที่เกี่ยวกับ NOWC แต่ละปี</strong></div>
+<button class="btn" onclick="sh('h-c4')">💡 Steps</button><button class="btn" onclick="sh('a-c4')">✅ Answer</button>
+<div class="hbox" id="h-c4">
+ต้องลงทุน NOWC <strong>ก่อน</strong>ยอดขายจะเกิด:<br>
+NOWC₀ = 20%×Sales₁ = 20%×20 = 4M → CF₀ = −4<br>
+NOWC₁ = 20%×Sales₂ = 20%×30 = 6M → CF₁ = −(6−4) = −2<br>
+NOWC₂ = 20%×Sales₃ = 20%×40 = 8M → CF₂ = −(8−6) = −2<br>
+NOWC₃ = 0 (คืนหมด) → CF₃ = +(8−0) = +8
+</div>
+<div class="abox" id="a-c4"><h4>Answer</h4>
+<table><tr><th>ปี</th><th>NOWC</th><th>CF (NOWC)</th></tr>
+<tr><td>0</td><td>4M</td><td>−4 ล้าน</td></tr>
+<tr><td>1</td><td>6M</td><td>−2 ล้าน</td></tr>
+<tr><td>2</td><td>8M</td><td>−2 ล้าน</td></tr>
+<tr><td>3</td><td>0</td><td>+8 ล้าน (คืนคืน)</td></tr></table>
+</div></div></div>
+
+<!-- CF5 -->
+<div class="qc" id="c5">
+<div class="qh" onclick="tog('c5')"><span class="qb-badge">Calc</span><span class="qt">CF 5 — Sensitivity Analysis (NPV vs WACC)</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<table><tr><th>ปี</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+<tr><td>CF (ล้านบาท)</td><td>−100</td><td>30</td><td>40</td><td>55</td></tr></table>
+</div>
+<div class="ask">❓ จงทำ Sensitivity Analysis ของ NPV ที่ WACC = 8%, 10%, 12%</div>
+<button class="btn" onclick="sh('h-c5')">💡 Steps</button><button class="btn" onclick="sh('a-c5')">✅ Answer</button>
+<div class="hbox" id="h-c5">
+คำนวณ NPV ที่แต่ละ WACC:<br>
+WACC 8%: −100 + 30/1.08 + 40/1.08² + 55/1.08³<br>
+WACC 10%: −100 + 30/1.10 + 40/1.10² + 55/1.10³<br>
+WACC 12%: −100 + 30/1.12 + 40/1.12² + 55/1.12³
+</div>
+<div class="abox" id="a-c5"><h4>Answer</h4>
+<table><tr><th>WACC</th><th>NPV (ล้านบาท)</th><th>Decision</th></tr>
+<tr><td>8%</td><td>5.73</td><td>Accept ✓</td></tr>
+<tr><td>10%</td><td>1.65</td><td>Accept ✓</td></tr>
+<tr><td>12%</td><td>−2.18</td><td>Reject ✗</td></tr></table>
+<div class="step">→ IRR อยู่ระหว่าง 10%–12% &nbsp;|&nbsp; WACC เพิ่มขึ้น → NPV ลดลง</div>
+</div></div></div>
+
+<!-- CF6 MC -->
+<div class="qc" id="c6">
+<div class="qh" onclick="tog('c6')"><span class="qb-badge mc">MC</span><span class="qt">CF 6 — รายการใดต้องคิดเป็น Cash Flow โครงการ?</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">รายการใดต่อไปนี้ที่บริษัทต้อง<strong>คิดเป็น Cash Flow ของโครงการ</strong>? (เลือกทุกข้อที่ถูก)</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">ก) ต้นทุนทางการเงิน (ดอกเบี้ย) จากการกู้ธนาคาร (ผิด — รวมอยู่ใน WACC แล้ว)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">ข) เงินปันผลที่จ่ายจากกำไรโครงการ (ผิด — Financing CF)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ค) ต้นทุนที่ดินที่มีอยู่ก่อนทำโครงการ (Opportunity Cost) ✓</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">ง) ยอดขายสินค้ารุ่นก่อนที่ลดลง (Cannibalization) ✓</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">จ) ค่าเสื่อมราคา (Depreciation Tax Shield) ✓</div>
+</div>
+<div class="step" style="margin-top:8px">💡 Sunk cost ≠ นับ &nbsp;|&nbsp; Opportunity cost = นับ &nbsp;|&nbsp; Cannibalization = นับ &nbsp;|&nbsp; Financing CF = ไม่นับ (อยู่ใน WACC)</div>
+</div></div>
+
+<!-- CF7 -->
+<div class="qc" id="c7">
+<div class="qh" onclick="tog('c7')"><span class="qb-badge">Calc</span><span class="qt">CF 7 — Net Operating CF จาก Income Statement #2</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">ยอดขาย</span><span class="gv">1,000,000 หน่วย × 20 บาท</span></div>
+<div class="gr"><span class="gl">ต้นทุนขาย</span><span class="gv">15 บาท/หน่วย</span></div>
+<div class="gr"><span class="gl">SG&A</span><span class="gv">500,000 บาท</span></div>
+<div class="gr"><span class="gl">Depreciation</span><span class="gv">1,500,000 บาท</span></div>
+<div class="gr"><span class="gl">Interest</span><span class="gv">1,000,000 บาท</span></div>
+<div class="gr"><span class="gl">Tax Rate</span><span class="gv">20%</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Net Operating Cash Flow</strong></div>
+<button class="btn" onclick="sh('h-c7')">💡 Steps</button><button class="btn" onclick="sh('a-c7')">✅ Answer</button>
+<div class="hbox" id="h-c7">
+Sales = 1M×20 = 20,000,000<br>
+COGS = 1M×15 = 15,000,000<br>
+Gross Profit = 5,000,000<br>
+SG&A = (500,000) | Depreciation = (1,500,000)<br>
+EBIT = 3,000,000<br>
+NOPAT = 3,000,000×(1−0.20) = <strong>2,400,000</strong><br>
+NOCF = 2,400,000 + 1,500,000 = <strong>3,900,000</strong>
+</div>
+<div class="abox" id="a-c7"><h4>Answer</h4>
+<div class="ar"><span class="al">EBIT</span><span class="av">3,000,000 บาท</span></div>
+<div class="ar"><span class="al">NOPAT</span><span class="av">2,400,000 บาท</span></div>
+<div class="ar"><span class="al">Net Operating CF</span><span class="av">3,900,000 บาท</span></div>
+</div></div></div>
+
+<!-- CF8 T/F -->
+<div class="qc" id="c8">
+<div class="qh" onclick="tog('c8')"><span class="qb-badge tf">T/F</span><span class="qt">CF 8 — True / False เกี่ยวกับ Cash Flow</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="ask">ข้อใดต่อไปนี้<strong>ถูกต้อง</strong>?</div>
+<div style="margin-top:10px">
+<div class="mco" data-correct="false" onclick="pickMC(this)">1) กระแสเงินสดโครงการจะเพิ่มขึ้นถ้า Account Payable น้อยลง (ผิด — AP ลด → ต้องจ่ายเงินออก → CF ลด)</div>
+<div class="mco" data-correct="true" onclick="pickMC(this)">2) เงินที่ขายสินทรัพย์ที่มีค่าเสื่อม ถ้า &gt; Book Value → กำไรต้องหักภาษี ✓</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">3) ค่าเสื่อม = non-cash → ต้องลบออกจาก NOPAT (ผิด — ต้องบวกกลับ)</div>
+<div class="mco" data-correct="false" onclick="pickMC(this)">4) เงินปันผลจากกำไรโครงการต้องนำมาคิดใน CF โครงการ (ผิด — Financing CF)</div>
+</div>
+</div></div>
+
+<!-- CF9 -->
+<div class="qc" id="c9">
+<div class="qh" onclick="tog('c9')"><span class="qb-badge">Calc</span><span class="qt">CF 9 — Initial Cost & Straight-Line Depreciation</span><span class="qa">▶</span></div>
+<div class="qbody">
+<div class="gbox"><h4>Given</h4>
+<div class="gr"><span class="gl">ราคาเครื่องจักร</span><span class="gv">1,500,000 บาท</span></div>
+<div class="gr"><span class="gl">ค่าขนส่ง</span><span class="gv">300,000 บาท</span></div>
+<div class="gr"><span class="gl">ค่าติดตั้ง</span><span class="gv">200,000 บาท</span></div>
+<div class="gr"><span class="gl">Salvage Value</span><span class="gv">100,000 บาท</span></div>
+<div class="gr"><span class="gl">อายุการใช้งาน</span><span class="gv">5 ปี (Straight-Line)</span></div>
+</div>
+<div class="ask">❓ จงหา <strong>Initial Cost</strong> และ <strong>ค่าเสื่อมราคาต่อปี</strong></div>
+<button class="btn" onclick="sh('h-c9')">💡 Steps</button><button class="btn" onclick="sh('a-c9')">✅ Answer</button>
+<div class="hbox" id="h-c9">
+Initial Cost = ราคา + ขนส่ง + ติดตั้ง = 1,500,000+300,000+200,000 = <strong>2,000,000 บาท</strong><br>
+Depn = (2,000,000−100,000)/5 = 1,900,000/5 = <strong>380,000 บาท/ปี</strong>
+</div>
+<div class="abox" id="a-c9"><h4>Answer</h4>
+<div class="ar"><span class="al">Initial Cost (Cap. Ex.)</span><span class="av">2,000,000 บาท</span></div>
+<div class="ar"><span class="al">ค่าเสื่อมราคา/ปี (SL)</span><span class="av">380,000 บาท</span></div>
+</div></div></div>
+
+</div><!-- end ch10 -->
 
 </div><!-- .main -->
 </div><!-- .app -->
 
+<!-- Mobile bottom nav -->
+<nav class="botnav" id="botnav">
+  <button class="bntab active" onclick="showCh('ch5',null,'📈 Bond Valuation','Ch5 · 10ข้อ');setBot(this)"><span class="bni">📈</span>Bond</button>
+  <button class="bntab" onclick="showCh('ch6',null,'📊 Risk & CAPM','Ch6 · 13ข้อ');setBot(this)"><span class="bni">📊</span>Risk</button>
+  <button class="bntab" onclick="showCh('ch7',null,'💹 Stock','Ch7 · 10ข้อ');setBot(this)"><span class="bni">💹</span>Stock</button>
+  <button class="bntab" onclick="showCh('ch8',null,'⚖️ WACC','Ch8 · 10ข้อ');setBot(this)"><span class="bni">⚖️</span>WACC</button>
+  <button class="bntab" onclick="showCh('ch9',null,'🏗️ Budgeting','Ch9 · 7ข้อ');setBot(this)"><span class="bni">🏗️</span>Budget</button>
+  <button class="bntab" onclick="showCh('ch10',null,'💰 Cash Flow','Ch10 · 9ข้อ');setBot(this)"><span class="bni">💰</span>CF</button>
+</nav>
+
 <script>
-function showChapter(id) {
-  document.querySelectorAll('.chapter').forEach(c => c.classList.remove('active'));
-  document.querySelectorAll('.ch-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.currentTarget.classList.add('active');
-}
-
-function toggleQ(id) {
-  const card = document.getElementById('q-' + id);
-  card.classList.toggle('open');
-}
-
-function toggleHint(id) {
-  const el = document.getElementById('hint-' + id);
-  el.classList.toggle('show');
-}
-
-function toggleAns(id) {
-  const el = document.getElementById('ans-' + id);
-  el.classList.toggle('show');
-}
-
-// MC option handler
-document.querySelectorAll('.mc-opt').forEach(opt => {
-  opt.addEventListener('click', function() {
-    if (this.dataset.correct === 'true') {
-      this.classList.add('correct');
-    } else {
-      this.classList.add('wrong');
-      const parent = this.closest('.mc-opts');
-      parent.querySelectorAll('[data-correct="true"]').forEach(c => c.classList.add('correct'));
-    }
-  });
+/* Wrap all tables for horizontal scroll on mobile */
+document.querySelectorAll('table').forEach(t=>{
+  if(!t.parentElement.classList.contains('tscroll')){
+    const w=document.createElement('div');
+    w.className='tscroll';
+    t.parentNode.insertBefore(w,t);
+    w.appendChild(t);
+  }
 });
+
+function showCh(id,btn,title,sub){
+  document.querySelectorAll('.chapter').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.cb').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  /* sync topbar */
+  const tbt=document.getElementById('topbar-title');
+  const tbs=document.querySelector('.topbar-sub');
+  if(tbt&&title) tbt.textContent=title;
+  if(tbs&&sub) tbs.textContent=sub;
+  /* close drawer on mobile */
+  closeSidebar();
+  /* scroll to top */
+  document.querySelector('.main').scrollTop=0;
+}
+function setBot(el){
+  document.querySelectorAll('.bntab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function tog(id){
+  document.getElementById(id).classList.toggle('open');
+}
+function sh(id){
+  document.getElementById(id).classList.toggle('show');
+}
+function pickMC(el){
+  const parent=el.closest('.qc');
+  if(parent.querySelector('.correct'))return;
+  if(el.dataset.correct==='true'){el.classList.add('correct');}
+  else{
+    el.classList.add('wrong');
+    parent.querySelectorAll('[data-correct="true"]').forEach(c=>c.classList.add('correct'));
+  }
+}
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
 </script>
 </body>
 </html>
