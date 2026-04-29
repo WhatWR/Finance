@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Bond Tutorial — เครื่องคิดเลขการเงิน Interactive</title>
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --ink: #1a1a1a;
+    --ink2: #5a5a5a;
+    --ink3: #888;
+    --accent: #d97757;
+    --accent-soft: #faece4;
+    --teal: #1d9e75;
+    --teal-soft: #e1f5ee;
+    --blue: #378add;
+    --blue-soft: #e6f1fb;
+    --red: #e24b4a;
+    --red-soft: #fcebeb;
+    --amber: #ef9f27;
+    --amber-soft: #faeeda;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Sukhumvit Set", "Noto Sans Thai", sans-serif; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    padding: 24px 16px 64px;
+    min-height: 100vh;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 500; margin-bottom: 4px; }
+  h2 { font-size: 22px; font-weight: 500; margin: 24px 0 12px; }
+  h3 { font-size: 18px; font-weight: 500; margin: 16px 0 8px; }
+  .subtitle { color: var(--ink2); margin-bottom: 24px; font-size: 15px; }
+
+  /* ===== Tabs ===== */
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+    padding-bottom: 0;
+  }
+  .tab {
+    padding: 10px 16px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink2);
+    transition: all 0.15s;
+    margin-bottom: -1px;
+  }
+  .tab:hover { background: var(--surface); color: var(--ink); }
+  .tab.active {
+    background: var(--surface);
+    color: var(--accent);
+    border-color: var(--border);
+    border-bottom-color: var(--surface);
+    font-weight: 500;
+  }
+  .tab-group-label {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-right: 8px;
+    align-self: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  /* ===== Layout ===== */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 16px 0;
+  }
+  @media (max-width: 900px) {
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-title {
+    font-size: 13px;
+    color: var(--ink3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  /* ===== Problem Statement ===== */
+  .problem-box {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+  }
+  .problem-box .label { font-size: 13px; color: #b15a36; font-weight: 500; margin-bottom: 6px; }
+  .problem-box ul { list-style: none; padding: 0; }
+  .problem-box li { padding: 3px 0; font-size: 15px; }
+  .problem-box li b { color: var(--ink); }
+
+  /* ===== Variable Map Table ===== */
+  .var-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+  }
+  .var-table th, .var-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .var-table th {
+    color: var(--ink3);
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .var-table tr:last-child td { border-bottom: none; }
+  .var-table .var-name { font-weight: 500; color: var(--accent); width: 80px; }
+  .var-table .var-calc { color: var(--ink2); font-family: ui-monospace, "SF Mono", monospace; font-size: 13px; }
+  .var-table .var-value { font-weight: 500; text-align: right; }
+
+  /* ===== Calculator ===== */
+  .calc {
+    background: #2a2a2a;
+    border-radius: 16px;
+    padding: 16px 14px 18px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    max-width: 320px;
+    margin: 0 auto;
+    user-select: none;
+  }
+  .calc-brand {
+    color: #d4d4d4;
+    font-size: 11px;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .calc-display {
+    background: #cce0a8;
+    color: #1a1a1a;
+    border-radius: 6px;
+    padding: 12px 14px;
+    text-align: right;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    min-height: 44px;
+    border: 2px inset #555;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .calc-display .display-label {
+    float: left;
+    font-size: 12px;
+    color: #4a6e1a;
+  }
+  .calc-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .btn {
+    background: #3a3a3a;
+    color: white;
+    border: none;
+    padding: 8px 4px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.12s;
+    box-shadow: 0 2px 0 #1a1a1a;
+    line-height: 1.2;
+    min-height: 32px;
+  }
+  .btn-tvm { background: #e8a23a; color: #1a1a1a; }
+  .btn-second { background: #c66; color: white; }
+  .btn-cpt { background: #5b8def; color: white; }
+  .btn-num { background: #4a4a4a; }
+  .btn-op { background: #5a5a5a; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active, .btn.pressing {
+    transform: translateY(2px);
+    box-shadow: 0 0 0 #1a1a1a;
+    background: #ffd966 !important;
+    color: #1a1a1a !important;
+  }
+  .btn.highlight {
+    animation: pulse 1.4s ease-in-out infinite;
+    box-shadow: 0 0 0 2px var(--accent), 0 2px 0 #1a1a1a;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--accent), 0 2px 0 #1a1a1a; }
+    50% { box-shadow: 0 0 0 4px var(--accent), 0 2px 0 #1a1a1a; }
+  }
+
+  /* ===== Step Sequence ===== */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+  }
+  .steps li {
+    counter-increment: step;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .steps li.current {
+    background: var(--blue-soft);
+    border-color: var(--blue);
+    transform: translateX(4px);
+  }
+  .steps li.done {
+    opacity: 0.5;
+    background: var(--teal-soft);
+  }
+  .steps li::before {
+    content: counter(step);
+    background: var(--ink);
+    color: white;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .steps li.current::before { background: var(--blue); }
+  .steps li.done::before { background: var(--teal); }
+  .steps .key {
+    background: var(--ink);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 12px;
+    margin: 0 2px;
+  }
+
+  /* ===== Action Bar ===== */
+  .actions {
+    display: flex;
+    gap: 8px;
+    margin: 16px 0;
+    justify-content: center;
+  }
+  .action-btn {
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--ink);
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .action-btn:hover { background: var(--bg); border-color: var(--ink2); }
+  .action-btn.primary {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+  }
+  .action-btn.primary:hover { background: #c46544; }
+  .action-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ===== Result Box ===== */
+  .result-box {
+    background: var(--teal-soft);
+    border: 1px solid var(--teal);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .result-box .label { font-size: 13px; color: #0f6e56; font-weight: 500; }
+  .result-box .value { font-size: 28px; font-weight: 500; color: var(--teal); margin: 6px 0; }
+  .result-box .note { font-size: 13px; color: var(--ink2); }
+
+  /* ===== Concept badges ===== */
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 16px; }
+  .badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .badge-premium { background: var(--blue-soft); color: var(--blue); }
+  .badge-discount { background: var(--red-soft); color: var(--red); }
+  .badge-par { background: var(--amber-soft); color: #854f0b; }
+  .badge-info { background: #f1efe8; color: var(--ink2); }
+
+  /* ===== Theory diagrams ===== */
+  .theory-q {
+    background: var(--blue-soft);
+    border-left: 4px solid var(--blue);
+    padding: 14px 18px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 16px;
+    font-size: 15px;
+  }
+  .choices { list-style: none; padding: 0; margin: 12px 0; }
+  .choices li {
+    padding: 12px 16px;
+    margin-bottom: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .choices li.correct {
+    background: var(--teal-soft);
+    border-color: var(--teal);
+    border-width: 2px;
+  }
+  .choice-letter {
+    font-weight: 500;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 20px;
+  }
+  .choices li.correct .choice-letter { color: var(--teal); }
+  .explain {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 16px;
+  }
+
+  /* Visual concept diagrams */
+  .seesaw {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin: 16px 0;
+  }
+  .seesaw svg { max-width: 100%; height: auto; }
+
+  /* Helpful */
+  .tip {
+    background: var(--amber-soft);
+    border-left: 4px solid var(--amber);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #6b3f08;
+  }
+  .danger {
+    background: var(--red-soft);
+    border-left: 4px solid var(--red);
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 12px 0;
+    font-size: 14px;
+    color: #7a2424;
+  }
+  .formula {
+    background: #f4f4f4;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 14px;
+    margin: 8px 0;
+    overflow-x: auto;
+  }
+
+  /* CF mode display */
+  .cf-list {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 13px;
+  }
+  .cf-list div { padding: 4px 0; border-bottom: 1px dashed var(--border); }
+  .cf-list div:last-child { border-bottom: none; }
+
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Bond Tutorial — เรียนรู้ตราสารหนี้พร้อมเครื่องคิดเลข</h1>
+  <p class="subtitle">สื่อการสอนแบบ Interactive · ครอบคลุมโจทย์ทั้ง 10 ข้อ · กดปุ่ม "เล่นทีละขั้น" เพื่อดูแอนิเมชันการกดเครื่องคิดเลข</p>
+
+  <div class="tabs" id="tabs">
+    <span class="tab-group-label">คำนวณ</span>
+    <button class="tab active" data-tab="b1">ข้อ 1</button>
+    <button class="tab" data-tab="b2">ข้อ 2</button>
+    <button class="tab" data-tab="b3">ข้อ 3</button>
+    <button class="tab" data-tab="b4">ข้อ 4 · CF</button>
+    <button class="tab" data-tab="b5">ข้อ 5</button>
+    <span class="tab-group-label" style="margin-left:12px;">ทฤษฎี</span>
+    <button class="tab" data-tab="b6">ข้อ 6</button>
+    <button class="tab" data-tab="b7">ข้อ 7</button>
+    <button class="tab" data-tab="b8">ข้อ 8</button>
+    <button class="tab" data-tab="b9">ข้อ 9</button>
+    <button class="tab" data-tab="b10">ข้อ 10</button>
+    <button class="tab" data-tab="summary" style="margin-left:12px;">สรุป</button>
+  </div>
+
+  <!-- ============== BOND 1 ============== -->
+  <div class="panel active" id="b1">
+    <h2>ข้อ 1 — หาราคา Bond (Premium)</h2>
+    <div class="badges">
+      <span class="badge badge-info">TVM Mode</span>
+      <span class="badge badge-info">หา PV</span>
+      <span class="badge badge-premium">Premium</span>
+    </div>
+
+    <div class="problem-box">
+      <div class="label">โจทย์</div>
+      <ul>
+        <li>• Par value = <b>1,000 บาท</b></li>
+        <li>• Coupon Rate = <b>4.25% ต่อปี</b></li>
+        <li>• จ่ายคูปอง <b>4 ครั้ง/ปี</b> (รายไตรมาส)</li>
+        <li>• อายุ <b>3 ปี</b></li>
+        <li>• YTM = <b>4% ต่อปี</b></li>
+        <li>• <b>ถาม: ราคาหุ้นกู้ = ?</b></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card-title">ตัวแปรที่ต้องป้อน</div>
+        <table class="var-table">
+          <tr><th>ตัวแปร</th><th>วิธีคำนวณ</th><th>ค่า</th></tr>
+          <tr><td class="var-name">N</td><td class="var-calc">3 × 4</td><td class="var-value">12</td></tr>
+          <tr><td class="var-name">I/Y</td><td class="var-calc">4 ÷ 4</td><td class="var-value">1</td></tr>
+          <tr><td class="var-name">PMT</td><td class="var-calc">1000 × 0.0425 ÷ 4</td><td class="var-value">10.625</td></tr>
+          <tr><td class="var-name">FV</td><td class="var-calc">Par value</td><td class="var-value">1,000</td></tr>
+          <tr><td class="var-name">PV</td><td class="var-calc">CPT</td><td class="var-value">?</td></tr>
+        </table>
+        <div class="tip"><b>เทคนิคจำ:</b> จ่ายปีละ <i>m</i> ครั้ง → หาร YTM ด้วย <i>m</i> และคูณปีด้วย <i>m</i> เพื่อแปลงทุกอย่างเป็น "ต่องวด"</div>
+      </div>
+
+      <div>
+        <div class="card-title">เครื่องคิดเลข TI BA II Plus</div>
+        <div class="calc" id="calc1">
+          <div class="calc-brand">TEXAS INSTRUMENTS · BA II PLUS</div>
+          <div class="calc-display"><span class="display-label" id="dlabel1"></span><span id="display1">0.00</span></div>
+          <div class="calc-row">
+            <button class="btn btn-cpt" data-key="CPT">CPT</button>
+            <button class="btn" data-key="N">N</button>
+            <button class="btn" data-key="I/Y">I/Y</button>
+            <button class="btn" data-key="PV">PV</button>
+            <button class="btn" data-key="PMT">PMT</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-second" data-key="2nd">2nd</button>
+            <button class="btn" data-key="FV">FV</button>
+            <button class="btn" data-key="CLR">CLR<br>TVM</button>
+            <button class="btn" data-key="+/-">+/-</button>
+            <button class="btn" data-key="ENTER">ENTER</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="7">7</button>
+            <button class="btn btn-num" data-key="8">8</button>
+            <button class="btn btn-num" data-key="9">9</button>
+            <button class="btn btn-op" data-key="÷">÷</button>
+            <button class="btn btn-op" data-key="×">×</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="4">4</button>
+            <button class="btn btn-num" data-key="5">5</button>
+            <button class="btn btn-num" data-key="6">6</button>
+            <button class="btn btn-num" data-key="-">-</button>
+            <button class="btn btn-op" data-key="+">+</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="1">1</button>
+            <button class="btn btn-num" data-key="2">2</button>
+            <button class="btn btn-num" data-key="3">3</button>
+            <button class="btn btn-num" data-key="0">0</button>
+            <button class="btn btn-op" data-key=".">.</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="action-btn primary" onclick="playSeq('b1')">▶ เล่นทีละขั้น</button>
+          <button class="action-btn" onclick="resetSeq('b1')">↺ รีเซ็ต</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title">ลำดับการกด</div>
+    <ol class="steps" id="steps-b1">
+      <li><b>ล้างค่าเก่า</b> · กด <span class="key">2nd</span> <span class="key">CLR TVM</span></li>
+      <li>ป้อน N · กด <span class="key">1</span> <span class="key">2</span> <span class="key">N</span></li>
+      <li>ป้อน I/Y · กด <span class="key">1</span> <span class="key">I/Y</span></li>
+      <li>ป้อน PMT · กด <span class="key">1</span> <span class="key">0</span> <span class="key">.</span> <span class="key">6</span> <span class="key">2</span> <span class="key">5</span> <span class="key">PMT</span></li>
+      <li>ป้อน FV · กด <span class="key">1</span> <span class="key">0</span> <span class="key">0</span> <span class="key">0</span> <span class="key">FV</span></li>
+      <li>คำนวณ PV · กด <span class="key">CPT</span> <span class="key">PV</span></li>
+    </ol>
+
+    <div class="result-box">
+      <div class="label">ผลลัพธ์</div>
+      <div class="value">PV = −1,007.03 บาท</div>
+      <div class="note">ติดลบเพราะเป็น "เงินที่จ่ายออกไปซื้อ" → ราคาจริง = <b>1,007.03 บาท</b></div>
+    </div>
+
+    <div class="explain">
+      <h3>ทำไมเป็น Premium?</h3>
+      <p>Coupon Rate (4.25%) <b>มากกว่า</b> YTM (4%) → หุ้นกู้นี้ "จ่ายดอกเบี้ยดีกว่าตลาดเรียกร้อง" → คนยอมจ่ายราคาแพงกว่า Par เพื่อซื้อ</p>
+    </div>
+  </div>
+
+  <!-- ============== BOND 2 ============== -->
+  <div class="panel" id="b2">
+    <h2>ข้อ 2 — หา YTM (Discount)</h2>
+    <div class="badges">
+      <span class="badge badge-info">TVM Mode</span>
+      <span class="badge badge-info">หา I/Y</span>
+      <span class="badge badge-discount">Discount</span>
+    </div>
+
+    <div class="problem-box">
+      <div class="label">โจทย์</div>
+      <ul>
+        <li>• Par value = <b>1,000 บาท</b></li>
+        <li>• Coupon Rate = <b>4% ต่อปี</b></li>
+        <li>• จ่าย <b>4 ครั้ง/ปี</b></li>
+        <li>• อายุ <b>6 ปี</b></li>
+        <li>• ราคาปัจจุบัน = <b>957.55 บาท</b></li>
+        <li>• <b>ถาม: YTM = ?</b></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card-title">ตัวแปรที่ต้องป้อน</div>
+        <table class="var-table">
+          <tr><th>ตัวแปร</th><th>วิธีคำนวณ</th><th>ค่า</th></tr>
+          <tr><td class="var-name">N</td><td class="var-calc">6 × 4</td><td class="var-value">24</td></tr>
+          <tr><td class="var-name">PV</td><td class="var-calc">−ราคาที่จ่าย</td><td class="var-value">−957.55</td></tr>
+          <tr><td class="var-name">PMT</td><td class="var-calc">1000 × 0.04 ÷ 4</td><td class="var-value">10</td></tr>
+          <tr><td class="var-name">FV</td><td class="var-calc">Par value</td><td class="var-value">1,000</td></tr>
+          <tr><td class="var-name">I/Y</td><td class="var-calc">CPT</td><td class="var-value">?</td></tr>
+        </table>
+        <div class="danger"><b>ระวัง!</b> PV ต้องใส่เป็นค่าลบ มิฉะนั้นเครื่องจะขึ้น <b>Error 5</b> (ไม่สามารถหา rate ได้)</div>
+      </div>
+
+      <div>
+        <div class="card-title">เครื่องคิดเลข</div>
+        <div class="calc" id="calc2">
+          <div class="calc-brand">TEXAS INSTRUMENTS · BA II PLUS</div>
+          <div class="calc-display"><span class="display-label" id="dlabel2"></span><span id="display2">0.00</span></div>
+          <div class="calc-row">
+            <button class="btn btn-cpt" data-key="CPT">CPT</button>
+            <button class="btn" data-key="N">N</button>
+            <button class="btn" data-key="I/Y">I/Y</button>
+            <button class="btn" data-key="PV">PV</button>
+            <button class="btn" data-key="PMT">PMT</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-second" data-key="2nd">2nd</button>
+            <button class="btn" data-key="FV">FV</button>
+            <button class="btn" data-key="CLR">CLR<br>TVM</button>
+            <button class="btn" data-key="+/-">+/-</button>
+            <button class="btn" data-key="ENTER">ENTER</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="7">7</button>
+            <button class="btn btn-num" data-key="8">8</button>
+            <button class="btn btn-num" data-key="9">9</button>
+            <button class="btn btn-op" data-key="÷">÷</button>
+            <button class="btn btn-op" data-key="×">×</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="4">4</button>
+            <button class="btn btn-num" data-key="5">5</button>
+            <button class="btn btn-num" data-key="6">6</button>
+            <button class="btn btn-num" data-key="-">-</button>
+            <button class="btn btn-op" data-key="+">+</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="1">1</button>
+            <button class="btn btn-num" data-key="2">2</button>
+            <button class="btn btn-num" data-key="3">3</button>
+            <button class="btn btn-num" data-key="0">0</button>
+            <button class="btn btn-op" data-key=".">.</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="action-btn primary" onclick="playSeq('b2')">▶ เล่นทีละขั้น</button>
+          <button class="action-btn" onclick="resetSeq('b2')">↺ รีเซ็ต</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title">ลำดับการกด</div>
+    <ol class="steps" id="steps-b2">
+      <li>ล้างค่าเก่า · <span class="key">2nd</span> <span class="key">CLR TVM</span></li>
+      <li>ป้อน N · <span class="key">2</span> <span class="key">4</span> <span class="key">N</span></li>
+      <li>ป้อน PV (ลบ!) · <span class="key">9</span> <span class="key">5</span> <span class="key">7</span> <span class="key">.</span> <span class="key">5</span> <span class="key">5</span> <span class="key">+/-</span> <span class="key">PV</span></li>
+      <li>ป้อน PMT · <span class="key">1</span> <span class="key">0</span> <span class="key">PMT</span></li>
+      <li>ป้อน FV · <span class="key">1</span> <span class="key">0</span> <span class="key">0</span> <span class="key">0</span> <span class="key">FV</span></li>
+      <li>คำนวณ I/Y · <span class="key">CPT</span> <span class="key">I/Y</span></li>
+    </ol>
+
+    <div class="result-box">
+      <div class="label">ผลลัพธ์</div>
+      <div class="value">I/Y = 1.20% (ต่องวด)</div>
+      <div class="note">× 4 = <b>YTM 4.82% ต่อปี</b></div>
+    </div>
+
+    <div class="explain">
+      <h3>ทำไมเป็น Discount?</h3>
+      <p>ราคา 957.55 น้อยกว่า Par 1,000 → Discount<br>เพราะ Coupon (4%) <b>น้อยกว่า</b> YTM (4.82%) → ตลาดเรียก rate สูงกว่าที่หุ้นกู้จ่าย → ราคาเลยต้องลดเพื่อชดเชย</p>
+    </div>
+  </div>
+
+  <!-- ============== BOND 3 ============== -->
+  <div class="panel" id="b3">
+    <h2>ข้อ 3 — หาราคา Bond (Discount, จ่าย 2 ครั้ง/ปี)</h2>
+    <div class="badges">
+      <span class="badge badge-info">TVM Mode</span>
+      <span class="badge badge-info">หา PV</span>
+      <span class="badge badge-discount">Discount</span>
+    </div>
+
+    <div class="problem-box">
+      <div class="label">โจทย์</div>
+      <ul>
+        <li>• Par = <b>1,000 บาท</b> · Coupon = <b>3.35%/ปี</b></li>
+        <li>• จ่าย <b>2 ครั้ง/ปี</b> · อายุ <b>3 ปี</b></li>
+        <li>• YTM = <b>4.15%/ปี</b></li>
+        <li>• <b>ถาม: ราคาหุ้นกู้ = ?</b></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card-title">ตัวแปรที่ต้องป้อน</div>
+        <table class="var-table">
+          <tr><th>ตัวแปร</th><th>วิธีคำนวณ</th><th>ค่า</th></tr>
+          <tr><td class="var-name">N</td><td class="var-calc">3 × 2</td><td class="var-value">6</td></tr>
+          <tr><td class="var-name">I/Y</td><td class="var-calc">4.15 ÷ 2</td><td class="var-value">2.075</td></tr>
+          <tr><td class="var-name">PMT</td><td class="var-calc">1000 × 0.0335 ÷ 2</td><td class="var-value">16.75</td></tr>
+          <tr><td class="var-name">FV</td><td class="var-calc">Par</td><td class="var-value">1,000</td></tr>
+        </table>
+      </div>
+
+      <div>
+        <div class="card-title">เครื่องคิดเลข</div>
+        <div class="calc" id="calc3">
+          <div class="calc-brand">TEXAS INSTRUMENTS · BA II PLUS</div>
+          <div class="calc-display"><span class="display-label" id="dlabel3"></span><span id="display3">0.00</span></div>
+          <div class="calc-row">
+            <button class="btn btn-cpt" data-key="CPT">CPT</button>
+            <button class="btn" data-key="N">N</button>
+            <button class="btn" data-key="I/Y">I/Y</button>
+            <button class="btn" data-key="PV">PV</button>
+            <button class="btn" data-key="PMT">PMT</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-second" data-key="2nd">2nd</button>
+            <button class="btn" data-key="FV">FV</button>
+            <button class="btn" data-key="CLR">CLR<br>TVM</button>
+            <button class="btn" data-key="+/-">+/-</button>
+            <button class="btn" data-key="ENTER">ENTER</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="7">7</button>
+            <button class="btn btn-num" data-key="8">8</button>
+            <button class="btn btn-num" data-key="9">9</button>
+            <button class="btn btn-op" data-key="÷">÷</button>
+            <button class="btn btn-op" data-key="×">×</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="4">4</button>
+            <button class="btn btn-num" data-key="5">5</button>
+            <button class="btn btn-num" data-key="6">6</button>
+            <button class="btn btn-num" data-key="-">-</button>
+            <button class="btn btn-op" data-key="+">+</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="1">1</button>
+            <button class="btn btn-num" data-key="2">2</button>
+            <button class="btn btn-num" data-key="3">3</button>
+            <button class="btn btn-num" data-key="0">0</button>
+            <button class="btn btn-op" data-key=".">.</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="action-btn primary" onclick="playSeq('b3')">▶ เล่นทีละขั้น</button>
+          <button class="action-btn" onclick="resetSeq('b3')">↺ รีเซ็ต</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title">ลำดับการกด</div>
+    <ol class="steps" id="steps-b3">
+      <li>ล้างค่าเก่า · <span class="key">2nd</span> <span class="key">CLR TVM</span></li>
+      <li>ป้อน N · <span class="key">6</span> <span class="key">N</span></li>
+      <li>ป้อน I/Y · <span class="key">2</span> <span class="key">.</span> <span class="key">0</span> <span class="key">7</span> <span class="key">5</span> <span class="key">I/Y</span></li>
+      <li>ป้อน PMT · <span class="key">1</span> <span class="key">6</span> <span class="key">.</span> <span class="key">7</span> <span class="key">5</span> <span class="key">PMT</span></li>
+      <li>ป้อน FV · <span class="key">1</span> <span class="key">0</span> <span class="key">0</span> <span class="key">0</span> <span class="key">FV</span></li>
+      <li>คำนวณ PV · <span class="key">CPT</span> <span class="key">PV</span></li>
+    </ol>
+
+    <div class="result-box">
+      <div class="label">ผลลัพธ์</div>
+      <div class="value">PV = −977.65 บาท</div>
+      <div class="note">ราคาจริง = <b>977.65 บาท</b> · Coupon (3.35%) &lt; YTM (4.15%) จึงเป็น Discount</div>
+    </div>
+  </div>
+
+  <!-- ============== BOND 4 — CF MODE ============== -->
+  <div class="panel" id="b4">
+    <h2>ข้อ 4 — Bond คูปองเปลี่ยนแต่ละช่วง (ใช้ CF + NPV)</h2>
+    <div class="badges">
+      <span class="badge badge-info">CF Mode</span>
+      <span class="badge badge-info">NPV</span>
+      <span class="badge badge-discount">Discount</span>
+    </div>
+
+    <div class="problem-box">
+      <div class="label">โจทย์</div>
+      <ul>
+        <li>• Par = <b>1,000</b> · อายุ <b>5 ปี</b> · จ่าย <b>2 ครั้ง/ปี</b> (รวม 10 งวด)</li>
+        <li>• ปีที่ <b>1-2</b>: Coupon = <b>6%/ปี</b></li>
+        <li>• ปีที่ <b>3-5</b>: Coupon = <b>7.5%/ปี</b></li>
+        <li>• YTM = <b>9%/ปี</b></li>
+        <li>• <b>ถาม: ราคาหุ้นกู้ = ?</b></li>
+      </ul>
+    </div>
+
+    <div class="danger"><b>คำเตือน:</b> เมื่อ PMT แต่ละงวด <b>ไม่เท่ากัน</b> ใช้ N/I/PMT/FV แบบเดิมไม่ได้! ต้องใช้ฟังก์ชัน <b>CF (Cash Flow) + NPV</b> แทน · และต้องแปลง YTM เป็น "ต่องวด" ด้วยมือก่อน เพราะ CF mode ตั้ง P/Y ไม่ได้</div>
+
+    <h3>ขั้นที่ 1: แตกกระแสเงินสดทุกงวด</h3>
+    <div class="grid-2">
+      <div>
+        <table class="var-table">
+          <tr><th>งวด</th><th>คำนวณ</th><th>CF (บาท)</th></tr>
+          <tr><td><b>1-4</b></td><td class="var-calc">1000 × 6% ÷ 2</td><td class="var-value">30</td></tr>
+          <tr><td><b>5-9</b></td><td class="var-calc">1000 × 7.5% ÷ 2</td><td class="var-value">37.5</td></tr>
+          <tr><td><b>10</b></td><td class="var-calc">37.5 + 1,000</td><td class="var-value">1,037.5</td></tr>
+        </table>
+        <div class="tip">งวดสุดท้ายต้องบวก Par value = 1,000 เข้าไปด้วย เพราะได้เงินต้นคืน</div>
+      </div>
+
+      <div>
+        <svg viewBox="0 0 360 220" style="width:100%; max-width:360px;">
+          <line x1="20" y1="180" x2="340" y2="180" stroke="#888" stroke-width="1"/>
+          <!-- Bars: periods 1-4 height 30 -->
+          <g>
+            <rect x="30" y="160" width="22" height="20" fill="#85b7eb" rx="2"/>
+            <rect x="58" y="160" width="22" height="20" fill="#85b7eb" rx="2"/>
+            <rect x="86" y="160" width="22" height="20" fill="#85b7eb" rx="2"/>
+            <rect x="114" y="160" width="22" height="20" fill="#85b7eb" rx="2"/>
+            <text x="73" y="200" font-size="10" fill="#185fa5" text-anchor="middle">งวด 1-4 · 30 บ.</text>
+          </g>
+          <!-- Bars: periods 5-9 height 37.5 -->
+          <g>
+            <rect x="146" y="155" width="22" height="25" fill="#5dcaa5" rx="2"/>
+            <rect x="174" y="155" width="22" height="25" fill="#5dcaa5" rx="2"/>
+            <rect x="202" y="155" width="22" height="25" fill="#5dcaa5" rx="2"/>
+            <rect x="230" y="155" width="22" height="25" fill="#5dcaa5" rx="2"/>
+            <rect x="258" y="155" width="22" height="25" fill="#5dcaa5" rx="2"/>
+            <text x="213" y="200" font-size="10" fill="#0f6e56" text-anchor="middle">งวด 5-9 · 37.5 บ.</text>
+          </g>
+          <!-- Period 10: huge bar 1037.5 -->
+          <g>
+            <rect x="290" y="40" width="30" height="140" fill="#d97757" rx="2"/>
+            <text x="305" y="32" font-size="10" fill="#993c1d" text-anchor="middle" font-weight="500">งวด 10</text>
+            <text x="305" y="22" font-size="10" fill="#993c1d" text-anchor="middle" font-weight="500">1,037.5</text>
+          </g>
+          <text x="180" y="215" font-size="11" fill="#5a5a5a" text-anchor="middle">กระแสเงินสด 10 งวด</text>
+        </svg>
+      </div>
+    </div>
+
+    <h3>ขั้นที่ 2: แปลง I ต่อปีเป็นต่องวด</h3>
+    <div class="formula">I per period = 9% ÷ 2 = <b>4.5%</b> ต่อ 6 เดือน</div>
+
+    <h3>ขั้นที่ 3: ป้อน CF ลงเครื่อง</h3>
+    <div class="grid-2">
+      <div>
+        <div class="cf-list">
+          <div>กด <b>CF</b> · <b>2nd CE|C</b> (ล้างค่าเก่า)</div>
+          <div>CF0 = 0 ENTER ↓</div>
+          <div>C01 = 30 ENTER ↓ · F01 = 4 ENTER ↓</div>
+          <div>C02 = 37.5 ENTER ↓ · F02 = 5 ENTER ↓</div>
+          <div>C03 = 1037.5 ENTER ↓ · F03 = 1 ENTER ↓</div>
+          <div>กด <b>NPV</b></div>
+          <div>I = 4.5 ENTER ↓</div>
+          <div>กด <b>CPT</b> เพื่อหา NPV</div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-title">ความหมายปุ่ม CF</div>
+          <ul style="font-size: 13px; line-height: 1.8; list-style: none;">
+            <li><b>CF0</b> · กระแสเงินสด ณ วันนี้</li>
+            <li><b>C01, C02...</b> · ค่า cash flow แต่ละกลุ่ม</li>
+            <li><b>F01, F02...</b> · ความถี่ (ติดต่อกันกี่งวด)</li>
+            <li><b>NPV</b> · มูลค่าปัจจุบันรวม</li>
+            <li><b>I</b> · อัตราคิดลดต่องวด</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-box">
+      <div class="label">ผลลัพธ์</div>
+      <div class="value">NPV = 913.75 บาท</div>
+      <div class="note">นี่คือ <b>ราคาหุ้นกู้</b> · ขาย Discount เพราะคูปองเฉลี่ย &lt; YTM</div>
+    </div>
+  </div>
+
+  <!-- ============== BOND 5 ============== -->
+  <div class="panel" id="b5">
+    <h2>ข้อ 5 — หา YTM (จ่ายรายไตรมาส)</h2>
+    <div class="badges">
+      <span class="badge badge-info">TVM Mode</span>
+      <span class="badge badge-info">หา I/Y</span>
+      <span class="badge badge-discount">Discount</span>
+    </div>
+
+    <div class="problem-box">
+      <div class="label">โจทย์</div>
+      <ul>
+        <li>• Par = <b>1,000</b> · Coupon = <b>6.15%/ปี</b></li>
+        <li>• จ่าย <b>4 ครั้ง/ปี</b> · อายุ <b>3 ปี</b></li>
+        <li>• ราคาปัจจุบัน = <b>950.80 บาท</b></li>
+        <li>• <b>ถาม: YTM = ?</b></li>
+      </ul>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card-title">ตัวแปรที่ต้องป้อน</div>
+        <table class="var-table">
+          <tr><th>ตัวแปร</th><th>วิธีคำนวณ</th><th>ค่า</th></tr>
+          <tr><td class="var-name">N</td><td class="var-calc">3 × 4</td><td class="var-value">12</td></tr>
+          <tr><td class="var-name">PV</td><td class="var-calc">−ราคา</td><td class="var-value">−950.80</td></tr>
+          <tr><td class="var-name">PMT</td><td class="var-calc">1000 × 0.0615 ÷ 4</td><td class="var-value">15.375</td></tr>
+          <tr><td class="var-name">FV</td><td class="var-calc">Par</td><td class="var-value">1,000</td></tr>
+        </table>
+      </div>
+
+      <div>
+        <div class="card-title">เครื่องคิดเลข</div>
+        <div class="calc" id="calc5">
+          <div class="calc-brand">TEXAS INSTRUMENTS · BA II PLUS</div>
+          <div class="calc-display"><span class="display-label" id="dlabel5"></span><span id="display5">0.00</span></div>
+          <div class="calc-row">
+            <button class="btn btn-cpt" data-key="CPT">CPT</button>
+            <button class="btn" data-key="N">N</button>
+            <button class="btn" data-key="I/Y">I/Y</button>
+            <button class="btn" data-key="PV">PV</button>
+            <button class="btn" data-key="PMT">PMT</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-second" data-key="2nd">2nd</button>
+            <button class="btn" data-key="FV">FV</button>
+            <button class="btn" data-key="CLR">CLR<br>TVM</button>
+            <button class="btn" data-key="+/-">+/-</button>
+            <button class="btn" data-key="ENTER">ENTER</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="7">7</button>
+            <button class="btn btn-num" data-key="8">8</button>
+            <button class="btn btn-num" data-key="9">9</button>
+            <button class="btn btn-op" data-key="÷">÷</button>
+            <button class="btn btn-op" data-key="×">×</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="4">4</button>
+            <button class="btn btn-num" data-key="5">5</button>
+            <button class="btn btn-num" data-key="6">6</button>
+            <button class="btn btn-num" data-key="-">-</button>
+            <button class="btn btn-op" data-key="+">+</button>
+          </div>
+          <div class="calc-row">
+            <button class="btn btn-num" data-key="1">1</button>
+            <button class="btn btn-num" data-key="2">2</button>
+            <button class="btn btn-num" data-key="3">3</button>
+            <button class="btn btn-num" data-key="0">0</button>
+            <button class="btn btn-op" data-key=".">.</button>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="action-btn primary" onclick="playSeq('b5')">▶ เล่นทีละขั้น</button>
+          <button class="action-btn" onclick="resetSeq('b5')">↺ รีเซ็ต</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-title">ลำดับการกด</div>
+    <ol class="steps" id="steps-b5">
+      <li>ล้างค่าเก่า · <span class="key">2nd</span> <span class="key">CLR TVM</span></li>
+      <li>ป้อน N · <span class="key">1</span> <span class="key">2</span> <span class="key">N</span></li>
+      <li>ป้อน PV (ลบ!) · <span class="key">9</span> <span class="key">5</span> <span class="key">0</span> <span class="key">.</span> <span class="key">8</span> <span class="key">+/-</span> <span class="key">PV</span></li>
+      <li>ป้อน PMT · <span class="key">1</span> <span class="key">5</span> <span class="key">.</span> <span class="key">3</span> <span class="key">7</span> <span class="key">5</span> <span class="key">PMT</span></li>
+      <li>ป้อน FV · <span class="key">1</span> <span class="key">0</span> <span class="key">0</span> <span class="key">0</span> <span class="key">FV</span></li>
+      <li>คำนวณ I/Y · <span class="key">CPT</span> <span class="key">I/Y</span></li>
+    </ol>
+
+    <div class="result-box">
+      <div class="label">ผลลัพธ์</div>
+      <div class="value">I/Y = 2.00% (ต่องวด)</div>
+      <div class="note">× 4 = <b>YTM 8.01% ต่อปี</b></div>
+    </div>
+  </div>
+
+  <!-- ============== BOND 6 ============== -->
+  <div class="panel" id="b6">
+    <h2>ข้อ 6 — Premium Bond ได้ผลตอบแทนอย่างไร?</h2>
+    <div class="theory-q">
+      หุ้นกู้มีราคา<b>สูงกว่า</b> Par นักลงทุนจะได้ผลตอบแทน (YTM) เป็นอย่างไร?
+    </div>
+    <ul class="choices">
+      <li><span class="choice-letter">ก</span><span>ได้ YTM = Coupon Rate</span></li>
+      <li><span class="choice-letter">ข</span><span>ได้ YTM <b>มากกว่า</b> Coupon Rate</span></li>
+      <li class="correct"><span class="choice-letter">✓ ค</span><span>ได้ YTM <b>น้อยกว่า</b> Coupon Rate</span></li>
+      <li><span class="choice-letter">ง</span><span>ได้ผลตอบแทนตาม government bond yield curve</span></li>
+      <li><span class="choice-letter">จ</span><span>ขึ้นกับการเปลี่ยนแปลงดอกเบี้ยและราคาขาย</span></li>
+    </ul>
+
+    <div class="seesaw">
+      <h3 style="margin-bottom: 16px;">ภาพ Premium vs Discount</h3>
+      <svg viewBox="0 0 600 240" style="width:100%; max-width:600px;">
+        <!-- Premium -->
+        <g>
+          <text x="100" y="20" font-size="14" font-weight="500" fill="#185fa5" text-anchor="middle">PREMIUM</text>
+          <rect x="40" y="40" width="120" height="160" fill="#e6f1fb" stroke="#378add" stroke-width="1.5" rx="4"/>
+          <line x1="40" y1="120" x2="160" y2="120" stroke="#378add" stroke-dasharray="4,4"/>
+          <text x="100" y="60" font-size="11" fill="#185fa5" text-anchor="middle">ราคา = 1,007</text>
+          <text x="100" y="135" font-size="11" fill="#5a5a5a" text-anchor="middle">Par = 1,000</text>
+          <text x="100" y="180" font-size="11" fill="#185fa5" text-anchor="middle" font-weight="500">Coupon &gt; YTM</text>
+          <text x="100" y="220" font-size="10" fill="#5a5a5a" text-anchor="middle">(จ่ายดอกเบี้ยดีกว่าตลาด)</text>
+        </g>
+
+        <!-- Par -->
+        <g>
+          <text x="300" y="20" font-size="14" font-weight="500" fill="#854f0b" text-anchor="middle">PAR</text>
+          <rect x="240" y="100" width="120" height="60" fill="#faeeda" stroke="#ef9f27" stroke-width="1.5" rx="4"/>
+          <text x="300" y="135" font-size="11" fill="#854f0b" text-anchor="middle">ราคา = Par = 1,000</text>
+          <text x="300" y="180" font-size="11" fill="#854f0b" text-anchor="middle" font-weight="500">Coupon = YTM</text>
+        </g>
+
+        <!-- Discount -->
+        <g>
+          <text x="500" y="20" font-size="14" font-weight="500" fill="#a32d2d" text-anchor="middle">DISCOUNT</text>
+          <rect x="440" y="80" width="120" height="120" fill="#fcebeb" stroke="#e24b4a" stroke-width="1.5" rx="4"/>
+          <line x1="440" y1="60" x2="560" y2="60" stroke="#e24b4a" stroke-dasharray="4,4"/>
+          <text x="500" y="55" font-size="11" fill="#5a5a5a" text-anchor="middle">Par = 1,000</text>
+          <text x="500" y="135" font-size="11" fill="#a32d2d" text-anchor="middle">ราคา = 957</text>
+          <text x="500" y="180" font-size="11" fill="#a32d2d" text-anchor="middle" font-weight="500">Coupon &lt; YTM</text>
+          <text x="500" y="220" font-size="10" fill="#5a5a5a" text-anchor="middle">(จ่ายดอกเบี้ยน้อยกว่าตลาด)</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="explain">
+      <h3>เหตุผล</h3>
+      <p>เมื่อราคา &gt; Par แสดงว่าหุ้นกู้ตัวนี้ <b>"จ่ายดอก"</b> ดีกว่าที่ตลาดเรียกร้อง (Coupon &gt; YTM)<br>คนเลยยอมจ่ายแพงเพื่อซื้อ → แต่ส่วนที่จ่ายเกิน Par นั้น <b>ได้คืนแค่ 1,000</b> ตอนครบกำหนด → ผลตอบแทนรวมแท้จริงเลยน้อยกว่า Coupon ที่เห็น</p>
+      <div class="formula" style="margin-top:8px;">Premium ⇒ Coupon &gt; YTM<br>Par     ⇒ Coupon = YTM<br>Discount ⇒ Coupon &lt; YTM</div>
+    </div>
+  </div>
+
+  <!-- ============== BOND 7 ============== -->
+  <div class="panel" id="b7">
+    <h2>ข้อ 7 — เงินเฟ้อลด ลงทุนแบบไหนดี?</h2>
+    <div class="theory-q">
+      ถ้าอัตราเงินเฟ้อผ่านจุดสูงสุดและกำลังลดลง ในฐานะนักลงทุนตราสารหนี้ ควรลงทุนแบบใดเพื่อผลตอบแทนที่ดี?
+    </div>
+    <ul class="choices">
+      <li><span class="choice-letter">ก</span><span>อันดับความน่าเชื่อถือสูง</span></li>
+      <li class="correct"><span class="choice-letter">✓ ข</span><span>ระยะเวลาครบกำหนด <b>ยาว</b></span></li>
+      <li><span class="choice-letter">ค</span><span>สภาพคล่องสูง</span></li>
+      <li><span class="choice-letter">ง</span><span>จ่ายคูปองหลายครั้งใน 1 ปี</span></li>
+      <li><span class="choice-letter">จ</span><span>Coupon Rate สูง</span></li>
+    </ul>
+
+    <div class="seesaw">
+      <h3 style="margin-bottom:12px;">ผลของดอกเบี้ยลด → ราคา Bond ขึ้น</h3>
+      <svg viewBox="0 0 500 200" style="width:100%; max-width:500px;">
+        <!-- Arrow down for rate -->
+        <g>
+          <text x="100" y="30" font-size="13" font-weight="500" fill="#0f6e56" text-anchor="middle">ดอกเบี้ย ↓</text>
+          <path d="M 100 50 L 100 130 L 80 110 M 100 130 L 120 110" stroke="#1d9e75" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <text x="100" y="170" font-size="11" fill="#5a5a5a" text-anchor="middle">เงินเฟ้อลด</text>
+        </g>
+        <!-- Arrow -->
+        <g>
+          <path d="M 160 100 L 220 100 L 210 90 M 220 100 L 210 110" stroke="#5a5a5a" stroke-width="2" fill="none"/>
+        </g>
+        <!-- Arrow up for price -->
+        <g>
+          <text x="290" y="30" font-size="13" font-weight="500" fill="#185fa5" text-anchor="middle">ราคา ↑</text>
+          <path d="M 290 130 L 290 50 L 270 70 M 290 50 L 310 70" stroke="#378add" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <text x="290" y="170" font-size="11" fill="#5a5a5a" text-anchor="middle">Bond Price ขึ้น</text>
+        </g>
+        <!-- Arrow -->
+        <g>
+          <path d="M 350 100 L 410 100 L 400 90 M 410 100 L 400 110" stroke="#5a5a5a" stroke-width="2" fill="none"/>
+        </g>
+        <!-- Long bond -->
+        <g>
+          <text x="450" y="30" font-size="13" font-weight="500" fill="#993c1d" text-anchor="middle">ระยะยาว</text>
+          <rect x="430" y="50" width="40" height="100" fill="#faece4" stroke="#d97757" stroke-width="2" rx="4"/>
+          <text x="450" y="170" font-size="11" fill="#5a5a5a" text-anchor="middle">Capital Gain มาก</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="explain">
+      <h3>เหตุผล: Duration ยิ่งยาว ราคายิ่งอ่อนไหว</h3>
+      <p>เงินเฟ้อลด → ดอกเบี้ยตลาด (YTM) มีแนวโน้มลด → ราคาตราสารหนี้<b>ขึ้น</b> (เคลื่อนไหวตรงข้ามกันเสมอ)<br>หุ้นกู้ <b>ระยะยาว</b> มี Duration สูง → ราคาขึ้น<b>มากกว่า</b>หุ้นกู้ระยะสั้น เมื่อดอกเบี้ยลดในระดับเดียวกัน → ได้ Capital Gain มากกว่า</p>
+    </div>
+  </div>
+
+  <!-- ============== BOND 8 ============== -->
+  <div class="panel" id="b8">
+    <h2>ข้อ 8 — ดอกเบี้ยจะขึ้น ลงทุนแบบไหนดี?</h2>
+    <div class="theory-q">
+      ถ้าคาดการณ์ว่าอัตราดอกเบี้ย<b>จะปรับขึ้น</b> ควรลงทุนในตราสารหนี้แบบใด?
+    </div>
+    <ul class="choices">
+      <li class="correct"><span class="choice-letter">✓ ก</span><span>ตราสารหนี้ระยะ <b>สั้น</b></span></li>
+      <li><span class="choice-letter">ข</span><span>อันดับความน่าเชื่อถือสูง</span></li>
+      <li><span class="choice-letter">ค</span><span>มีหลักประกัน (secured bond)</span></li>
+      <li><span class="choice-letter">ง</span><span>Coupon Rate สูง</span></li>
+      <li><span class="choice-letter">จ</span><span>ระยะยาว</span></li>
+    </ul>
+
+    <div class="explain">
+      <h3>เหตุผล: ขาดทุนน้อย + Reinvest เร็ว</h3>
+      <p>ดอกเบี้ยขึ้น → ราคาตราสารหนี้ลง<br>ระยะ<b>สั้น</b>ขาดทุนน้อยกว่าระยะยาว และครบกำหนดเร็ว → เอาเงินไปลงทุนใหม่ในอัตราที่สูงขึ้นได้เร็ว</p>
+      <div class="formula" style="margin-top:8px;">📌 กฎจำง่าย<br>ดอกเบี้ย <b>ลด</b> → ถือ <b>ยาว</b> (ข้อ 7)<br>ดอกเบี้ย <b>ขึ้น</b> → ถือ <b>สั้น</b> (ข้อ 8)</div>
+    </div>
+  </div>
+
+  <!-- ============== BOND 9 ============== -->
+  <div class="panel" id="b9">
+    <h2>ข้อ 9 — ตลาดและประเภทตราสารหนี้</h2>
+    <div class="theory-q">ข้อใดถูกต้อง?</div>
+
+    <table class="var-table">
+      <tr><th>ข้อ</th><th>คำกล่าว</th><th>ผลตรวจ</th></tr>
+      <tr style="background:var(--teal-soft);">
+        <td><b>I</b></td>
+        <td>Primary Market = ตลาดที่ผู้ออกขายตราสารหนี้ออกใหม่ให้นักลงทุนครั้งแรก</td>
+        <td style="color:var(--teal); font-weight:500;">✓ ถูก</td>
+      </tr>
+      <tr style="background:var(--red-soft);">
+        <td><b>II</b></td>
+        <td>การซื้อขายตราสารหนี้ในไทยส่วนใหญ่เกิดที่ Exchange Market</td>
+        <td style="color:var(--red); font-weight:500;">✗ ผิด<br><small>(ส่วนใหญ่อยู่ใน OTC)</small></td>
+      </tr>
+      <tr style="background:var(--teal-soft);">
+        <td><b>III</b></td>
+        <td>ตราสารหนี้ที่ออกโดยกระทรวงการคลัง อายุ &gt; 1 ปี = พันธบัตรรัฐบาล</td>
+        <td style="color:var(--teal); font-weight:500;">✓ ถูก</td>
+      </tr>
+      <tr style="background:var(--red-soft);">
+        <td><b>IV</b></td>
+        <td>ตราสารหนี้ที่ออกโดยกระทรวงการคลัง อายุ &gt; 1 ปี = ตั๋วเงินคลัง</td>
+        <td style="color:var(--red); font-weight:500;">✗ ผิด<br><small>(T-Bill อายุ ≤ 1 ปี)</small></td>
+      </tr>
+    </table>
+
+    <div class="result-box" style="margin-top:20px;">
+      <div class="label">คำตอบที่ถูก</div>
+      <div class="value">ค (ข้อ I และ III ถูก)</div>
+    </div>
+
+    <div class="explain">
+      <h3>คำศัพท์ที่ต้องจำ</h3>
+      <ul style="list-style:none; padding:0;">
+        <li>📅 <b>Treasury Bill (ตั๋วเงินคลัง)</b> = อายุ ≤ 1 ปี (สั้น)</li>
+        <li>📅 <b>Government Bond (พันธบัตรรัฐบาล)</b> = อายุ &gt; 1 ปี (ยาว)</li>
+        <li>🏪 <b>Primary Market</b> = ขายครั้งแรกจาก issuer</li>
+        <li>🔄 <b>Secondary Market</b> = ซื้อขายต่อระหว่างนักลงทุน (ส่วนใหญ่ของไทยอยู่ใน OTC)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============== BOND 10 ============== -->
+  <div class="panel" id="b10">
+    <h2>ข้อ 10 — ความเสี่ยงจากการเปลี่ยนแปลงดอกเบี้ย</h2>
+    <div class="theory-q">
+      เมื่ออัตราดอกเบี้ยตลาดเปลี่ยน นักลงทุนตราสารหนี้เผชิญความเสี่ยงประเภทใด?
+    </div>
+    <ul class="choices">
+      <li><span class="choice-letter">ก</span><span>ความเสี่ยงจากการลงทุนต่อ (Reinvestment risk)</span></li>
+      <li><span class="choice-letter">ข</span><span>ความเสี่ยงจากการผิดนัดชำระ (Default risk)</span></li>
+      <li><span class="choice-letter">ค</span><span>ความเสี่ยงจากอัตราดอกเบี้ย (Interest rate risk)</span></li>
+      <li><span class="choice-letter">ง</span><span>ก และ ข</span></li>
+      <li class="correct"><span class="choice-letter">✓ จ</span><span><b>ก และ ค</b> (Reinvestment + Interest rate risk)</span></li>
+    </ul>
+
+    <div class="grid-2">
+      <div class="card" style="background:var(--blue-soft); border-color:var(--blue);">
+        <div class="card-title" style="color:var(--blue);">Interest Rate Risk</div>
+        <p style="font-size:14px;">ดอกเบี้ย <b>ขึ้น</b> → ราคา Bond <b>ลง</b><br>→ ขาดทุนถ้าขายก่อนครบกำหนด</p>
+      </div>
+      <div class="card" style="background:var(--teal-soft); border-color:var(--teal);">
+        <div class="card-title" style="color:var(--teal);">Reinvestment Risk</div>
+        <p style="font-size:14px;">ดอกเบี้ย <b>ลง</b> → คูปองที่ได้รับ<br>เอาไปลงทุนต่อในอัตราต่ำกว่าเดิม</p>
+      </div>
+    </div>
+
+    <div class="tip">
+      <b>เกร็ดน่าสนใจ:</b> 2 ความเสี่ยงนี้<b>หักล้างกัน</b> — ดอกเบี้ยขึ้น เสีย Interest Rate Risk แต่ Reinvestment ดีขึ้น (ลงทุนต่อในอัตราสูงกว่า) และในทางกลับกัน · ทฤษฎีนี้คือพื้นฐานของ <b>Duration Matching / Immunization</b>
+    </div>
+
+    <div class="explain">
+      <p>ส่วน <b>Default Risk</b> (ข) คือความเสี่ยงที่<b>ผู้ออก</b>จะผิดนัดชำระ ไม่เกี่ยวข้องกับการเปลี่ยนแปลงดอกเบี้ยตลาด → ตัดทิ้ง</p>
+    </div>
+  </div>
+
+  <!-- ============== SUMMARY ============== -->
+  <div class="panel" id="summary">
+    <h2>สรุปทั้ง 10 ข้อ</h2>
+    <table class="var-table">
+      <tr><th>ข้อ</th><th>ประเภท</th><th>ใช้ฟังก์ชัน</th><th>คำตอบ</th></tr>
+      <tr><td><b>1</b></td><td>คำนวณ Bond Price</td><td>TVM (หา PV)</td><td class="var-value">1,007.03 บาท</td></tr>
+      <tr><td><b>2</b></td><td>คำนวณ YTM</td><td>TVM (หา I/Y)</td><td class="var-value">4.82%/ปี</td></tr>
+      <tr><td><b>3</b></td><td>คำนวณ Bond Price</td><td>TVM (หา PV)</td><td class="var-value">977.65 บาท</td></tr>
+      <tr><td><b>4</b></td><td>Bond คูปองไม่เท่ากัน</td><td>CF + NPV</td><td class="var-value">913.75 บาท</td></tr>
+      <tr><td><b>5</b></td><td>คำนวณ YTM</td><td>TVM (หา I/Y)</td><td class="var-value">8.01%/ปี</td></tr>
+      <tr><td><b>6</b></td><td>Premium → YTM &lt; Coupon</td><td>—</td><td class="var-value">ค</td></tr>
+      <tr><td><b>7</b></td><td>ดอกเบี้ยจะลด → ถือยาว</td><td>—</td><td class="var-value">ข</td></tr>
+      <tr><td><b>8</b></td><td>ดอกเบี้ยจะขึ้น → ถือสั้น</td><td>—</td><td class="var-value">ก</td></tr>
+      <tr><td><b>9</b></td><td>Primary Mkt + Gov Bond</td><td>—</td><td class="var-value">ค</td></tr>
+      <tr><td><b>10</b></td><td>Interest Rate + Reinvest Risk</td><td>—</td><td class="var-value">จ</td></tr>
+    </table>
+
+    <h2>สูตรและกฎทองที่ต้องจำ</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">การแปลงเป็น "ต่องวด"</div>
+        <div class="formula">N = ปี × m<br>I/Y = YTM ÷ m<br>PMT = Par × Coupon ÷ m<br>FV = Par<br>(m = ครั้งจ่ายต่อปี)</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">ความสัมพันธ์ราคา-YTM</div>
+        <div class="formula">Coupon &gt; YTM ⇒ Premium<br>Coupon = YTM ⇒ Par<br>Coupon &lt; YTM ⇒ Discount</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">ดอกเบี้ย vs ราคา Bond</div>
+        <p style="font-size:14px; line-height:1.7;">
+          <b>เคลื่อนไหวตรงข้ามกันเสมอ</b><br>
+          • ดอกเบี้ย ↑ → ราคา Bond ↓<br>
+          • ดอกเบี้ย ↓ → ราคา Bond ↑<br>
+          • ระยะยาว = อ่อนไหวมากกว่า
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">เลือกเครื่องมือคำนวณ</div>
+        <p style="font-size:14px; line-height:1.7;">
+          • PMT เท่ากันทุกงวด → <b>TVM</b><br>
+          (N, I/Y, PMT, FV, PV)<br>
+          • PMT ไม่เท่ากัน → <b>CF + NPV</b><br>
+          (CF0, C01/F01, C02/F02...)
+        </p>
+      </div>
+    </div>
+
+    <div class="tip" style="margin-top:24px;">
+      <b>Tips:</b> ก่อนเริ่มทุกข้อ <b>กด <span style="background:#fff;padding:2px 6px;border-radius:4px;">2nd CLR TVM</span> เสมอ</b> เพื่อล้างค่าเก่า · เวลาหา I/Y หรือ PV ในข้อที่ราคาขาย ต้องใส่ PV เป็น<b>ค่าลบ</b> มิฉะนั้น Error 5
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ============ Tab switching ============
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById(t.dataset.tab).classList.add('active');
+  }));
+
+  // ============ Calculator sequences ============
+  const SEQ = {
+    b1: [
+      { keys: ['2nd', 'CLR'], display: '0.00', label: '' },
+      { keys: ['1','2'], display: '12', label: '' },
+      { keys: ['N'], display: '12.00', label: 'N=' },
+      { keys: ['1'], display: '1', label: '' },
+      { keys: ['I/Y'], display: '1.00', label: 'I/Y=' },
+      { keys: ['1','0','.','6','2','5'], display: '10.625', label: '' },
+      { keys: ['PMT'], display: '10.63', label: 'PMT=' },
+      { keys: ['1','0','0','0'], display: '1000', label: '' },
+      { keys: ['FV'], display: '1,000.00', label: 'FV=' },
+      { keys: ['CPT', 'PV'], display: '-1,007.03', label: 'PV=' }
+    ],
+    b2: [
+      { keys: ['2nd', 'CLR'], display: '0.00', label: '' },
+      { keys: ['2','4'], display: '24', label: '' },
+      { keys: ['N'], display: '24.00', label: 'N=' },
+      { keys: ['9','5','7','.','5','5'], display: '957.55', label: '' },
+      { keys: ['+/-'], display: '-957.55', label: '' },
+      { keys: ['PV'], display: '-957.55', label: 'PV=' },
+      { keys: ['1','0'], display: '10', label: '' },
+      { keys: ['PMT'], display: '10.00', label: 'PMT=' },
+      { keys: ['1','0','0','0'], display: '1000', label: '' },
+      { keys: ['FV'], display: '1,000.00', label: 'FV=' },
+      { keys: ['CPT', 'I/Y'], display: '1.20', label: 'I/Y=' }
+    ],
+    b3: [
+      { keys: ['2nd', 'CLR'], display: '0.00', label: '' },
+      { keys: ['6'], display: '6', label: '' },
+      { keys: ['N'], display: '6.00', label: 'N=' },
+      { keys: ['2','.','0','7','5'], display: '2.075', label: '' },
+      { keys: ['I/Y'], display: '2.08', label: 'I/Y=' },
+      { keys: ['1','6','.','7','5'], display: '16.75', label: '' },
+      { keys: ['PMT'], display: '16.75', label: 'PMT=' },
+      { keys: ['1','0','0','0'], display: '1000', label: '' },
+      { keys: ['FV'], display: '1,000.00', label: 'FV=' },
+      { keys: ['CPT', 'PV'], display: '-977.65', label: 'PV=' }
+    ],
+    b5: [
+      { keys: ['2nd', 'CLR'], display: '0.00', label: '' },
+      { keys: ['1','2'], display: '12', label: '' },
+      { keys: ['N'], display: '12.00', label: 'N=' },
+      { keys: ['9','5','0','.','8'], display: '950.8', label: '' },
+      { keys: ['+/-'], display: '-950.80', label: '' },
+      { keys: ['PV'], display: '-950.80', label: 'PV=' },
+      { keys: ['1','5','.','3','7','5'], display: '15.375', label: '' },
+      { keys: ['PMT'], display: '15.38', label: 'PMT=' },
+      { keys: ['1','0','0','0'], display: '1000', label: '' },
+      { keys: ['FV'], display: '1,000.00', label: 'FV=' },
+      { keys: ['CPT', 'I/Y'], display: '2.00', label: 'I/Y=' }
+    ]
+  };
+
+  let activeAnims = {};
+
+  function pressBtn(calcId, key) {
+    return new Promise(resolve => {
+      const calc = document.getElementById(calcId);
+      if (!calc) return resolve();
+      const btn = calc.querySelector(`[data-key="${key}"]`);
+      if (btn) {
+        btn.classList.add('pressing');
+        setTimeout(() => {
+          btn.classList.remove('pressing');
+          resolve();
+        }, 240);
+      } else { resolve(); }
+    });
+  }
+
+  async function playSeq(id) {
+    const calcId = 'calc' + id.slice(1);
+    const display = document.getElementById('display' + id.slice(1));
+    const dlabel = document.getElementById('dlabel' + id.slice(1));
+    const stepsEl = document.getElementById('steps-' + id);
+    const seq = SEQ[id];
+    if (!seq) return;
+
+    resetSeq(id);
+    activeAnims[id] = true;
+    const stepLis = stepsEl ? stepsEl.querySelectorAll('li') : [];
+
+    for (let i = 0; i < seq.length; i++) {
+      if (!activeAnims[id]) return;
+      if (stepLis[i]) {
+        for (let s = 0; s < stepLis.length; s++) stepLis[s].classList.remove('current');
+        stepLis[i].classList.add('current');
+      }
+      for (const k of seq[i].keys) {
+        if (!activeAnims[id]) return;
+        await pressBtn(calcId, k);
+      }
+      if (display) display.textContent = seq[i].display;
+      if (dlabel) dlabel.textContent = seq[i].label;
+      await new Promise(r => setTimeout(r, 380));
+      if (stepLis[i]) {
+        stepLis[i].classList.remove('current');
+        stepLis[i].classList.add('done');
+      }
+    }
+  }
+
+  function resetSeq(id) {
+    activeAnims[id] = false;
+    const display = document.getElementById('display' + id.slice(1));
+    const dlabel = document.getElementById('dlabel' + id.slice(1));
+    if (display) display.textContent = '0.00';
+    if (dlabel) dlabel.textContent = '';
+    const stepsEl = document.getElementById('steps-' + id);
+    if (stepsEl) {
+      stepsEl.querySelectorAll('li').forEach(li => {
+        li.classList.remove('current'); li.classList.remove('done');
+      });
+    }
+  }
+</script>
+</body>
+</html>
