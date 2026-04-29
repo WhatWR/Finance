@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Ch10 Cash Flow Estimation Tutorial</title>
+<style>
+  :root {--bg:#faf9f5;--surface:#fff;--ink:#1a1a1a;--ink2:#5a5a5a;--ink3:#888;--accent:#d97757;--accent-soft:#faece4;--teal:#1d9e75;--teal-soft:#e1f5ee;--blue:#378add;--blue-soft:#e6f1fb;--red:#e24b4a;--red-soft:#fcebeb;--amber:#ef9f27;--amber-soft:#faeeda;--border:rgba(0,0,0,0.08);}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sukhumvit Set","Noto Sans Thai",sans-serif;}
+  body{background:var(--bg);color:var(--ink);line-height:1.6;padding:24px 16px 64px;min-height:100vh;}
+  .container{max-width:1100px;margin:0 auto;}
+  h1{font-size:28px;font-weight:500;margin-bottom:4px;}
+  h2{font-size:22px;font-weight:500;margin:24px 0 12px;}
+  .subtitle{color:var(--ink2);margin-bottom:24px;font-size:15px;}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+  .tab{padding:10px 14px;background:transparent;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px;color:var(--ink2);margin-bottom:-1px;}
+  .tab:hover{background:var(--surface);color:var(--ink);}
+  .tab.active{background:var(--surface);color:var(--accent);border-color:var(--border);border-bottom-color:var(--surface);font-weight:500;}
+  .panel{display:none;}.panel.active{display:block;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0;}
+  @media (max-width:900px){.grid-2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
+  .card-title{font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;font-weight:600;}
+  .problem-box{background:var(--accent-soft);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  .formula-box{background:var(--blue-soft);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;font-family:"Courier New",monospace;font-size:14px;}
+  .answer-box{background:var(--teal-soft);border-left:3px solid var(--teal);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  .info-box{background:var(--amber-soft);border-left:3px solid var(--amber);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;}
+  th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+  th{background:var(--bg);font-weight:600;color:var(--ink2);font-size:13px;text-transform:uppercase;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .key{display:inline-block;background:#2a2a2a;color:white;padding:4px 10px;border-radius:6px;font-size:13px;margin:2px;font-family:"Courier New",monospace;box-shadow:0 2px 0 rgba(0,0,0,0.4);}
+  .key.disp{background:#f0e8d8;color:#1a1a1a;font-weight:600;}
+  .step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--border);}
+  .step-num{background:var(--accent);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .step-content{flex:1;}
+  .nav-back{display:inline-block;padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--ink2);text-decoration:none;font-size:13px;margin-bottom:12px;}
+  .pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:500;}
+  .pill.green{background:var(--teal-soft);color:var(--teal);}.pill.red{background:var(--red-soft);color:var(--red);}.pill.blue{background:var(--blue-soft);color:var(--blue);}
+  .hl{background:#fff5cc;padding:1px 4px;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="study.html" class="nav-back">← กลับหน้ารวม</a>
+  <h1>Ch10 — Cash Flow Estimation</h1>
+  <p class="subtitle">Expected NPV, Salvage CF, NOPAT, NOWC, Sensitivity, Depreciation</p>
+
+  <div class="tabs">
+    <button class="tab active" data-target="b1">ข้อ 1 (Expected NPV)</button>
+    <button class="tab" data-target="b2">ข้อ 2 (Salvage CF)</button>
+    <button class="tab" data-target="b3">ข้อ 3 (NOPAT/OCF)</button>
+    <button class="tab" data-target="b4">ข้อ 4 (NOWC)</button>
+    <button class="tab" data-target="b5">ข้อ 5 (Sensitivity)</button>
+    <button class="tab" data-target="b6">ข้อ 6 (รายการ CF)</button>
+    <button class="tab" data-target="b7">ข้อ 7 (OCF)</button>
+    <button class="tab" data-target="b8">ข้อ 8 (T/F)</button>
+    <button class="tab" data-target="b9">ข้อ 9 (Depreciation)</button>
+  </div>
+
+  <!-- ============== B1: Expected NPV ============== -->
+  <div class="panel active" id="b1">
+    <h2>ข้อ 1 — Expected NPV, Variance, SD</h2>
+    <div class="problem-box">
+      <table>
+        <tr><th>กรณี</th><th>Worst</th><th>Most Likely</th><th>Best</th></tr>
+        <tr><td>Probability</td><td class="num">0.20</td><td class="num">0.45</td><td class="num">0.35</td></tr>
+        <tr><td>NPV (ล้านบาท)</td><td class="num">−60</td><td class="num">10</td><td class="num">30</td></tr>
+      </table>
+      จงหา Expected NPV, Variance, Standard Deviation
+    </div>
+
+    <div class="card">
+      <div class="card-title">สูตร</div>
+      <div class="formula-box">
+        E(NPV) = Σ Pᵢ × NPVᵢ<br>
+        Var(NPV) = Σ Pᵢ × (NPVᵢ − E(NPV))²<br>
+        SD(NPV) = √Var(NPV)
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 1 — Expected NPV</div>
+      <table>
+        <tr><th>กรณี</th><th>Prob.</th><th>NPV</th><th>Prob × NPV</th></tr>
+        <tr><td>Worst</td><td class="num">0.20</td><td class="num">−60</td><td class="num">−12.00</td></tr>
+        <tr><td>Most Likely</td><td class="num">0.45</td><td class="num">10</td><td class="num">4.50</td></tr>
+        <tr><td>Best</td><td class="num">0.35</td><td class="num">30</td><td class="num">10.50</td></tr>
+        <tr><td colspan="3"><strong>Expected NPV =</strong></td><td class="num"><strong class="hl">3.00</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 2 — Variance</div>
+      <table>
+        <tr><th>กรณี</th><th>NPV − E(NPV)</th><th>(NPV − E)²</th><th>Prob × (NPV − E)²</th></tr>
+        <tr><td>Worst</td><td class="num">−60 − 3 = −63</td><td class="num">3,969</td><td class="num">793.80</td></tr>
+        <tr><td>Most Likely</td><td class="num">10 − 3 = 7</td><td class="num">49</td><td class="num">22.05</td></tr>
+        <tr><td>Best</td><td class="num">30 − 3 = 27</td><td class="num">729</td><td class="num">255.15</td></tr>
+        <tr><td colspan="3"><strong>Variance =</strong></td><td class="num"><strong class="hl">1,071</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="answer-box">
+      <strong>คำตอบ:</strong><br>
+      1) Expected NPV = <strong>3.00 ล้านบาท</strong><br>
+      2) Variance of NPV = <strong>1,071 ล้านบาท²</strong><br>
+      3) Standard Deviation = √1,071 = <strong>32.73 ล้านบาท</strong>
+    </div>
+  </div>
+
+  <!-- ============== B2: Salvage Cash Flow ============== -->
+  <div class="panel" id="b2">
+    <h2>ข้อ 2 — Salvage Cash Flow (after-tax)</h2>
+    <div class="problem-box">
+      เครื่องจักรราคา 30 ล้านบาท · อายุการใช้งาน 5 ปี · ค่าเสื่อมแบบเส้นตรง · มูลค่าซากบัญชี 5 ล้านบาท · Tax 20%<br>
+      ขายซากตอนสิ้นปีที่ 4 ในราคา 14 ล้านบาท
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 1 — ค่าเสื่อมราคาต่อปี (Straight-line)</div>
+      <div class="formula-box">Dep/year = (ทุน − Salvage บัญชี) / อายุ = (30 − 5) / 5 = <span class="hl">5 ล้านบาท/ปี</span></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 2 — Book Value ที่สิ้นปีที่ 4</div>
+      <div class="formula-box">
+        ค่าเสื่อมสะสม = 5 × 4 = <span class="hl">20 ล้านบาท</span><br>
+        BV = ทุน − ค่าเสื่อมสะสม = 30 − 20 = <span class="hl">10 ล้านบาท</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 3 — Profit on Disposal และ Tax</div>
+      <div class="formula-box">
+        Profit = ราคาขาย − BV = 14 − 10 = <span class="hl">4 ล้านบาท</span><br>
+        Tax = 4 × 20% = <span class="hl">0.80 ล้านบาท</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 4 — Salvage CF (สุทธิจากภาษี)</div>
+      <div class="formula-box">
+        Salvage CF = ราคาขาย − Tax = 14 − 0.80 = <span class="hl">13.20 ล้านบาท</span>
+      </div>
+    </div>
+
+    <div class="answer-box">
+      <strong>คำตอบ:</strong><br>
+      Depreciation/year = <strong>5.00 ล้านบาท</strong> · ค่าเสื่อมสะสม = <strong>20.00</strong> · BV = <strong>10.00</strong><br>
+      Profit on disposal = <strong>4.00</strong> · Tax = <strong>0.80</strong><br>
+      <strong>Salvage cash flow = 13.20 ล้านบาท</strong>
+    </div>
+
+    <div class="info-box">
+      <strong>หลักจำ:</strong> ถ้าราคาขาย &gt; BV → มีกำไร → ต้องเสียภาษี<br>
+      ถ้าราคาขาย &lt; BV → ขาดทุน → ได้ Tax shield (Tax credit)<br>
+      Salvage CF = ราคาขาย − (ราคาขาย − BV) × Tax
+    </div>
+  </div>
+
+  <!-- ============== B3: NOPAT / OCF ============== -->
+  <div class="panel" id="b3">
+    <h2>ข้อ 3 — NOPAT และ Net Operating Cash Flow</h2>
+    <div class="problem-box">
+      <table>
+        <tr><td>Sales</td><td class="num">1,500</td></tr>
+        <tr><td>− COGS</td><td class="num">−900</td></tr>
+        <tr><td>Gross Profit</td><td class="num">600</td></tr>
+        <tr><td>− Selling expenses</td><td class="num">−120</td></tr>
+        <tr><td>− Depreciation</td><td class="num">−180</td></tr>
+        <tr><td><strong>EBIT</strong></td><td class="num"><strong>300</strong></td></tr>
+        <tr><td>− Interest</td><td class="num">−120</td></tr>
+        <tr><td>EBT</td><td class="num">180</td></tr>
+        <tr><td>− Tax (20%)</td><td class="num">−36</td></tr>
+        <tr><td>Net Profits</td><td class="num">144</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">หลักการ — Project Cash Flow ไม่นับ Interest</div>
+      <div class="info-box">
+        Cost of debt (Interest) ถูกรวมไว้ใน WACC แล้ว → ไม่นำมาคิดใน CF อีก เพื่อไม่ให้นับซ้ำ<br>
+        ดังนั้นเริ่มจาก <strong>EBIT</strong> แล้วหักภาษีเสมือนไม่มีดอกเบี้ย → ได้ <strong>NOPAT</strong>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">สูตร</div>
+      <div class="formula-box">
+        NOPAT = EBIT × (1 − Tax)<br>
+        OCF = NOPAT + Depreciation<br>
+        <span style="color:var(--ink3);">(บวก Dep. กลับเพราะเป็น non-cash)</span>
+      </div>
+    </div>
+
+    <div class="answer-box">
+      <strong>คำตอบ:</strong><br>
+      NOPAT = 300 × (1 − 0.20) = <strong class="hl">240 ล้านบาท</strong><br>
+      Net Operating Cash Flow = 240 + 180 = <strong class="hl">420 ล้านบาท</strong>
+    </div>
+  </div>
+
+  <!-- ============== B4: NOWC ============== -->
+  <div class="panel" id="b4">
+    <h2>ข้อ 4 — กระแสเงินสดจาก NOWC</h2>
+    <div class="problem-box">
+      ยอดขาย: ปี 1 = 20, ปี 2 = 30, ปี 3 = 40 ล้านบาท<br>
+      NOWC = 20% ของยอดขาย <strong>ปีถัดไป</strong> (ลงทุนล่วงหน้า) · เงิน NOWC คืนเมื่อสิ้นโครงการ<br>
+      จงหา CF จาก NOWC ตั้งแต่ปี 0 ถึงปี 3
+    </div>
+
+    <div class="card">
+      <div class="card-title">หลักการ NOWC (Net Operating Working Capital)</div>
+      <div class="info-box">
+        ปี 0: ลงทุน NOWC₀ = 20% × Sales₁ → CF₀ = −NOWC₀<br>
+        ปี t (t ≥ 1): ปรับ NOWC ก่อนยอดขายปีถัดไป → CFₜ = −(NOWCₜ − NOWCₜ₋₁)<br>
+        ปีสุดท้าย: NOWC = 0 → ได้คืนเต็มจำนวน
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">การคำนวณ</div>
+      <table>
+        <tr><th>ปี</th><th>Sales</th><th>NOWC</th><th>ΔNOWC</th><th>CF</th></tr>
+        <tr><td class="num">0</td><td class="num">0</td><td class="num">20%×20 = 4</td><td class="num">+4</td><td class="num"><strong class="hl">−4</strong></td></tr>
+        <tr><td class="num">1</td><td class="num">20</td><td class="num">20%×30 = 6</td><td class="num">+2</td><td class="num"><strong class="hl">−2</strong></td></tr>
+        <tr><td class="num">2</td><td class="num">30</td><td class="num">20%×40 = 8</td><td class="num">+2</td><td class="num"><strong class="hl">−2</strong></td></tr>
+        <tr><td class="num">3</td><td class="num">40</td><td class="num">0 (สิ้นโครงการ)</td><td class="num">−8</td><td class="num"><strong class="hl">+8</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="answer-box">
+      <strong>กระแสเงินสด NOWC:</strong> ปี 0 = −4 · ปี 1 = −2 · ปี 2 = −2 · ปี 3 = <strong>+8 ล้านบาท</strong><br>
+      (รวม CF = 0 → เงินที่ลงทุนได้คืนหมด)
+    </div>
+  </div>
+
+  <!-- ============== B5: Sensitivity ============== -->
+  <div class="panel" id="b5">
+    <h2>ข้อ 5 — Sensitivity Analysis ของ NPV ต่อ WACC</h2>
+    <div class="problem-box">
+      <table>
+        <tr><th>ปี</th><td>0</td><td>1</td><td>2</td><td>3</td></tr>
+        <tr><th>CF (ล้านบาท)</th><td class="num">−100</td><td class="num">30</td><td class="num">40</td><td class="num">55</td></tr>
+      </table>
+      ทดสอบ NPV ที่ WACC = 8%, 10%, 12%
+    </div>
+
+    <div class="card">
+      <div class="card-title">วิธี TI BA II Plus (CF Worksheet)</div>
+      <div class="step"><div class="step-num">1</div><div class="step-content">กด <span class="key">CF</span> → CF0 = −100 → C01 = 30, F01 = 1 → C02 = 40, F02 = 1 → C03 = 55, F03 = 1</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content">กด <span class="key">NPV</span> → ใส่ I = 8 → <span class="key">↓</span> <span class="key">CPT</span> → ได้ NPV</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content">เปลี่ยนเฉพาะ I (เป็น 10, 12) แล้ว CPT ใหม่</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ผลลัพธ์</div>
+      <table>
+        <tr><th>WACC</th><th>NPV (ล้านบาท)</th><th>ตัดสินใจ</th></tr>
+        <tr><td class="num">8%</td><td class="num"><strong>5.73</strong></td><td><span class="pill green">รับโครงการ</span></td></tr>
+        <tr><td class="num">10%</td><td class="num"><strong>1.65</strong></td><td><span class="pill green">รับโครงการ</span></td></tr>
+        <tr><td class="num">12%</td><td class="num"><strong>−2.18</strong></td><td><span class="pill red">ไม่รับ</span></td></tr>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <strong>การตีความ:</strong> NPV ลดลงเมื่อ WACC เพิ่มขึ้น (สัมพันธ์เชิงผกผัน)<br>
+      จุดที่ NPV = 0 คือ <strong>IRR</strong> → IRR อยู่ระหว่าง 10% ถึง 12% (≈ 10.86%)<br>
+      ถ้าต้นทุนเงินทุนเกิน IRR → ปฏิเสธโครงการ
+    </div>
+  </div>
+
+  <!-- ============== B6: รายการ CF ============== -->
+  <div class="panel" id="b6">
+    <h2>ข้อ 6 — รายการใดต้องคิดเป็น CF ของโครงการ</h2>
+
+    <div class="card">
+      <div class="card-title">วิเคราะห์รายข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>รายการ</th><th>คำตอบ</th><th>เหตุผล</th></tr>
+        <tr>
+          <td>ก</td>
+          <td>ต้นทุนทางการเงินจากการกู้ธนาคาร</td>
+          <td><span class="pill red">ไม่ใช่</span></td>
+          <td>Interest อยู่ใน WACC แล้ว — ห้ามนับซ้ำ</td>
+        </tr>
+        <tr>
+          <td>ข</td>
+          <td>เงินปันผลที่จ่ายจากกำไร</td>
+          <td><span class="pill red">ไม่ใช่</span></td>
+          <td>Cost of equity อยู่ใน WACC แล้ว — ห้ามนับซ้ำ</td>
+        </tr>
+        <tr>
+          <td>ค</td>
+          <td>ต้นทุนที่ดินซึ่งบริษัทมีอยู่ก่อน</td>
+          <td><span class="pill red">ไม่ใช่</span></td>
+          <td><strong>Sunk cost</strong> — เกิดขึ้นแล้ว ไม่ว่าจะทำโครงการหรือไม่</td>
+        </tr>
+        <tr>
+          <td>ง</td>
+          <td>ยอดขายของสินค้ารุ่นก่อนที่ลดลง</td>
+          <td><span class="pill green">ใช่</span></td>
+          <td><strong>Cannibalization</strong> = opportunity cost → ต้องนับ (กระทบ CFO ผ่าน Inventory ลดลง)</td>
+        </tr>
+        <tr>
+          <td>จ</td>
+          <td>ค่าเสื่อมราคา</td>
+          <td><span class="pill green">ใช่ (ทางอ้อม)</span></td>
+          <td>เป็น Non-cash แต่ใช้คำนวณภาษี → บวกกลับเข้า OCF</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="answer-box">
+      <strong>ที่ต้องคิดเป็น CF ของโครงการ: ข้อ ง และ จ</strong><br>
+      (ก, ข ถูก WACC ดูดซับ · ค เป็น sunk cost)
+    </div>
+
+    <div class="info-box">
+      <strong>หลักการสำคัญ:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>Incremental CF เท่านั้น</strong> — เฉพาะ CF ที่เปลี่ยนแปลงเพราะรับโครงการ</li>
+        <li>ห้ามคิด <strong>Sunk costs</strong> (ค่าใช้จ่ายในอดีต)</li>
+        <li>ต้องคิด <strong>Opportunity costs</strong> (สิ่งที่เสียไปจากการเลือกทำโครงการ)</li>
+        <li>ต้องคิด <strong>Externalities</strong> เช่น cannibalization</li>
+        <li>ห้ามคิด financing cost (Interest, Dividend) เพราะอยู่ใน WACC แล้ว</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============== B7: OCF ============== -->
+  <div class="panel" id="b7">
+    <h2>ข้อ 7 — Net Operating Cash Flow จาก Income Statement</h2>
+    <div class="problem-box">
+      Sales (Unit) = 1,000,000 · Sales Price = 20 · Sales Cost (Variable) = 15<br>
+      Sales &amp; admin = 500,000 · Depreciation = 1,500,000 · Interest = 1,000,000 · Tax = 20%
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 1 — สร้าง Income Statement</div>
+      <table>
+        <tr><td>Revenue = 1,000,000 × 20</td><td class="num">20,000,000</td></tr>
+        <tr><td>− Variable cost = 1,000,000 × 15</td><td class="num">−15,000,000</td></tr>
+        <tr><td>Gross profit</td><td class="num">5,000,000</td></tr>
+        <tr><td>− Sales &amp; admin</td><td class="num">−500,000</td></tr>
+        <tr><td>− Depreciation</td><td class="num">−1,500,000</td></tr>
+        <tr><td><strong>EBIT</strong></td><td class="num"><strong>3,000,000</strong></td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 2 — NOPAT และ OCF (ไม่หัก Interest)</div>
+      <div class="formula-box">
+        NOPAT = EBIT × (1 − Tax) = 3,000,000 × 0.80 = <span class="hl">2,400,000</span><br>
+        OCF = NOPAT + Dep = 2,400,000 + 1,500,000 = <span class="hl">3,900,000</span>
+      </div>
+    </div>
+
+    <div class="answer-box">
+      <strong>Net Operating Cash Flow = 3,900,000 บาท</strong>
+    </div>
+
+    <div class="info-box">
+      <strong>เตือน:</strong> Interest = 1,000,000 ในโจทย์ ไม่ต้องนำมาคิด เพราะอยู่ใน WACC แล้ว<br>
+      ถ้าเผลอคิด Interest จะได้ Tax = (3,000,000 − 1,000,000) × 0.20 = 400,000 → คำนวณผิด
+    </div>
+  </div>
+
+  <!-- ============== B8: T/F ============== -->
+  <div class="panel" id="b8">
+    <h2>ข้อ 8 — ข้อใดถูกต้อง</h2>
+
+    <div class="card">
+      <div class="card-title">วิเคราะห์รายข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>คำตอบ</th><th>เหตุผล</th></tr>
+        <tr>
+          <td>1) CF จะเพิ่มถ้า A/P น้อยลง</td>
+          <td><span class="pill red">ผิด</span></td>
+          <td>A/P ลดลง = ต้องจ่ายเงินสดให้ supplier มากขึ้น → CF <strong>ลดลง</strong></td>
+        </tr>
+        <tr>
+          <td>2) เงินขายสินทรัพย์ &gt; BV → กำไร ต้องเสียภาษี</td>
+          <td><span class="pill green">ถูก</span></td>
+          <td>หลักการ Salvage CF: Profit = Sale − BV → Tax = Profit × t</td>
+        </tr>
+        <tr>
+          <td>3) Dep. เป็น non-cash → ลบออกจาก NOPAT</td>
+          <td><span class="pill red">ผิด</span></td>
+          <td>ต้อง <strong>บวกกลับ</strong> เข้า NOPAT (เพราะถูกหักไปแล้วใน EBIT แต่ไม่ได้จ่ายเงินจริง)</td>
+        </tr>
+        <tr>
+          <td>4) Dividend ต้องคิดใน CF ของโครงการ</td>
+          <td><span class="pill red">ผิด</span></td>
+          <td>Cost of equity อยู่ใน WACC แล้ว — ห้ามนับซ้ำ</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="answer-box"><strong>ตอบ: ข้อ 2 ถูกต้องเพียงข้อเดียว</strong></div>
+
+    <div class="info-box">
+      <strong>กับดักที่พบบ่อย:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li>Working Capital ↑ = ใช้เงินมากขึ้น → CF ลด · WC ↓ = ปลดปล่อยเงิน → CF เพิ่ม</li>
+        <li>Depreciation ลด taxable income → ประหยัดภาษี = "Tax shield"</li>
+        <li>Financing CF (Int., Div.) — ห้ามนับใน Project CF เด็ดขาด</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ============== B9: Depreciation ============== -->
+  <div class="panel" id="b9">
+    <h2>ข้อ 9 — ค่าเสื่อมราคา (รวมค่าขนส่ง+ติดตั้ง)</h2>
+    <div class="problem-box">
+      ราคาเครื่องจักร = 1,500,000 · ค่าขนส่ง = 300,000 · ค่าติดตั้ง = 200,000<br>
+      Salvage บัญชี = 100,000 · อายุ = 5 ปี · วิธีเส้นตรง
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 1 — Capital Expenditure (ทุนรวม)</div>
+      <div class="formula-box">
+        Cap. Ex. = ราคาเครื่อง + ค่าขนส่ง + ค่าติดตั้ง<br>
+        = 1,500,000 + 300,000 + 200,000<br>
+        = <span class="hl">2,000,000 บาท</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นที่ 2 — Depreciation (Straight-line)</div>
+      <div class="formula-box">
+        Dep/year = (Cap. Ex. − Salvage) / อายุ<br>
+        = (2,000,000 − 100,000) / 5<br>
+        = 1,900,000 / 5<br>
+        = <span class="hl">380,000 บาท/ปี</span>
+      </div>
+    </div>
+
+    <div class="answer-box">
+      <strong>ค่าเสื่อมราคา = 380,000 บาท/ปี</strong>
+    </div>
+
+    <div class="info-box">
+      <strong>หลักจำ — ทุนของเครื่องจักร:</strong><br>
+      Cap. Ex. = ราคาซื้อ + ค่าขนส่ง + ค่าติดตั้ง + ค่าใช้จ่ายอื่น ๆ ที่จำเป็นเพื่อให้เครื่องพร้อมใช้งาน<br>
+      <em>ไม่รวม</em> ค่าซ่อมบำรุงประจำหรือดอกเบี้ยกู้
+    </div>
+  </div>
+
+  <!-- ============== Summary ============== -->
+  <div class="card" style="margin-top:32px;background:var(--accent-soft);border:none;">
+    <div class="card-title">สรุปสูตร Cash Flow Estimation</div>
+    <div class="formula-box" style="background:var(--surface);">
+      <strong>Project CF (3 ส่วน):</strong><br>
+      ① Initial Outlay = Cap. Ex. + ΔNOWC₀ <br>
+      ② Operating CF = NOPAT + Depreciation = EBIT(1−t) + Dep <br>
+      ③ Terminal CF = Salvage − Tax×(Salvage − BV) + การคืน NOWC<br><br>
+      <strong>หลักสำคัญ:</strong> เริ่มจาก EBIT (ไม่ใช้ Net Income) เพื่อไม่นับ Interest ซ้ำกับ WACC
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.target).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
