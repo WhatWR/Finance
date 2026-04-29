@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Ch8 WACC Tutorial — เครื่องคิดเลขการเงิน Interactive</title>
+<style>
+  :root {--bg:#faf9f5;--surface:#fff;--ink:#1a1a1a;--ink2:#5a5a5a;--ink3:#888;--accent:#d97757;--accent-soft:#faece4;--teal:#1d9e75;--teal-soft:#e1f5ee;--blue:#378add;--blue-soft:#e6f1fb;--red:#e24b4a;--red-soft:#fcebeb;--amber:#ef9f27;--amber-soft:#faeeda;--border:rgba(0,0,0,0.08);}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sukhumvit Set","Noto Sans Thai",sans-serif;}
+  body{background:var(--bg);color:var(--ink);line-height:1.6;padding:24px 16px 64px;min-height:100vh;}
+  .container{max-width:1100px;margin:0 auto;}
+  h1{font-size:28px;font-weight:500;margin-bottom:4px;}
+  h2{font-size:22px;font-weight:500;margin:24px 0 12px;}
+  .subtitle{color:var(--ink2);margin-bottom:24px;font-size:15px;}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+  .tab{padding:10px 14px;background:transparent;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px;color:var(--ink2);margin-bottom:-1px;}
+  .tab:hover{background:var(--surface);color:var(--ink);}
+  .tab.active{background:var(--surface);color:var(--accent);border-color:var(--border);border-bottom-color:var(--surface);font-weight:500;}
+  .panel{display:none;}.panel.active{display:block;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0;}
+  @media (max-width:900px){.grid-2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
+  .card-title{font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;font-weight:600;}
+  .problem-box{background:var(--accent-soft);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  .formula-box{background:var(--blue-soft);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;font-family:"Courier New",monospace;font-size:14px;}
+  .answer-box{background:var(--teal-soft);border-left:3px solid var(--teal);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  .info-box{background:var(--amber-soft);border-left:3px solid var(--amber);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;}
+  th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+  th{background:var(--bg);font-weight:600;color:var(--ink2);font-size:13px;text-transform:uppercase;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .key{display:inline-block;background:#2a2a2a;color:white;padding:4px 10px;border-radius:6px;font-size:13px;margin:2px;font-family:"Courier New",monospace;box-shadow:0 2px 0 rgba(0,0,0,0.4);}
+  .key.disp{background:#f0e8d8;color:#1a1a1a;font-weight:600;}
+  .step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--border);}
+  .step-num{background:var(--accent);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .step-content{flex:1;}
+  .nav-back{display:inline-block;padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--ink2);text-decoration:none;font-size:13px;margin-bottom:12px;}
+  .pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:500;}
+  .pill.green{background:var(--teal-soft);color:var(--teal);}.pill.red{background:var(--red-soft);color:var(--red);}.pill.blue{background:var(--blue-soft);color:var(--blue);}
+  .hl{background:#fff5cc;padding:1px 4px;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="All_Chapters_Tutorial.html" class="nav-back">← กลับหน้ารวม</a>
+  <h1>Ch8 — Cost of Capital (WACC)</h1>
+  <p class="subtitle">Cost of Debt, Cost of Equity (CAPM/DDM), Cost of Preferred, WACC, Floatation</p>
+
+  <div class="tabs">
+    <button class="tab active" data-target="w1">ข้อ 1</button>
+    <button class="tab" data-target="w2">ข้อ 2</button>
+    <button class="tab" data-target="w3">ข้อ 3</button>
+    <button class="tab" data-target="w4">ข้อ 4</button>
+    <button class="tab" data-target="w5">ข้อ 5</button>
+    <button class="tab" data-target="w6">ข้อ 6</button>
+    <button class="tab" data-target="w7">ข้อ 7</button>
+    <button class="tab" data-target="w8">ข้อ 8</button>
+    <button class="tab" data-target="w9">ข้อ 9</button>
+    <button class="tab" data-target="w10">ข้อ 10</button>
+  </div>
+
+  <!-- ============== W1: Full WACC Calculation ============== -->
+  <div class="panel active" id="w1">
+    <h2>ข้อ 1 — บริษัท Leo: WACC ครบทุกขั้นตอน</h2>
+    <div class="problem-box">
+      ราคาหุ้น 35, จำนวนหุ้น 150 ล้าน, IB Debt 3,400 ล้าน, Total Liab 4,600, Equity 3,300<br>
+      β=1.55, t=20%, Rf=3.45%, MRP=6.35%, Yield Spread=2.5%
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1) Market Capitalization (E)</div>
+        <div class="formula-box">E = Price × Shares = 35 × 150 = <span class="hl">5,250 ล้าน</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">2) Interest-Bearing Debt (L)</div>
+        <div class="formula-box">L = <span class="hl">3,400 ล้าน</span> (ไม่ใช้ Total Liab)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">3) Firm Value</div>
+        <div class="formula-box">A = L + E = 3,400 + 5,250 = <span class="hl">8,650 ล้าน</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">4) Cost of Debt (Rd)</div>
+        <div class="formula-box">Rd = Rf + Spread = 3.45% + 2.5% = <span class="hl">5.95%</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">5) After-tax Cost of Debt</div>
+        <div class="formula-box">Rd(1−t) = 0.0595 × 0.80 = <span class="hl">4.76%</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">6) Cost of Equity (CAPM)</div>
+        <div class="formula-box">Re = Rf + β·MRP<br>= 0.0345 + 1.55·0.0635 = <span class="hl">13.29%</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">7) Wd, We</div>
+        <div class="formula-box">
+          Wd = 3,400 / 8,650 = 0.3931<br>
+          We = 5,250 / 8,650 = 0.6069
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">8) WACC</div>
+        <div class="formula-box">
+          WACC = Wd·Rd(1−t) + We·Re<br>
+          = 0.3931·0.0476 + 0.6069·0.13293<br>
+          = 0.01871 + 0.08068<br>
+          = <span class="hl">9.94%</span>
+        </div>
+      </div>
+    </div>
+    <div class="answer-box"><strong>WACC = <span class="pill green">9.94% ต่อปี</span></strong></div>
+  </div>
+
+  <!-- ============== W2: Cost of New Equity with Floatation ============== -->
+  <div class="panel" id="w2">
+    <h2>ข้อ 2 — บริษัทสิงห์: Cost of New Equity + Floatation</h2>
+    <div class="problem-box">
+      ราคา underwritten = 40 บาท | f = 1% | D0 = 3.2 (XD แล้ว) | ROE = 14% | Payout = 65%
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1) g</div>
+        <div class="formula-box">
+          RR = 1 − 0.65 = 0.35<br>
+          g = ROE × RR = 0.14 × 0.35 = <span class="hl">4.9%</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">2) D1</div>
+        <div class="formula-box">D1 = D0(1+g) = 3.2 × 1.049 = <span class="hl">3.3568</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">3) Cost of Equity (XD แล้ว → ใช้ Pxd0(1−f) เป็นเงินสุทธิที่ได้)</div>
+      <div class="formula-box">
+        Re = D1 / [Pxd0·(1−f)] + g<br>
+        = 3.3568 / [40 × 0.99] + 0.049<br>
+        = 3.3568 / 39.60 + 0.049<br>
+        = 0.08477 + 0.049 = <span class="hl">13.38%</span>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>ทำไมต้องคิด Floatation?</strong> เพราะบริษัทไม่ได้รับเต็ม 40 บาท — เสีย 1% เป็นค่าธรรมเนียม → เงินจริงที่ได้คือ 39.60 บาทต่อหุ้น แต่ต้องจ่ายปันผลตามมูลค่าจริง ผลทำให้ "ต้นทุนแพงขึ้น"
+    </div>
+    <div class="answer-box"><strong>Re = <span class="pill green">13.38% ต่อปี</span></strong></div>
+  </div>
+
+  <!-- ============== W3: Capex threshold ============== -->
+  <div class="panel" id="w3">
+    <h2>ข้อ 3 — บริษัทช้างเผือก: เมื่อไรต้องออกหุ้นเพิ่มทุน</h2>
+    <div class="problem-box">
+      Wd=40%, We=60% (จากกำไรสะสม) | Payout=55% | NI=850 ล้าน
+    </div>
+    <div class="card">
+      <div class="card-title">หาขนาด Capex ที่กำไรสะสมยังพอ</div>
+      <div class="formula-box">
+        Retained Earnings = NI × (1 − Payout) = 850 × 0.45 = 382.5 ล้าน<br><br>
+        We = 0.60 → ต้องการ equity 60% ของ Capex<br>
+        Threshold Capex = 382.5 / 0.60 = <span class="hl">637.5 ล้าน</span>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>หลักคิด:</strong> ตราบใดที่ Capex ≤ 637.5 ล้าน → กำไรสะสมที่เหลือ 382.5 ล้านพอเป็น 60% — ไม่ต้องออกหุ้นใหม่ (และไม่มี floatation cost) แต่ถ้าเกินกว่านั้น ต้องออกหุ้นใหม่ → ต้นทุนสูงขึ้น
+    </div>
+    <div class="answer-box">บริษัทจะออกหุ้นเพิ่มทุนเมื่อ Capex &gt; <span class="pill green">637.5 ล้านบาท</span></div>
+  </div>
+
+  <!-- ============== W4: Own-Bond Yield + WACC ============== -->
+  <div class="panel" id="w4">
+    <h2>ข้อ 4 — บริษัทสิงหราช (เล็ก ไม่จดทะเบียน → ใช้ Own-Bond Yield)</h2>
+    <div class="problem-box">
+      MLR=6.25%, Spread=1.75%, t=20%, Wd=40%, We=60%, MRP=6.25%
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1) Cost of Debt</div>
+        <div class="formula-box">Rd = MLR + Spread = 6.25% + 1.75% = <span class="hl">8.0%</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">2) After-tax Cost of Debt</div>
+        <div class="formula-box">Rd(1−t) = 0.08 × 0.80 = <span class="hl">6.4%</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">3) Cost of Equity — วิธี 3 (Own-Bond Yield)</div>
+      <div class="formula-box">
+        Re = Rd + MRP = 0.08 + 0.0625 = <span class="hl">14.25%</span>
+      </div>
+      <div class="info-box" style="margin-top:8px;">
+        ใช้เมื่อ: บริษัทเล็ก, ไม่มีข้อมูล Beta ใช้ CAPM ไม่ได้ — ใช้ Rd ของตัวเองเป็น proxy + bonus 5–6% (MRP) เพราะ equity เสี่ยงกว่าหนี้
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">4) WACC</div>
+      <div class="formula-box">
+        WACC = 0.4·0.064 + 0.6·0.1425<br>
+        = 0.0256 + 0.0855 = <span class="hl">11.11%</span>
+      </div>
+    </div>
+    <div class="answer-box"><strong>WACC = <span class="pill green">11.11%</span></strong></div>
+  </div>
+
+  <!-- ============== W5: Negative Beta ============== -->
+  <div class="panel" id="w5">
+    <h2>ข้อ 5 — Cost of Equity เมื่อ Beta ติดลบ</h2>
+    <div class="problem-box">
+      β = -0.5 (Rm ขึ้น 1% → R ของหุ้นลด 0.5%)<br>
+      Rf 1ปี = 1.2%, Rf 10ปี = 3.2%, Rm = 8%
+    </div>
+    <div class="info-box">
+      ใช้ <strong>Rf 10 ปี</strong> เป็นมาตรฐาน (long-term equity → match กับ duration ของกระแสเงินสดบริษัท)
+    </div>
+    <div class="formula-box">
+      CAPM: Re = Rf + β(Rm − Rf)<br>
+      = 0.032 + (−0.5)(0.08 − 0.032)<br>
+      = 0.032 + (−0.5)(0.048)<br>
+      = 0.032 − 0.024<br>
+      = <span class="hl">0.008 = 0.8%</span>
+    </div>
+    <div class="info-box">
+      <strong>เข้าใจ negative beta:</strong> หุ้นเคลื่อนสวนตลาด — เป็น hedge ในยามตลาดล่ม → นักลงทุนยอมรับผลตอบแทนต่ำเพราะลดความเสี่ยง portfolio ได้
+    </div>
+    <div class="answer-box"><strong>Re = <span class="pill green">0.8% ต่อปี</span></strong></div>
+  </div>
+
+  <!-- ============== W6: Bond Cost of Debt with Calculator ============== -->
+  <div class="panel" id="w6">
+    <h2>ข้อ 6 — บริษัท XYZ: Cost of Debt ด้วยเครื่องคิดเลข (Bond)</h2>
+    <div class="problem-box">
+      Par = 1,000 | n=3 ปี | จ่ายคูปอง 4 ครั้ง/ปี (m=4) | Coupon=5%/ปี | f=0.8% | t=20%
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">1) PV (เงินที่บริษัทได้รับจริง)</div>
+        <div class="formula-box">PV = Par·(1−f) = 1,000 × 0.992 = <span class="hl">992</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">2) คูปองต่องวด</div>
+        <div class="formula-box">PMT = Par·Cpn/m = 1,000·0.05/4 = <span class="hl">12.50</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">3) จำนวนงวด</div>
+        <div class="formula-box">N = m·n = 4·3 = <span class="hl">12 งวด</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">4) FV</div>
+        <div class="formula-box">FV = Par = <span class="hl">1,000</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">เครื่องคิดเลข — หา YTM</div>
+      <div class="step"><div class="step-num">1</div><div class="step-content">ตั้ง P/Y=C/Y=4: <span class="key">2nd</span> <span class="key">P/Y</span> <span class="key">4</span> <span class="key">ENTER</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><span class="key">2nd</span> <span class="key">CLR TVM</span> ล้างค่าเก่า</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content"><span class="key">12</span> <span class="key">N</span></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content"><span class="key">992</span> <span class="key">+/-</span> <span class="key">PV</span> (เป็นลบเพราะบริษัทได้รับเงิน)</div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-content"><span class="key">12.50</span> <span class="key">PMT</span></div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-content"><span class="key">1000</span> <span class="key">FV</span></div></div>
+      <div class="step"><div class="step-num">7</div><div class="step-content"><span class="key">CPT</span> <span class="key">I/Y</span> → <span class="key disp">5.29%</span></div></div>
+    </div>
+    <div class="formula-box">
+      Before-tax Rd = <span class="hl">5.29%</span><br>
+      After-tax Rd = 5.29 × (1−0.20) = <span class="hl">4.23%</span>
+    </div>
+    <div class="answer-box"><strong>Before-tax Rd = <span class="pill green">5.29%</span> | After-tax Rd = <span class="pill green">4.23%</span></strong></div>
+  </div>
+
+  <!-- ============== W7: Cost of Preferred ============== -->
+  <div class="panel" id="w7">
+    <h2>ข้อ 7 — บริษัท CMMU: Cost of Preferred Stock</h2>
+    <div class="problem-box">ราคา underwritten = 20 บาท | f = 2% | Dividend = 2 บาท/ปี | t = 20%</div>
+    <div class="card">
+      <div class="card-title">สูตร (preferred → g = 0)</div>
+      <div class="formula-box">
+        Rp = D / [P·(1−f)]<br>
+        = 2 / [20 × 0.98]<br>
+        = 2 / 19.6<br>
+        = <span class="hl">10.20%</span>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>หมายเหตุ:</strong> Preferred dividend จ่ายจาก net profit (after-tax) → ไม่หักภาษีเหมือนหนี้ → ใช้ Rp ตรงๆ
+    </div>
+    <div class="answer-box"><strong>Rp = <span class="pill green">10.20%</span></strong></div>
+  </div>
+
+  <!-- ============== W8: Standard WACC ============== -->
+  <div class="panel" id="w8">
+    <h2>ข้อ 8 — WACC พื้นฐาน</h2>
+    <div class="problem-box">Wd=0.5, We=0.5, Rd=8.5%, Re=15%, t=40%</div>
+    <div class="formula-box">
+      WACC = Wd·Rd(1−t) + We·Re<br>
+      = 0.5·0.085·(1−0.4) + 0.5·0.15<br>
+      = 0.5·0.051 + 0.075<br>
+      = 0.0255 + 0.075<br>
+      = <span class="hl">0.1005 = 10.05%</span>
+    </div>
+    <div class="answer-box"><strong>WACC = <span class="pill green">10.05%</span></strong></div>
+  </div>
+
+  <!-- ============== W9: Backward Solve Re ============== -->
+  <div class="panel" id="w9">
+    <h2>ข้อ 9 — แก้สมการกลับหา Re จาก WACC</h2>
+    <div class="problem-box">Wd=0.4, We=0.6, Rd=5%, t=20%, WACC=8.5%</div>
+    <div class="card">
+      <div class="card-title">ย้ายข้างสมการ</div>
+      <div class="formula-box">
+        WACC = Wd·Rd(1−t) + We·Re<br>
+        0.085 = 0.4·0.05·0.8 + 0.6·Re<br>
+        0.085 = 0.016 + 0.6·Re<br>
+        0.069 = 0.6·Re<br>
+        Re = 0.069 / 0.6 = <span class="hl">0.115 = 11.5%</span>
+      </div>
+    </div>
+    <div class="answer-box"><strong>Re = <span class="pill green">11.5%</span></strong></div>
+  </div>
+
+  <!-- ============== W10: Tax Rate Change Impact on WACC ============== -->
+  <div class="panel" id="w10">
+    <h2>ข้อ 10 — การเปลี่ยนภาษีกระทบ Cost of Debt อย่างไร</h2>
+    <div class="problem-box">
+      Par=1,000, n=20 ปี, Coupon 7%/ปี (m=2), t1=40%, t2=30% (ลดภาษี)
+    </div>
+    <div class="card">
+      <div class="card-title">หา Rd จาก TVM (P/Y=2)</div>
+      <div class="formula-box">
+        N=40, PV=−1,000, PMT=35 (=1,000·0.07/2), FV=1,000<br>
+        CPT I/Y = <span class="hl">7%</span> (Before-tax)
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">เปรียบเทียบ After-tax Rd</div>
+      <div class="formula-box">
+        Scenario I (t=40%): Rd(1−t) = 0.07 × 0.60 = <span class="hl">4.2%</span><br>
+        Scenario II (t=30%): Rd(1−t) = 0.07 × 0.70 = <span class="hl">4.9%</span><br><br>
+        ΔWACC (Δ Cost of Debt) = 4.9% − 4.2% = <span class="hl">+0.7%</span>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>เข้าใจ Tax Shield:</strong> ภาษีลดลง → Tax Shield ของหนี้ลดลง → ต้นทุนหนี้ after-tax สูงขึ้น → WACC สูงขึ้น
+    </div>
+    <div class="answer-box"><strong>ΔWACC = <span class="pill red">+0.7%</span> (เพิ่มขึ้น)</strong></div>
+  </div>
+
+</div>
+<script>
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.target).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
