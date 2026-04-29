@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Ch6 Risk Tutorial — เครื่องคิดเลขการเงิน Interactive</title>
+<style>
+  :root {
+    --bg: #faf9f5;
+    --surface: #ffffff;
+    --ink: #1a1a1a;
+    --ink2: #5a5a5a;
+    --ink3: #888;
+    --accent: #d97757;
+    --accent-soft: #faece4;
+    --teal: #1d9e75;
+    --teal-soft: #e1f5ee;
+    --blue: #378add;
+    --blue-soft: #e6f1fb;
+    --red: #e24b4a;
+    --red-soft: #fcebeb;
+    --amber: #ef9f27;
+    --amber-soft: #faeeda;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Sukhumvit Set", "Noto Sans Thai", sans-serif; }
+  body { background: var(--bg); color: var(--ink); line-height: 1.6; padding: 24px 16px 64px; min-height: 100vh; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 28px; font-weight: 500; margin-bottom: 4px; }
+  h2 { font-size: 22px; font-weight: 500; margin: 24px 0 12px; }
+  h3 { font-size: 18px; font-weight: 500; margin: 16px 0 8px; }
+  .subtitle { color: var(--ink2); margin-bottom: 24px; font-size: 15px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+  .tab { padding: 10px 14px; background: transparent; border: 1px solid transparent; border-bottom: none; border-radius: 8px 8px 0 0; cursor: pointer; font-size: 14px; color: var(--ink2); transition: all 0.15s; margin-bottom: -1px; }
+  .tab:hover { background: var(--surface); color: var(--ink); }
+  .tab.active { background: var(--surface); color: var(--accent); border-color: var(--border); border-bottom-color: var(--surface); font-weight: 500; }
+  .panel { display: none; }
+  .panel.active { display: block; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0; }
+  @media (max-width: 900px) { .grid-2 { grid-template-columns: 1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px; }
+  .card-title { font-size: 13px; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; font-weight: 600; }
+  .problem-box { background: var(--accent-soft); border-left: 3px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+  .formula-box { background: var(--blue-soft); border-left: 3px solid var(--blue); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 16px; font-family: "Courier New", monospace; font-size: 14px; }
+  .answer-box { background: var(--teal-soft); border-left: 3px solid var(--teal); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+  .info-box { background: var(--amber-soft); border-left: 3px solid var(--amber); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 16px; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--bg); font-weight: 600; color: var(--ink2); font-size: 13px; text-transform: uppercase; letter-spacing: 0.3px; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .key { display: inline-block; background: #2a2a2a; color: white; padding: 4px 10px; border-radius: 6px; font-size: 13px; margin: 2px; font-family: "Courier New", monospace; box-shadow: 0 2px 0 rgba(0,0,0,0.4); transition: transform 0.1s; }
+  .key.pressing { transform: translateY(2px); box-shadow: 0 0 0 rgba(0,0,0,0.4); background: var(--accent); }
+  .key.disp { background: #f0e8d8; color: #1a1a1a; box-shadow: 0 2px 0 rgba(0,0,0,0.15); font-weight: 600; }
+  .step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px dashed var(--border); }
+  .step-num { background: var(--accent); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .step-content { flex: 1; }
+  .play-btn { padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; }
+  .play-btn:hover { background: #c66845; }
+  .calc { background: #2a2a2a; padding: 16px; border-radius: 12px; margin: 16px 0; }
+  .calc-display { background: #1a3a2a; color: #5dff9b; padding: 10px 14px; border-radius: 6px; font-family: "Courier New", monospace; font-size: 18px; min-height: 36px; margin-bottom: 10px; text-align: right; }
+  .calc-keys { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .calc-keys .key { padding: 8px; text-align: center; font-size: 12px; }
+  .nav-back { display: inline-block; padding: 6px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--ink2); text-decoration: none; font-size: 13px; margin-bottom: 12px; }
+  .nav-back:hover { background: var(--accent-soft); color: var(--accent); }
+  .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+  .pill.green { background: var(--teal-soft); color: var(--teal); }
+  .pill.red { background: var(--red-soft); color: var(--red); }
+  .pill.blue { background: var(--blue-soft); color: var(--blue); }
+  ul { padding-left: 20px; }
+  ul li { margin: 4px 0; }
+  .hl { background: #fff5cc; padding: 1px 4px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="All_Chapters_Tutorial.html" class="nav-back">← กลับหน้ารวม</a>
+  <h1>Ch6 — Risk &amp; Return</h1>
+  <p class="subtitle">สอนทีละข้อ พร้อมขั้นตอนเครื่องคิดเลขการเงิน TI BA II Plus</p>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-target="r1">ข้อ 1</button>
+    <button class="tab" data-target="r2">ข้อ 2</button>
+    <button class="tab" data-target="r3">ข้อ 3</button>
+    <button class="tab" data-target="r4">ข้อ 4</button>
+    <button class="tab" data-target="r5">ข้อ 5</button>
+    <button class="tab" data-target="r6">ข้อ 6</button>
+    <button class="tab" data-target="r7">ข้อ 7</button>
+    <button class="tab" data-target="r8">ข้อ 8</button>
+    <button class="tab" data-target="r9">ข้อ 9</button>
+    <button class="tab" data-target="r10">ข้อ 10</button>
+    <button class="tab" data-target="r11">ข้อ 11</button>
+    <button class="tab" data-target="r12">ข้อ 12</button>
+    <button class="tab" data-target="r13">ข้อ 13</button>
+  </div>
+
+  <!-- ============== ข้อ 1: Portfolio Return + SD with Correlation ============== -->
+  <div class="panel active" id="r1">
+    <h2>ข้อ 1 — Portfolio Return &amp; SD (มี correlation)</h2>
+    <div class="problem-box">
+      <strong>โจทย์:</strong>
+      <table>
+        <tr><th>Asset</th><th>Weight</th><th>E(R)</th><th>SD</th></tr>
+        <tr><td>A</td><td class="num">75%</td><td class="num">8%</td><td class="num">14%</td></tr>
+        <tr><td>B</td><td class="num">25%</td><td class="num">15%</td><td class="num">40%</td></tr>
+      </table>
+      Correlation A,B = <span class="hl">0.85</span> &nbsp; → จงหา E(Rp), SDp
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">สูตรที่ใช้</div>
+        <div class="formula-box">
+          E(Rp) = Wa·E(Ra) + Wb·E(Rb)<br><br>
+          SDp² = Wa²σa² + Wb²σb² + 2·Wa·Wb·ρab·σa·σb<br>
+          SDp = √(SDp²)
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">แทนค่า</div>
+        <div class="formula-box">
+          E(Rp) = (0.75)(0.08) + (0.25)(0.15)<br>
+          &nbsp;&nbsp;&nbsp;= 0.06 + 0.0375 = <span class="hl">0.0975</span><br><br>
+          Var = (0.75²)(0.14²) + (0.25²)(0.40²)<br>
+          &nbsp;&nbsp;&nbsp;+ 2(0.75)(0.25)(0.85)(0.14)(0.40)<br>
+          &nbsp;&nbsp;&nbsp;= 0.011025 + 0.01 + 0.01785<br>
+          &nbsp;&nbsp;&nbsp;= 0.038875<br>
+          SD = √0.038875 = <span class="hl">0.1972</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">ขั้นตอนเครื่องคิดเลข — หา SD (ใช้ Memory)</div>
+      <div class="step"><div class="step-num">1</div><div class="step-content">เก็บ Term1 = (0.75)²·(0.14)² &nbsp;<span class="key">.75</span> <span class="key">x²</span> <span class="key">×</span> <span class="key">.14</span> <span class="key">x²</span> <span class="key">=</span> <span class="key">STO</span> <span class="key">1</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content">เก็บ Term2 = (0.25)²·(0.40)² &nbsp;<span class="key">.25</span> <span class="key">x²</span> <span class="key">×</span> <span class="key">.4</span> <span class="key">x²</span> <span class="key">=</span> <span class="key">STO</span> <span class="key">2</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content">เก็บ Term3 = 2·Wa·Wb·ρ·σa·σb &nbsp;<span class="key">2</span> <span class="key">×</span> <span class="key">.75</span> <span class="key">×</span> <span class="key">.25</span> <span class="key">×</span> <span class="key">.85</span> <span class="key">×</span> <span class="key">.14</span> <span class="key">×</span> <span class="key">.4</span> <span class="key">=</span> <span class="key">STO</span> <span class="key">3</span></div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content">รวม &amp; รากที่สอง: <span class="key">RCL</span> <span class="key">1</span> <span class="key">+</span> <span class="key">RCL</span> <span class="key">2</span> <span class="key">+</span> <span class="key">RCL</span> <span class="key">3</span> <span class="key">=</span> <span class="key">√x</span></div></div>
+    </div>
+
+    <div class="answer-box">
+      <strong>คำตอบ:</strong> E(Rp) = <span class="pill green">9.75%</span> &nbsp; SDp = <span class="pill green">19.72%</span>
+    </div>
+  </div>
+
+  <!-- ============== ข้อ 2: Portfolio Beta + CAPM ============== -->
+  <div class="panel" id="r2">
+    <h2>ข้อ 2 — Portfolio Beta + CAPM</h2>
+    <div class="problem-box">
+      Wa=0.20, βa=0.45 &nbsp;|&nbsp; Wb=0.30, βb=1.10 &nbsp;|&nbsp; Wc=0.50, βc=0.90<br>
+      Rf=2.5%, Rm=10% &nbsp;→ จงหา βp และ E(Rp)
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">สูตร</div>
+        <div class="formula-box">
+          βp = ΣWi·βi<br><br>
+          E(Rp) = Rf + βp·(Rm − Rf)
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">แทนค่า</div>
+        <div class="formula-box">
+          βp = (0.2)(0.45)+(0.3)(1.10)+(0.5)(0.90)<br>
+          &nbsp;&nbsp;&nbsp;= 0.09 + 0.33 + 0.45 = <span class="hl">0.87</span><br><br>
+          E(Rp) = 0.025 + 0.87·(0.10 − 0.025)<br>
+          &nbsp;&nbsp;&nbsp;= 0.025 + 0.87·0.075<br>
+          &nbsp;&nbsp;&nbsp;= 0.025 + 0.06525 = <span class="hl">0.09025</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">ขั้นตอนเครื่องคิดเลข</div>
+      <div class="step"><div class="step-num">1</div><div class="step-content">หา βp: <span class="key">.2</span><span class="key">×</span><span class="key">.45</span><span class="key">+</span><span class="key">.3</span><span class="key">×</span><span class="key">1.1</span><span class="key">+</span><span class="key">.5</span><span class="key">×</span><span class="key">.9</span><span class="key">=</span> &nbsp;→ display 0.87</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content">เก็บไว้: <span class="key">STO</span> <span class="key">1</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content">CAPM: <span class="key">.025</span><span class="key">+</span><span class="key">RCL</span><span class="key">1</span><span class="key">×</span><span class="key">(</span><span class="key">.1</span><span class="key">−</span><span class="key">.025</span><span class="key">)</span><span class="key">=</span> &nbsp;→ <span class="key disp">0.09025</span></div></div>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> βp=<span class="pill green">0.87</span> &nbsp; E(Rp)=<span class="pill green">9.03%</span></div>
+  </div>
+
+  <!-- ============== ข้อ 3: Theory - Market Risk ============== -->
+  <div class="panel" id="r3">
+    <h2>ข้อ 3 — ความเสี่ยง market (systematic) ในมุมนักลงทุน global</h2>
+    <div class="problem-box">นักลงทุนลงทุนต่างประเทศได้ — ข้อใดเป็น Market Risk (เลือกทุกข้อที่ถูก)</div>
+    <div class="card">
+      <table>
+        <tr><th>ข้อ</th><th>คำตอบ</th><th>ใช่ market risk?</th></tr>
+        <tr><td>ก. รสนิยมผู้บริโภคที่เปลี่ยน</td><td>เฉพาะอุตสาหกรรม</td><td><span class="pill red">ไม่ใช่ (Unsystematic)</span></td></tr>
+        <tr><td>ข. อัตราเงินเฟ้อ</td><td>กระทบทุกอุตสาหกรรม</td><td><span class="pill green">ใช่</span></td></tr>
+        <tr><td>ค. อัตราดอกเบี้ย</td><td>กระทบทุกอุตสาหกรรม</td><td><span class="pill green">ใช่</span></td></tr>
+        <tr><td>ง. ความไม่มั่นคงทางการเมือง</td><td>กระทบทุกอุตสาหกรรม</td><td><span class="pill green">ใช่</span></td></tr>
+        <tr><td>จ. ผู้บริหารบริษัท ผิดพลาด</td><td>เฉพาะบริษัท</td><td><span class="pill red">ไม่ใช่ (Unsystematic)</span></td></tr>
+        <tr><td>ฉ. รสนิยมเปลี่ยนทั้งโลก</td><td>กระทบทุกอุตสาหกรรม</td><td><span class="pill green">ใช่</span></td></tr>
+      </table>
+    </div>
+    <div class="info-box"><strong>หลักคิด:</strong> Market Risk = Systematic = หลีกเลี่ยงไม่ได้ด้วยการกระจายลงทุน เพราะกระทบตลาดทั้งระบบ; ที่กระทบเฉพาะบริษัท/อุตสาหกรรม คือ Unsystematic ซึ่งกระจายความเสี่ยงได้</div>
+    <div class="answer-box"><strong>ตอบ:</strong> ข, ค, ง, ฉ</div>
+  </div>
+
+  <!-- ============== ข้อ 4: Risk Ranking ============== -->
+  <div class="panel" id="r4">
+    <h2>ข้อ 4 — ลำดับความเสี่ยงเครื่องมือทางการเงิน (มาก→น้อย)</h2>
+    <div class="info-box">
+      <strong>ลำดับมาตรฐาน (จากเสี่ยงมากที่สุด):</strong><br>
+      หุ้นสามัญ &gt; หุ้นบุริมสิทธิ์ &gt; ตราสารหนี้เอกชน &gt; ตราสารหนี้รัฐบาล<br><br>
+      <strong>เหตุผล:</strong> ลำดับ claim เมื่อเลิกบริษัท: เจ้าหนี้รัฐ (ปลอดภัยสุด) → เจ้าหนี้เอกชน → preferred → common (ขาดทุนคนแรก)
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> ข้อ 3 (หุ้นสามัญ &gt; หุ้นบุริมสิทธิ์ &gt; ตราสารหนี้เอกชน &gt; ตราสารหนี้รัฐบาล) และ ข้อ 5 (เพิ่ม subdivide ระยะยาว/ระยะสั้น แต่ก็ใช้ logic เดียวกัน)</div>
+  </div>
+
+  <!-- ============== ข้อ 5: Mean & SD from time series ============== -->
+  <div class="panel" id="r5">
+    <h2>ข้อ 5 — ผลตอบแทนเฉลี่ย &amp; SD จาก Time Series 12 เดือน</h2>
+    <div class="problem-box">
+      ผลตอบแทนรายเดือน 12 เดือน: 4.7%, -3.2%, -7.4%, 3.7%, 6.5%, -1.5%, -2.8%, 4.5%, 2.5%, -3.9%, 1.9%, 2.3%
+    </div>
+    <div class="card">
+      <div class="card-title">วิธีเครื่องคิดเลข — โหมด <span class="key">2nd</span> <span class="key">DATA</span> (Statistics)</div>
+      <div class="step"><div class="step-num">1</div><div class="step-content">ล้าง stat: <span class="key">2nd</span> <span class="key">DATA</span> <span class="key">2nd</span> <span class="key">CLR Work</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content">ป้อน X01=4.7, ENTER ↓↓ X02=-3.2 ENTER ↓↓ … (ใช้ <span class="key">↓</span> เพื่อข้าม Y) ทั้งหมด 12 ค่า</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content">เปลี่ยนโหมดสถิติ: <span class="key">2nd</span> <span class="key">STAT</span> เลือก <strong>1-V</strong> (1-variable)</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-content">กด <span class="key">↓</span> เพื่ออ่าน:<br>
+        n = 12<br>
+        x̄ (mean) = <span class="hl">0.6083</span>% ต่อเดือน → ปี ≈ 7.30%<br>
+        Sx (sample SD) = <span class="hl">4.2563</span>% ต่อเดือน → ปี ≈ 14.74% (× √12)
+      </div></div>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> ผลตอบแทนเฉลี่ย ≈ <span class="pill green">7.30%/ปี</span> &nbsp; SD ≈ <span class="pill green">14.74%/ปี</span></div>
+    <div class="info-box"><strong>ทำไมต้อง × √12 ?</strong> เพราะ variance รายเดือน × 12 = variance รายปี (ถ้า return ไม่สัมพันธ์กัน) → ดังนั้น SD รายปี = SD เดือน × √12</div>
+  </div>
+
+  <!-- ============== ข้อ 6: CAPM Difference ============== -->
+  <div class="panel" id="r6">
+    <h2>ข้อ 6 — CAPM: ผลตอบแทนหุ้นต้องมากกว่าพันธบัตรเท่าไร</h2>
+    <div class="problem-box">β=1.4, MRP (Rm−Rf)=6% → จงหา (Ri − Rf)</div>
+    <div class="formula-box">
+      Ri = Rf + β·(Rm − Rf)<br>
+      Ri − Rf = β·MRP = 1.4 × 0.06 = <span class="hl">0.084 = 8.4%</span>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> หุ้นสิงห์ต้องให้ผลตอบแทนมากกว่าพันธบัตร <span class="pill green">8.4% ต่อปี</span></div>
+  </div>
+
+  <!-- ============== ข้อ 7: CAPM + Valuation Decision ============== -->
+  <div class="panel" id="r7">
+    <h2>ข้อ 7 — Portfolio CAPM &amp; ตัดสินใจ undervalue/overvalue</h2>
+    <div class="problem-box">
+      <table>
+        <tr><th>Asset</th><th>W</th><th>β</th><th>E(R)</th></tr>
+        <tr><td>A</td><td class="num">0.30</td><td class="num">1.25</td><td class="num">10%</td></tr>
+        <tr><td>B</td><td class="num">0.30</td><td class="num">1.20</td><td class="num">8%</td></tr>
+        <tr><td>C</td><td class="num">0.40</td><td class="num">0.85</td><td class="num">7%</td></tr>
+      </table>
+      Rf=2.5%, MRP=5%
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">หา βp + Required (CAPM)</div>
+        <div class="formula-box">
+          βp = (0.3)(1.25)+(0.3)(1.2)+(0.4)(0.85)<br>
+          &nbsp;&nbsp;&nbsp;= 0.375 + 0.36 + 0.34 = <span class="hl">1.075</span><br><br>
+          Required Rp = Rf + βp·MRP<br>
+          &nbsp;&nbsp;&nbsp;= 0.025 + 1.075·0.05 = <span class="hl">7.875%</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">หา Expected Rp (จาก W·E(R))</div>
+        <div class="formula-box">
+          E(Rp) = (0.3)(0.10)+(0.3)(0.08)+(0.4)(0.07)<br>
+          &nbsp;&nbsp;&nbsp;= 0.030 + 0.024 + 0.028<br>
+          &nbsp;&nbsp;&nbsp;= <span class="hl">8.2%</span>
+        </div>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>เปรียบเทียบ:</strong> Expected = 8.2% &gt; Required = 7.875% → <strong>Undervalued</strong><br>
+      → คุ้มค่าลงทุน! ตลาดยังไม่ค่อยเห็นมูลค่า เลยให้ผลตอบแทนคาดหวังสูงกว่าที่ความเสี่ยงควรได้
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> <span class="pill green">Undervalue</span></div>
+  </div>
+
+  <!-- ============== ข้อ 8: Portfolio Return + Risk with weights from money ============== -->
+  <div class="panel" id="r8">
+    <h2>ข้อ 8 — Portfolio + Correlation (จากเงินลงทุน)</h2>
+    <div class="problem-box">
+      A: Return 8%, SD 12%, ลงทุน 150,000 บาท<br>
+      B: Return 12%, SD 16%, ลงทุน 250,000 บาท<br>
+      Corr(A,B) = 0.7
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">หา Weight</div>
+        <div class="formula-box">
+          Total = 150,000 + 250,000 = 400,000<br>
+          Wa = 150/400 = 0.375<br>
+          Wb = 250/400 = 0.625
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Return + Risk</div>
+        <div class="formula-box">
+          Rp = (0.375)(0.08)+(0.625)(0.12) = <span class="hl">10.5%</span><br><br>
+          Var = 0.375²·0.12² + 0.625²·0.16²<br>
+          &nbsp;&nbsp;&nbsp;+ 2·0.375·0.625·0.7·0.12·0.16<br>
+          &nbsp;&nbsp;&nbsp;= 0.002025 + 0.01 + 0.0063<br>
+          &nbsp;&nbsp;&nbsp;= 0.018325<br>
+          SD = √0.018325 ≈ <span class="hl">13.54%</span>
+        </div>
+      </div>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> Rp=<span class="pill green">10.5%</span> &nbsp; SDp=<span class="pill green">13.54%</span></div>
+  </div>
+
+  <!-- ============== ข้อ 9: Scenario-based Portfolio Return ============== -->
+  <div class="panel" id="r9">
+    <h2>ข้อ 9 — Portfolio Return จาก Scenario (boom/normal/recession)</h2>
+    <div class="problem-box">
+      <table>
+        <tr><th>State</th><th>Prob.</th><th>R(A)</th><th>R(B)</th></tr>
+        <tr><td>บูม</td><td class="num">25%</td><td class="num">8%</td><td class="num">12%</td></tr>
+        <tr><td>ปกติ</td><td class="num">50%</td><td class="num">6%</td><td class="num">5%</td></tr>
+        <tr><td>ถดถอย</td><td class="num">25%</td><td class="num">3%</td><td class="num">-2%</td></tr>
+      </table>
+      Wa=0.80, Wb=0.20 → จงหา Rp
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">วิธี 1: หา E(Ra) &amp; E(Rb) ก่อน</div>
+        <div class="formula-box">
+          E(Ra) = 0.25·0.08 + 0.50·0.06 + 0.25·0.03<br>
+          &nbsp;&nbsp;&nbsp;= 0.02 + 0.03 + 0.0075 = <span class="hl">5.75%</span><br><br>
+          E(Rb) = 0.25·0.12 + 0.50·0.05 + 0.25·(-0.02)<br>
+          &nbsp;&nbsp;&nbsp;= 0.03 + 0.025 − 0.005 = <span class="hl">5.0%</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">รวม Portfolio</div>
+        <div class="formula-box">
+          E(Rp) = Wa·E(Ra) + Wb·E(Rb)<br>
+          &nbsp;&nbsp;&nbsp;= 0.80·0.0575 + 0.20·0.05<br>
+          &nbsp;&nbsp;&nbsp;= 0.046 + 0.01 = <span class="hl">5.6%</span>
+        </div>
+      </div>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> E(Rp) = <span class="pill green">5.6%</span></div>
+  </div>
+
+  <!-- ============== ข้อ 10: 3-asset Portfolio with full Corr ============== -->
+  <div class="panel" id="r10">
+    <h2>ข้อ 10 — Portfolio 3 หลัก + Correlation Matrix</h2>
+    <div class="problem-box">
+      A: 1,000,000 บาท, R=6%, SD=10.5%<br>
+      B: 1,500,000 บาท, R=12%, SD=18.2%<br>
+      C: 2,500,000 บาท, R=9.5%, SD=15.4%<br>
+      Corr: ρab=0.6, ρbc=0.7, ρac=0.8<br>
+      Total = 5,000,000 → Wa=0.2, Wb=0.3, Wc=0.5
+    </div>
+    <div class="card">
+      <div class="card-title">Portfolio Return</div>
+      <div class="formula-box">
+        E(Rp) = 0.2·0.06 + 0.3·0.12 + 0.5·0.095<br>
+        &nbsp;&nbsp;&nbsp;= 0.012 + 0.036 + 0.0475 = <span class="hl">9.55%</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Portfolio Variance — รวม 6 term</div>
+      <div class="formula-box">
+        Var(p) = Wa²σa² + Wb²σb² + Wc²σc²<br>
+        &nbsp;&nbsp;&nbsp;+ 2WaWbρab·σa·σb<br>
+        &nbsp;&nbsp;&nbsp;+ 2WbWcρbc·σb·σc<br>
+        &nbsp;&nbsp;&nbsp;+ 2WaWcρac·σa·σc<br><br>
+        = (0.2)²(0.105)² = 0.000441<br>
+        + (0.3)²(0.182)² = 0.002981<br>
+        + (0.5)²(0.154)² = 0.005929<br>
+        + 2(0.2)(0.3)(0.6)(0.105)(0.182) = 0.001376<br>
+        + 2(0.3)(0.5)(0.7)(0.182)(0.154) = 0.005886<br>
+        + 2(0.2)(0.5)(0.8)(0.105)(0.154) = 0.002587<br>
+        = <span class="hl">0.019200</span><br><br>
+        SD = √0.019200 = <span class="hl">13.86%</span>
+      </div>
+    </div>
+    <div class="info-box"><strong>เคล็ดลับ:</strong> ใน TI BA II Plus เก็บแต่ละ term ใน <span class="key">STO 1</span>…<span class="key">STO 6</span> แล้วบวก <span class="key">RCL</span> รวมก่อน sqrt — ลดผิดพลาด</div>
+    <div class="answer-box"><strong>คำตอบ:</strong> Rp=<span class="pill green">9.55%</span> &nbsp; SDp=<span class="pill green">13.86%</span></div>
+  </div>
+
+  <!-- ============== ข้อ 11: SML Theory ============== -->
+  <div class="panel" id="r11">
+    <h2>ข้อ 11 — เส้นใดอธิบาย CAPM</h2>
+    <div class="card">
+      <table>
+        <tr><th>เส้น</th><th>คำอธิบาย</th><th>ใช่ CAPM?</th></tr>
+        <tr><td>CAL (Capital Allocation Line)</td><td>combination ของ risk-free + risky portfolio</td><td><span class="pill red">ไม่ใช่</span></td></tr>
+        <tr><td>CML (Capital Market Line)</td><td>ใช้ TOTAL risk (SD) เป็นแกน X (เฉพาะ efficient port.)</td><td><span class="pill red">ไม่ใช่</span></td></tr>
+        <tr><td><strong>SML (Security Market Line)</strong></td><td>ใช้ <strong>Beta</strong> เป็นแกน X — สมการเดียวกับ CAPM</td><td><span class="pill green">ใช่</span></td></tr>
+        <tr><td>Efficient Frontier</td><td>ขอบบนของ portfolio ที่ดีที่สุด</td><td><span class="pill red">ไม่ใช่</span></td></tr>
+      </table>
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> ค. <span class="pill green">เส้น SML</span></div>
+  </div>
+
+  <!-- ============== ข้อ 12: 3-Asset CAPM ============== -->
+  <div class="panel" id="r12">
+    <h2>ข้อ 12 — Portfolio Beta &amp; E(Rp) แบบ CAPM</h2>
+    <div class="problem-box">
+      A:W=0.2,β=0.55 | B:W=0.3,β=1.2 | C:W=0.5,β=0.85<br>
+      Rf=2.2%, MRP=8.2%
+    </div>
+    <div class="formula-box">
+      βp = 0.2·0.55 + 0.3·1.2 + 0.5·0.85<br>
+      &nbsp;&nbsp;= 0.110 + 0.360 + 0.425 = <span class="hl">0.895</span><br><br>
+      E(Rp) = 0.022 + 0.895·0.082<br>
+      &nbsp;&nbsp;= 0.022 + 0.07339 = <span class="hl">9.539%</span>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> βp=<span class="pill green">0.895</span> &nbsp; E(Rp)=<span class="pill green">9.54%</span></div>
+  </div>
+
+  <!-- ============== ข้อ 13: Same as 12 ============== -->
+  <div class="panel" id="r13">
+    <h2>ข้อ 13 — Portfolio CAPM (ซ้ำสไตล์ข้อ 12)</h2>
+    <div class="problem-box">
+      A:W=0.2,β=0.54 | B:W=0.3,β=1.2 | C:W=0.5,β=0.88<br>
+      Rf=2.57%, MRP=6.75%
+    </div>
+    <div class="formula-box">
+      βp = 0.2·0.54 + 0.3·1.2 + 0.5·0.88<br>
+      &nbsp;&nbsp;= 0.108 + 0.360 + 0.440 = <span class="hl">0.908</span><br><br>
+      E(Rp) = 0.0257 + 0.908·0.0675<br>
+      &nbsp;&nbsp;= 0.0257 + 0.06129 = <span class="hl">8.699%</span>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> βp=<span class="pill green">0.908</span> &nbsp; E(Rp)=<span class="pill green">8.70%</span></div>
+  </div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.target).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
