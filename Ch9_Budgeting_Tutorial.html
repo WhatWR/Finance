@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Ch9 Capital Budgeting Tutorial</title>
+<style>
+  :root {--bg:#faf9f5;--surface:#fff;--ink:#1a1a1a;--ink2:#5a5a5a;--ink3:#888;--accent:#d97757;--accent-soft:#faece4;--teal:#1d9e75;--teal-soft:#e1f5ee;--blue:#378add;--blue-soft:#e6f1fb;--red:#e24b4a;--red-soft:#fcebeb;--amber:#ef9f27;--amber-soft:#faeeda;--border:rgba(0,0,0,0.08);}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Sukhumvit Set","Noto Sans Thai",sans-serif;}
+  body{background:var(--bg);color:var(--ink);line-height:1.6;padding:24px 16px 64px;min-height:100vh;}
+  .container{max-width:1100px;margin:0 auto;}
+  h1{font-size:28px;font-weight:500;margin-bottom:4px;}
+  h2{font-size:22px;font-weight:500;margin:24px 0 12px;}
+  .subtitle{color:var(--ink2);margin-bottom:24px;font-size:15px;}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+  .tab{padding:10px 14px;background:transparent;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;font-size:14px;color:var(--ink2);margin-bottom:-1px;}
+  .tab:hover{background:var(--surface);color:var(--ink);}
+  .tab.active{background:var(--surface);color:var(--accent);border-color:var(--border);border-bottom-color:var(--surface);font-weight:500;}
+  .panel{display:none;}.panel.active{display:block;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:16px 0;}
+  @media (max-width:900px){.grid-2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;}
+  .card-title{font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px;font-weight:600;}
+  .problem-box{background:var(--accent-soft);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  .formula-box{background:var(--blue-soft);border-left:3px solid var(--blue);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;font-family:"Courier New",monospace;font-size:14px;}
+  .answer-box{background:var(--teal-soft);border-left:3px solid var(--teal);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  .info-box{background:var(--amber-soft);border-left:3px solid var(--amber);padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;}
+  th,td{padding:8px 12px;text-align:left;border-bottom:1px solid var(--border);}
+  th{background:var(--bg);font-weight:600;color:var(--ink2);font-size:13px;text-transform:uppercase;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .key{display:inline-block;background:#2a2a2a;color:white;padding:4px 10px;border-radius:6px;font-size:13px;margin:2px;font-family:"Courier New",monospace;box-shadow:0 2px 0 rgba(0,0,0,0.4);}
+  .key.disp{background:#f0e8d8;color:#1a1a1a;font-weight:600;}
+  .step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px dashed var(--border);}
+  .step-num{background:var(--accent);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+  .step-content{flex:1;}
+  .nav-back{display:inline-block;padding:6px 14px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--ink2);text-decoration:none;font-size:13px;margin-bottom:12px;}
+  .pill{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:500;}
+  .pill.green{background:var(--teal-soft);color:var(--teal);}.pill.red{background:var(--red-soft);color:var(--red);}.pill.blue{background:var(--blue-soft);color:var(--blue);}
+  .hl{background:#fff5cc;padding:1px 4px;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="container">
+  <a href="All_Chapters_Tutorial.html" class="nav-back">← กลับหน้ารวม</a>
+  <h1>Ch9 — Capital Budgeting</h1>
+  <p class="subtitle">NPV, IRR, MIRR, PB, DPB, NFV — เทคนิค Cash Flow Worksheet</p>
+
+  <div class="tabs">
+    <button class="tab active" data-target="b1">ข้อ 1 (MIRR)</button>
+    <button class="tab" data-target="b2">ข้อ 2 (DPB)</button>
+    <button class="tab" data-target="b3">ข้อ 3 (NPV/NFV)</button>
+    <button class="tab" data-target="b4">ข้อ 4 (Mut. Excl.)</button>
+    <button class="tab" data-target="b5">ข้อ 5 (NPV Mut.)</button>
+    <button class="tab" data-target="b6">ข้อ 6 (IRR)</button>
+    <button class="tab" data-target="b7">ข้อ 7 (PB)</button>
+  </div>
+
+  <!-- ============== B1: MIRR ============== -->
+  <div class="panel active" id="b1">
+    <h2>ข้อ 1 — MIRR ของ Project A &amp; B</h2>
+    <div class="problem-box">
+      <table>
+        <tr><th>ปี</th><th>A</th><th>B</th></tr>
+        <tr><td>0</td><td class="num">-1,900</td><td class="num">-1,900</td></tr>
+        <tr><td>1</td><td class="num">650</td><td class="num">1,000</td></tr>
+        <tr><td>2</td><td class="num">750</td><td class="num">500</td></tr>
+        <tr><td>3</td><td class="num">800</td><td class="num">1,000</td></tr>
+        <tr><td>4</td><td class="num">850</td><td class="num">500</td></tr>
+        <tr><td>5</td><td class="num">950</td><td class="num">1,000</td></tr>
+      </table>
+      WACC = 8% → จงหา MIRR
+    </div>
+
+    <div class="card">
+      <div class="card-title">หลักการ MIRR (2 ขั้น)</div>
+      <div class="info-box">
+        <strong>ขั้น 1:</strong> หา Terminal Value (TV) = NFV ของ inflows ที่ WACC<br>
+        <strong>ขั้น 2:</strong> ใช้ TVM หา rate: PV=−CF0, FV=TV, N=ปีโครงการ, PMT=0 → CPT I/Y = MIRR
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Project A (TI BA II Plus)</div>
+        <div class="step"><div class="step-num">1</div><div class="step-content">CF: <strong>CF0 = 0</strong> (ไม่ใส่ -1900) แล้ว CF1=650, CF2=750, CF3=800, CF4=850, CF5=950</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content"><span class="key">NPV</span> I=8 → <span class="key">CPT</span> ได้ NPV ของ inflows ≈ 3,182.05</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">หา TV: NFV = NPV·(1+i)^n = 3,182.05 × 1.08^5 ≈ <span class="hl">4,675.41</span></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">TVM: <span class="key">5</span><span class="key">N</span> <span class="key">1900</span><span class="key">+/-</span><span class="key">PV</span> <span class="key">0</span><span class="key">PMT</span> <span class="key">4675.41</span><span class="key">FV</span> <span class="key">CPT</span><span class="key">I/Y</span></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-content">MIRR(A) = <span class="hl">19.50%</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Project B</div>
+        <div class="step"><div class="step-num">1</div><div class="step-content">CF: CF0=0, CF1=1000, CF2=500, CF3=1000, CF4=500, CF5=1000</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">NPV I=8 → ≈ 3,221.45 → TV = 3,221.45 × 1.08^5 ≈ <span class="hl">4,733.23</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">TVM: N=5, PV=−1900, PMT=0, FV=4733 → CPT I/Y</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-content">MIRR(B) = <span class="hl">19.84%</span></div></div>
+      </div>
+    </div>
+
+    <div class="info-box"><strong>ข้อ 3 (Independent, ต้องการ MIRR ≥ 19%):</strong> A=19.50% ✓, B=19.84% ✓ → ตอบ <strong>(C) ลงทุนทั้ง A และ B</strong></div>
+    <div class="answer-box"><strong>คำตอบ:</strong> MIRR_A=<span class="pill green">19.50%</span> | MIRR_B=<span class="pill green">19.84%</span> | ตัดสินใจ <span class="pill green">เลือกทั้งสอง (C)</span></div>
+  </div>
+
+  <!-- ============== B2: DPB ============== -->
+  <div class="panel" id="b2">
+    <h2>ข้อ 2 — Discounted Payback (WACC = 8%)</h2>
+    <div class="problem-box">
+      เปลี่ยนทุนเริ่มต้นเป็น 2,000 (แทน 1,900 ในข้อ 1) — Cash flow ปีต่อๆ ไปเหมือนเดิม
+    </div>
+    <div class="card">
+      <div class="card-title">วิธี: Discount แต่ละปี → สะสม → ดูปีที่ครบทุน</div>
+      <table>
+        <tr><th>ปี</th><th>CF (A)</th><th>PV @8%</th><th>Cumulative</th></tr>
+        <tr><td>0</td><td class="num">-2,000</td><td class="num">-2,000</td><td class="num">-2,000</td></tr>
+        <tr><td>1</td><td class="num">650</td><td class="num">601.85</td><td class="num">-1,398.15</td></tr>
+        <tr><td>2</td><td class="num">750</td><td class="num">643.00</td><td class="num">-755.15</td></tr>
+        <tr><td>3</td><td class="num">800</td><td class="num">635.07</td><td class="num">-120.07</td></tr>
+        <tr><td>4</td><td class="num">850</td><td class="num">624.74</td><td class="num">+504.67</td></tr>
+      </table>
+      <div class="formula-box">
+        DPB(A) = 3 + (120.07 / 624.74) = 3 + 0.192 ≈ <span class="hl">3.19 ปี</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Project B (ทำตามตารางคล้ายกัน)</div>
+      <table>
+        <tr><th>ปี</th><th>CF (B)</th><th>PV @8%</th><th>Cum</th></tr>
+        <tr><td>0</td><td class="num">-2,000</td><td class="num">-2,000</td><td class="num">-2,000</td></tr>
+        <tr><td>1</td><td class="num">1,000</td><td class="num">925.93</td><td class="num">-1,074.07</td></tr>
+        <tr><td>2</td><td class="num">500</td><td class="num">428.67</td><td class="num">-645.40</td></tr>
+        <tr><td>3</td><td class="num">1,000</td><td class="num">793.83</td><td class="num">+148.43</td></tr>
+      </table>
+      <div class="formula-box">
+        DPB(B) = 2 + (645.40 / 793.83) ≈ <span class="hl">2.81 ปี</span>
+      </div>
+    </div>
+    <div class="answer-box"><strong>คำตอบ:</strong> DPB_A = <span class="pill green">3.19 ปี</span> | DPB_B = <span class="pill green">2.81 ปี</span></div>
+  </div>
+
+  <!-- ============== B3: NPV + NFV ============== -->
+  <div class="panel" id="b3">
+    <h2>ข้อ 3 — NPV และ NFV</h2>
+    <div class="problem-box">
+      CF: -75, 20, 20, 20, 30, 30 (ล้านบาท) | WACC = 14%
+    </div>
+    <div class="card">
+      <div class="card-title">หา NPV ด้วย CF Worksheet</div>
+      <div class="step"><div class="step-num">1</div><div class="step-content"><span class="key">CF</span> CF0=−75, CF1=20 F01=3, CF2=30 F02=2 (หรือ ป้อนทีละปี)</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-content"><span class="key">NPV</span> I=14 → <span class="key">CPT</span> = <span class="hl">4.7761 ล้าน</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-content">NFV = NPV·(1+r)^n = 4.7761 × 1.14^5 ≈ <span class="hl">9.196 ล้าน</span></div></div>
+    </div>
+    <div class="info-box">
+      <strong>ความสัมพันธ์ NFV ↔ NPV:</strong> NFV คือเงินสุทธิที่ "เก็บไว้" จนสิ้นโครงการ (compound forward) — ขณะที่ NPV คือมูลค่าที่ "ดึงกลับ" มาวันนี้ (discount back)
+    </div>
+    <div class="answer-box"><strong>NPV = <span class="pill green">4.78</span> ล้านบาท | NFV = <span class="pill green">9.20</span> ล้านบาท</strong></div>
+  </div>
+
+  <!-- ============== B4: Mutually Exclusive A vs B ============== -->
+  <div class="panel" id="b4">
+    <h2>ข้อ 4 — Mutually Exclusive: เลือก A หรือ B?</h2>
+    <div class="problem-box">
+      WACC = 11% (A: -100→25,25,25,50,50) | (B: -1000→300,300,400,400,400)
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Project A</div>
+        <div class="step"><div class="step-num">1</div><div class="step-content">CF: -100, 25, 25, 25, 50, 50</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">IRR: <span class="key">IRR</span> <span class="key">CPT</span> = <span class="hl">18.76%</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">NPV (I=11) = <span class="hl">27.37 ล้าน</span></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Project B</div>
+        <div class="step"><div class="step-num">1</div><div class="step-content">CF: -1000, 300, 300, 400, 400, 400</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-content">IRR = <span class="hl">21.84%</span></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-content">NPV = <span class="hl">342.76 ล้าน</span></div></div>
+      </div>
+    </div>
+    <div class="info-box">
+      <strong>กฎ Mutually Exclusive:</strong> ใช้ <strong>NPV เป็นหลัก</strong> เพราะวัดมูลค่าเงินสร้างได้จริง<br>
+      A: NPV=27.37 vs B: NPV=342.76 → <strong>เลือก B</strong> (แม้ IRR จะใกล้กัน แต่ขนาดต่างกันมาก)
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> เลือก <span class="pill green">Project B</span> (NPV สูงกว่า)</div>
+  </div>
+
+  <!-- ============== B5: Mutually Exclusive NPV ============== -->
+  <div class="panel" id="b5">
+    <h2>ข้อ 5 — Mut. Excl. ด้วย NPV (WACC 8%, ทุน 2,000)</h2>
+    <div class="card">
+      <table>
+        <tr><th>ปี</th><th>A</th><th>B</th></tr>
+        <tr><td>0</td><td class="num">-2000</td><td class="num">-2000</td></tr>
+        <tr><td>1-5</td><td class="num">650,750,800,850,950</td><td class="num">1000,500,1000,500,1000</td></tr>
+      </table>
+    </div>
+    <div class="formula-box">
+      NPV(A) @ 8% = <span class="hl">1,151.25 ล้าน</span><br>
+      NPV(B) @ 8% = <span class="hl">1,196.53 ล้าน</span>
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> เลือก <span class="pill green">Project B</span> (NPV สูงกว่า)</div>
+  </div>
+
+  <!-- ============== B6: IRR Independent ============== -->
+  <div class="panel" id="b6">
+    <h2>ข้อ 6 — IRR Independent (WACC 15%)</h2>
+    <div class="problem-box">CF เริ่มต้น -2,300 ทั้งคู่ (เพิ่มจาก 2,000 ในข้อ 5)</div>
+    <div class="formula-box">
+      IRR(A) = <span class="hl">20.32%</span> &gt; 15% → <span class="pill green">เลือก A</span><br>
+      IRR(B) = <span class="hl">22.04%</span> &gt; 15% → <span class="pill green">เลือก B</span>
+    </div>
+    <div class="info-box">
+      <strong>กฎ Independent:</strong> เลือกทุกโครงการที่ IRR &gt; WACC (ไม่ต้องเลือกอันใดอันหนึ่ง)
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> (C) <span class="pill green">เลือกทั้ง A และ B</span></div>
+  </div>
+
+  <!-- ============== B7: Payback Period ============== -->
+  <div class="panel" id="b7">
+    <h2>ข้อ 7 — Payback Period (PB)</h2>
+    <div class="card">
+      <div class="card-title">Project A</div>
+      <table>
+        <tr><th>ปี</th><th>CF</th><th>Cumulative</th></tr>
+        <tr><td>0</td><td class="num">-2,000</td><td class="num">-2,000</td></tr>
+        <tr><td>1</td><td class="num">650</td><td class="num">-1,350</td></tr>
+        <tr><td>2</td><td class="num">750</td><td class="num">-600</td></tr>
+        <tr><td>3</td><td class="num">800</td><td class="num">+200</td></tr>
+      </table>
+      <div class="formula-box">PB(A) = 2 + (600 / 800) = <span class="hl">2.75 ปี</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Project B</div>
+      <table>
+        <tr><th>ปี</th><th>CF</th><th>Cumulative</th></tr>
+        <tr><td>0</td><td class="num">-2,000</td><td class="num">-2,000</td></tr>
+        <tr><td>1</td><td class="num">1,000</td><td class="num">-1,000</td></tr>
+        <tr><td>2</td><td class="num">500</td><td class="num">-500</td></tr>
+        <tr><td>3</td><td class="num">1,000</td><td class="num">+500</td></tr>
+      </table>
+      <div class="formula-box">PB(B) = 2 + (500 / 1,000) = <span class="hl">2.50 ปี</span></div>
+    </div>
+    <div class="info-box">
+      <strong>เป้า PB ≤ 2.2 ปี:</strong> ทั้ง A (2.75) และ B (2.5) เกินเป้า → <strong>ไม่ลงทุน</strong>
+    </div>
+    <div class="answer-box"><strong>ตอบ:</strong> PB_A=<span class="pill green">2.75 ปี</span> | PB_B=<span class="pill green">2.50 ปี</span> | (D) <span class="pill red">ไม่ลงทุนทั้ง A และ B</span></div>
+  </div>
+
+</div>
+<script>
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.target).classList.add('active');
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
