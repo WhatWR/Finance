@@ -59,6 +59,7 @@
     <button class="tab" data-target="s8">ข้อ 8</button>
     <button class="tab" data-target="s9">ข้อ 9</button>
     <button class="tab" data-target="s10">ข้อ 10</button>
+    <button class="tab" data-target="summary" style="margin-left:12px;background:var(--accent-soft);color:var(--accent);">📋 สรุป</button>
   </div>
 
   <!-- ============== Stock 1: Super-growth 2 yrs then constant ============== -->
@@ -302,6 +303,105 @@
       </table>
     </div>
     <div class="answer-box"><strong>ตอบ:</strong> 1, 5</div>
+  </div>
+
+  <!-- ============== SUMMARY ============== -->
+  <div class="panel" id="summary">
+    <h2>สรุป Ch7 — Stock Valuation &amp; EMH</h2>
+
+    <div class="card">
+      <div class="card-title">ตารางคำตอบทั้ง 10 ข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>หัวข้อ</th><th>วิธี</th><th>คำตอบ</th></tr>
+        <tr><td>1</td><td>Super-growth 2 ปี → Constant g</td><td>DDM 2-stage + Pnxd0</td><td><strong>49.26 บาท</strong></td></tr>
+        <tr><td>2</td><td>g ติดลบ 6 ปี → Constant g</td><td>DDM 2-stage</td><td><strong>53.62 บาท</strong></td></tr>
+        <tr><td>3</td><td>Retention Growth Rate</td><td>g = ROE × RR</td><td><strong>g = 5%/ปี</strong></td></tr>
+        <tr><td>4</td><td>Valuation ด้วย P/E</td><td>P = EPS × P/E</td><td><strong>MPS = 15 บาท</strong></td></tr>
+        <tr><td>5</td><td>แก้กลับหา D1 จาก Gordon</td><td>D1 = P0(Re−g)</td><td><strong>D1 = 1.00 บาท</strong></td></tr>
+        <tr><td>6</td><td>Pnxd0 ครบทุกขั้น (Payout, RR, g)</td><td>DDM ครบสูตร</td><td><strong>Pnxd0=121.41</strong></td></tr>
+        <tr><td>7</td><td>Corporate Governance ที่ดี</td><td>เลือกข้อ</td><td><strong>ข, ง, จ</strong></td></tr>
+        <tr><td>8</td><td>ระดับ Market Efficiency</td><td>Weak/Semi/Strong</td><td>—</td></tr>
+        <tr><td>9</td><td>คุณสมบัติหุ้นบุริมสิทธิ์</td><td>เลือกข้อ</td><td><strong>1, 2, 5</strong></td></tr>
+        <tr><td>10</td><td>คุณสมบัติหุ้นสามัญ</td><td>เลือกข้อ</td><td><strong>1, 5</strong></td></tr>
+      </table>
+    </div>
+
+    <h2>สูตรและกฎทองที่ต้องจำ</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Gordon Growth Model (Constant g)</div>
+        <div class="formula-box">
+          P0 = D1 / (Re − g)<br>
+          P0xd = D0 + D1/(Re−g)<br>
+          (Pnxd0 = ราคาก่อน XD ปีนี้)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Multi-stage DDM (Super-growth)</div>
+        <div class="formula-box">
+          P0 = Σ Dₜ/(1+Re)ᵗ + P_T/(1+Re)ᵀ<br>
+          P_T = D_(T+1) / (Re − g_constant)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Sustainable Growth</div>
+        <div class="formula-box">
+          g = ROE × RR<br>
+          RR = 1 − Payout = 1 − DPS/EPS<br>
+          ROE = Net Income / Equity
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Required Return on Equity</div>
+        <div class="formula-box">
+          Re = D1/P0 + g (จาก Gordon)<br>
+          Re = Rf + β·MRP (จาก CAPM)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">P/E Multiple Valuation</div>
+        <div class="formula-box">
+          P = EPS × (P/E ของกลุ่ม)<br>
+          ใช้เมื่อหา P0 เปรียบเทียบเพื่อนร่วมอุตสาหกรรม
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">XD vs nxd</div>
+        <div class="info-box">
+          <strong>Pxd0</strong> = ราคา <em>หลัง</em> XD (ไม่ได้ปันผลปีนี้)<br>
+          <strong>Pnxd0</strong> = ราคา <em>ก่อน</em> XD = D0 + Pxd0<br>
+          (เมื่อ "ยังไม่ได้ XD" → ใช้ Pnxd0)
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:16px;">
+      <strong>EMH 3 ระดับ:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>Weak form</strong> — ราคาสะท้อนข้อมูลในอดีต → Technical analysis ใช้ไม่ได้</li>
+        <li><strong>Semi-strong</strong> — สะท้อนข้อมูล public ทั้งหมด → Fundamental analysis ใช้ไม่ได้</li>
+        <li><strong>Strong form</strong> — สะท้อนทั้ง public + private → Insider trading ก็ไม่ได้</li>
+      </ul>
+    </div>
+
+    <div class="info-box" style="margin-top:12px;">
+      <strong>หุ้นสามัญ vs หุ้นบุริมสิทธิ์:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li>Common — Limited liability · ปันผลไม่แน่นอน · มีสิทธิ์โหวต · เคลม<em>หลังสุด</em></li>
+        <li>Preferred — ปันผลคงที่ (เหมือน perpetuity) · ปกติไม่มีสิทธิ์โหวต · เคลม<em>ก่อน</em>สามัญ</li>
+        <li>Pref. Price = Dp / Rp</li>
+      </ul>
+    </div>
   </div>
 
 </div>
