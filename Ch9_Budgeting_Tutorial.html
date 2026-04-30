@@ -53,6 +53,7 @@
     <button class="tab" data-target="b5">ข้อ 5 (NPV Mut.)</button>
     <button class="tab" data-target="b6">ข้อ 6 (IRR)</button>
     <button class="tab" data-target="b7">ข้อ 7 (PB)</button>
+    <button class="tab" data-target="summary" style="margin-left:12px;background:var(--accent-soft);color:var(--accent);">📋 สรุป</button>
   </div>
 
   <!-- ============== B1: MIRR ============== -->
@@ -242,6 +243,98 @@
       <strong>เป้า PB ≤ 2.2 ปี:</strong> ทั้ง A (2.75) และ B (2.5) เกินเป้า → <strong>ไม่ลงทุน</strong>
     </div>
     <div class="answer-box"><strong>ตอบ:</strong> PB_A=<span class="pill green">2.75 ปี</span> | PB_B=<span class="pill green">2.50 ปี</span> | (D) <span class="pill red">ไม่ลงทุนทั้ง A และ B</span></div>
+  </div>
+
+  <!-- ============== SUMMARY ============== -->
+  <div class="panel" id="summary">
+    <h2>สรุป Ch9 — Capital Budgeting</h2>
+
+    <div class="card">
+      <div class="card-title">ตารางคำตอบทั้ง 7 ข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>หัวข้อ</th><th>วิธี</th><th>คำตอบ</th></tr>
+        <tr><td>1</td><td>MIRR ของ Project A &amp; B</td><td>NFV ของ inflows → TVM CPT I/Y</td><td><strong>MIRR_A=19.50% · B=19.84% → เลือกทั้ง 2</strong></td></tr>
+        <tr><td>2</td><td>Discounted Payback (WACC = 8%)</td><td>สะสม PV ของ CF จนเท่าทุน</td><td><strong>DPB_A=3.19 ปี · B=2.81 ปี</strong></td></tr>
+        <tr><td>3</td><td>NPV และ NFV</td><td>CF + NPV → NFV = NPV·(1+i)ⁿ</td><td><strong>NPV=4.78 · NFV=9.20 ล้าน</strong></td></tr>
+        <tr><td>4</td><td>Mut. Excl. — เลือก A หรือ B</td><td>NPV เป็นหลัก</td><td><strong>เลือก B (NPV สูง)</strong></td></tr>
+        <tr><td>5</td><td>Mut. Excl. ด้วย NPV</td><td>NPV ที่ WACC 8%</td><td><strong>เลือก B</strong></td></tr>
+        <tr><td>6</td><td>IRR Independent (WACC 15%)</td><td>IRR ≥ WACC ทั้งคู่</td><td><strong>(C) เลือกทั้ง A และ B</strong></td></tr>
+        <tr><td>7</td><td>Payback Period (เป้า ≤ 2.2 ปี)</td><td>PB = ปีก่อน + เหลือ/CFปีนั้น</td><td><strong>PB_A=2.75 · B=2.50 → ไม่ลงทุนทั้ง 2</strong></td></tr>
+      </table>
+    </div>
+
+    <h2>สูตรและกฎทองที่ต้องจำ</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">NPV (Net Present Value)</div>
+        <div class="formula-box">
+          NPV = Σ CFₜ/(1+r)ᵗ − CF0<br>
+          NPV &gt; 0 → รับ · NPV &lt; 0 → ปฏิเสธ<br>
+          (ใช้ CF + NPV worksheet ใน TI)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">IRR (Internal Rate of Return)</div>
+        <div class="formula-box">
+          IRR = อัตราที่ทำให้ NPV = 0<br>
+          IRR &gt; WACC → รับ · IRR &lt; WACC → ปฏิเสธ<br>
+          (CF → IRR CPT)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">MIRR (Modified IRR)</div>
+        <div class="formula-box">
+          ขั้น 1: หา TV = NFV ของ inflows ที่ WACC<br>
+          ขั้น 2: TVM N=ปี · PV=−CF0 · FV=TV → CPT I/Y<br>
+          (แก้ปัญหา reinvestment assumption ของ IRR)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Payback (PB) &amp; DPB</div>
+        <div class="formula-box">
+          PB = ปีก่อน + (เงินที่ขาด / CF ปีถัดไป)<br>
+          DPB = ใช้ <strong>PV ของ CF</strong> สะสมแทน<br>
+          ใช้ NPV → ↓ NFV CPT (สำหรับ NFV/TV)
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">การตัดสินใจ Project</div>
+      <table>
+        <tr><th>สถานการณ์</th><th>ใช้เกณฑ์ใดเป็นหลัก</th><th>เหตุผล</th></tr>
+        <tr><td>Independent (เลือกได้หลาย)</td><td>NPV หรือ IRR ก็ได้</td><td>ผลตรงกัน</td></tr>
+        <tr><td>Mutually Exclusive (เลือกได้ 1)</td><td><strong>NPV</strong> เท่านั้น</td><td>วัดมูลค่าเงินที่สร้างได้จริง</td></tr>
+        <tr><td>CF เปลี่ยนเครื่องหมายหลายครั้ง</td><td><strong>NPV</strong></td><td>IRR อาจมีหลายค่า (Multiple IRR)</td></tr>
+        <tr><td>มีข้อจำกัดเรื่องสภาพคล่อง</td><td>+ PB / DPB</td><td>ดูว่าเงินคืนเร็วแค่ไหน</td></tr>
+      </table>
+    </div>
+
+    <div class="info-box" style="margin-top:16px;">
+      <strong>กลเม็ด TI BA II Plus:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>NPV worksheet:</strong> CF → CF0, C01/F01, C02/F02 ... → NPV → I → CPT</li>
+        <li><strong>NFV ในเครื่อง:</strong> หลังจาก NPV CPT → กด <span class="key">↓</span> จะเจอ NFV → CPT</li>
+        <li><strong>IRR:</strong> CF → IRR CPT (ไม่ต้องใส่ I)</li>
+        <li><strong>MIRR:</strong> เครื่องไม่มีปุ่มตรง — ต้องคำนวณ 2 ขั้น (TV ก่อน แล้ว TVM)</li>
+        <li><strong>ก่อนเริ่ม:</strong> CF → 2nd CLR Work · TVM → 2nd CLR TVM</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <strong>เปรียบเทียบ NPV vs IRR vs MIRR:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>NPV</strong> — สมมุติ reinvest ที่ WACC (สมจริงที่สุด) · หน่วยเป็นเงิน</li>
+        <li><strong>IRR</strong> — สมมุติ reinvest ที่ IRR (ไม่สมจริง) · หน่วยเป็น %</li>
+        <li><strong>MIRR</strong> — แก้ IRR ให้ reinvest ที่ WACC · หน่วยเป็น %</li>
+      </ul>
+    </div>
   </div>
 
 </div>
