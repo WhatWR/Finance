@@ -91,6 +91,7 @@
     <button class="tab" data-target="r11">ข้อ 11</button>
     <button class="tab" data-target="r12">ข้อ 12</button>
     <button class="tab" data-target="r13">ข้อ 13</button>
+    <button class="tab" data-target="summary" style="margin-left:12px;background:var(--accent-soft);color:var(--accent);">📋 สรุป</button>
   </div>
 
   <!-- ============== ข้อ 1: Portfolio Return + SD with Correlation ============== -->
@@ -426,6 +427,103 @@
       &nbsp;&nbsp;= 0.0257 + 0.06129 = <span class="hl">8.699%</span>
     </div>
     <div class="answer-box"><strong>คำตอบ:</strong> βp=<span class="pill green">0.908</span> &nbsp; E(Rp)=<span class="pill green">8.70%</span></div>
+  </div>
+
+  <!-- ============== SUMMARY ============== -->
+  <div class="panel" id="summary">
+    <h2>สรุป Ch6 — Risk &amp; Return / CAPM</h2>
+
+    <div class="card">
+      <div class="card-title">ตารางคำตอบทั้ง 13 ข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>หัวข้อ</th><th>วิธี</th><th>คำตอบ</th></tr>
+        <tr><td>1</td><td>Portfolio Return &amp; SD (มี ρ)</td><td>Wᵢ·Rᵢ + Var formula</td><td><strong>E(Rp)=9.75% · SDp=19.72%</strong></td></tr>
+        <tr><td>2</td><td>Portfolio Beta + CAPM</td><td>Σwᵢβᵢ → Rf+βp·MRP</td><td><strong>βp=0.87 · E(Rp)=9.03%</strong></td></tr>
+        <tr><td>3</td><td>Systematic risk (มุมนักลงทุน global)</td><td>เลือกข้อ</td><td><strong>ข, ค, ง, ฉ</strong></td></tr>
+        <tr><td>4</td><td>ลำดับความเสี่ยงเครื่องมือ</td><td>—</td><td><strong>ข้อ 3 และ 5</strong></td></tr>
+        <tr><td>5</td><td>x̄, SD จาก Time Series 12 เดือน</td><td>STAT 1-V</td><td><strong>x̄=7.30%/ปี · SD=14.74%/ปี</strong></td></tr>
+        <tr><td>6</td><td>Premium ที่ต้องการ (CAPM)</td><td>Ri−Rf = β·MRP</td><td><strong>8.4% ต่อปี</strong></td></tr>
+        <tr><td>7</td><td>Portfolio CAPM + Under/Over</td><td>เปรียบ E(R)จริง vs CAPM</td><td><strong>Undervalue (E=8.2% &gt; 7.875%)</strong></td></tr>
+        <tr><td>8</td><td>Portfolio + ρ จากเงินลงทุน</td><td>w จาก ส่วนแบ่งเงิน</td><td><strong>Rp=10.5% · SDp=13.54%</strong></td></tr>
+        <tr><td>9</td><td>Scenario boom/normal/recession</td><td>Σ Pᵢ·Rᵢ</td><td><strong>E(Rp)=5.6%</strong></td></tr>
+        <tr><td>10</td><td>3 หุ้น + Correlation Matrix</td><td>Var = ΣΣ wᵢwⱼσᵢσⱼρᵢⱼ</td><td><strong>Rp=9.55% · SDp=13.86%</strong></td></tr>
+        <tr><td>11</td><td>เส้นใดอธิบาย CAPM</td><td>—</td><td><strong>ค. SML</strong></td></tr>
+        <tr><td>12</td><td>Portfolio βp &amp; E(Rp)</td><td>CAPM</td><td><strong>βp=0.895 · E(Rp)=9.54%</strong></td></tr>
+        <tr><td>13</td><td>Portfolio CAPM (ซ้ำสไตล์ 12)</td><td>CAPM</td><td><strong>βp=0.908 · E(Rp)=8.70%</strong></td></tr>
+      </table>
+    </div>
+
+    <h2>สูตรและกฎทองที่ต้องจำ</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">CAPM (Capital Asset Pricing Model)</div>
+        <div class="formula-box">
+          E(Rᵢ) = R<sub>f</sub> + βᵢ × (R<sub>M</sub> − R<sub>f</sub>)<br>
+          (R<sub>M</sub> − R<sub>f</sub>) = MRP<br>
+          βᵢ = Cov(i,M) / Var(M)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Portfolio Return / Beta</div>
+        <div class="formula-box">
+          E(Rp) = Σ wᵢ · E(Rᵢ)<br>
+          βp = Σ wᵢ · βᵢ<br>
+          (w = สัดส่วนเงินลงทุน)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">2-Asset Variance</div>
+        <div class="formula-box">
+          σp² = w₁²σ₁² + w₂²σ₂² + 2w₁w₂σ₁σ₂ρ<sub>12</sub><br>
+          SDp = √Var
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3-Asset Variance</div>
+        <div class="formula-box">
+          σp² = Σ wᵢ²σᵢ² + 2ΣΣ wᵢwⱼσᵢσⱼρᵢⱼ<br>
+          (i &lt; j; ดู Correlation Matrix)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Sample Statistics (TI BA II Plus)</div>
+        <div class="info-box">
+          <strong>2nd · DATA</strong> → ใส่ X01, X02 ... <span class="hl">Y = 1</span> ทุกตัว<br>
+          <strong>2nd · STAT</strong> → 1-V → ↓ → x̄, Sx, n<br>
+          <strong>แปลง:</strong> x̄ ปี = x̄ เดือน × 12 · SD ปี = SD เดือน × √12
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Under / Over / Fairly valued</div>
+        <div class="info-box">
+          เทียบ <strong>E(R) จริง</strong> กับ <strong>CAPM</strong>:<br>
+          E(R)จริง &gt; CAPM → <span class="pill green">Undervalued</span> (น่าซื้อ)<br>
+          E(R)จริง = CAPM → <span class="pill blue">Fairly</span><br>
+          E(R)จริง &lt; CAPM → <span class="pill red">Overvalued</span> (ขาย)
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:16px;">
+      <strong>หลักจำสำคัญ:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>Total risk</strong> = Systematic (β) + Unsystematic (diversifiable)</li>
+        <li>Diversification กำจัดเฉพาะ Unsystematic</li>
+        <li><strong>SML</strong> ใช้ β (systematic) · <strong>CML</strong> ใช้ σ (total)</li>
+        <li>ρ &lt; 1 → ลด SD ของ portfolio · ρ = -1 → ลดสุด · ρ = +1 → ไม่ลด</li>
+        <li>Beta &lt; 0 → หุ้นเคลื่อน <em>ตรงข้าม</em> ตลาด (เช่น ทองคำ)</li>
+      </ul>
+    </div>
   </div>
 
 </div>
