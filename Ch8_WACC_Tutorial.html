@@ -56,6 +56,7 @@
     <button class="tab" data-target="w8">ข้อ 8</button>
     <button class="tab" data-target="w9">ข้อ 9</button>
     <button class="tab" data-target="w10">ข้อ 10</button>
+    <button class="tab" data-target="summary" style="margin-left:12px;background:var(--accent-soft);color:var(--accent);">📋 สรุป</button>
   </div>
 
   <!-- ============== W1: Full WACC Calculation ============== -->
@@ -338,6 +339,99 @@
       <strong>เข้าใจ Tax Shield:</strong> ภาษีลดลง → Tax Shield ของหนี้ลดลง → ต้นทุนหนี้ after-tax สูงขึ้น → WACC สูงขึ้น
     </div>
     <div class="answer-box"><strong>ΔWACC = <span class="pill red">+0.7%</span> (เพิ่มขึ้น)</strong></div>
+  </div>
+
+  <!-- ============== SUMMARY ============== -->
+  <div class="panel" id="summary">
+    <h2>สรุป Ch8 — WACC (Weighted Average Cost of Capital)</h2>
+
+    <div class="card">
+      <div class="card-title">ตารางคำตอบทั้ง 10 ข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>หัวข้อ</th><th>วิธี</th><th>คำตอบ</th></tr>
+        <tr><td>1</td><td>WACC ครบทุกขั้น (Leo)</td><td>w·Rd(1−t) + w·Rp + w·Re</td><td><strong>WACC = 9.94%</strong></td></tr>
+        <tr><td>2</td><td>Cost of New Equity + Floatation</td><td>D1/[P0(1−F)] + g</td><td><strong>Re = 13.38%</strong></td></tr>
+        <tr><td>3</td><td>เมื่อไรต้องออกหุ้นใหม่</td><td>Capex &gt; RE/(equity weight)</td><td><strong>Capex &gt; 637.5 ล้าน</strong></td></tr>
+        <tr><td>4</td><td>WACC: บริษัทเล็ก ใช้ Own-Bond Yield</td><td>Rd + Risk Premium</td><td><strong>WACC = 11.11%</strong></td></tr>
+        <tr><td>5</td><td>Cost of Equity เมื่อ β ติดลบ</td><td>CAPM ปกติ (β·MRP ติดลบได้)</td><td><strong>Re = 0.8%</strong></td></tr>
+        <tr><td>6</td><td>Cost of Debt ด้วย Bond YTM</td><td>TVM (CPT I/Y)</td><td><strong>Rd=5.29% · After-tax=4.23%</strong></td></tr>
+        <tr><td>7</td><td>Cost of Preferred Stock</td><td>Rp = Dp / [Pp(1−F)]</td><td><strong>Rp = 10.20%</strong></td></tr>
+        <tr><td>8</td><td>WACC พื้นฐาน</td><td>Σ wᵢ·Rᵢ</td><td><strong>WACC = 10.05%</strong></td></tr>
+        <tr><td>9</td><td>แก้กลับหา Re จาก WACC</td><td>WACC − wd·Rd(1−t) − wp·Rp = we·Re</td><td><strong>Re = 11.5%</strong></td></tr>
+        <tr><td>10</td><td>ภาษีลด → WACC?</td><td>Tax↓ → After-tax Rd↑</td><td><strong>ΔWACC = +0.7% (เพิ่ม)</strong></td></tr>
+      </table>
+    </div>
+
+    <h2>สูตรและกฎทองที่ต้องจำ</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">WACC สูตรหลัก</div>
+        <div class="formula-box">
+          WACC = w<sub>d</sub>·R<sub>d</sub>(1−t) + w<sub>p</sub>·R<sub>p</sub> + w<sub>e</sub>·R<sub>e</sub><br>
+          (Σ w = 1.0 · จากโครงสร้างทุนเป้าหมาย)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Cost of Debt (Rd)</div>
+        <div class="formula-box">
+          Rd = YTM ของ bond (ใช้ TVM CPT I/Y)<br>
+          After-tax Rd = Rd × (1 − t)<br>
+          (Tax shield เฉพาะ debt)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Cost of Preferred (Rp)</div>
+        <div class="formula-box">
+          Rp = Dp / Pp (no flotation)<br>
+          Rp = Dp / [Pp · (1 − F)] (มี flotation)<br>
+          F = floatation cost %
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Cost of Equity (Re) — 3 วิธี</div>
+        <div class="formula-box">
+          1) CAPM: Re = Rf + β·MRP<br>
+          2) DDM: Re = D1/P0 + g<br>
+          3) Own-Bond Yield: Re = Rd + Risk Premium
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Cost of New Equity (Floatation)</div>
+        <div class="formula-box">
+          Re_new = D1 / [P0(1−F)] + g<br>
+          (ใช้เมื่อบริษัทออกหุ้นใหม่ ต้องจ่ายค่าธรรมเนียม)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Break Point — เมื่อไรต้องออกหุ้นใหม่</div>
+        <div class="formula-box">
+          Break Point = RE / w<sub>e</sub><br>
+          ถ้า Capex &gt; Break Point → ต้องออกหุ้นใหม่<br>
+          (RE = Retained Earnings ที่มี)
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:16px;">
+      <strong>หลักจำสำคัญ:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>Tax shield เฉพาะหนี้</strong> — Equity และ Preferred ไม่ได้ลดภาษี</li>
+        <li>Tax ลดลง → After-tax Rd สูงขึ้น → <strong>WACC สูงขึ้น</strong></li>
+        <li>โครงสร้างทุนใช้ <strong>Target weights</strong> (ไม่ใช่ market weights ปัจจุบัน)</li>
+        <li>WACC ใช้ตัดสินใจรับ/ปฏิเสธโครงการ — เป็น "ต้นทุนทุน" ขั้นต่ำที่โครงการต้องสร้างได้</li>
+        <li>ถ้า β ติดลบ → Re น้อยกว่า Rf ได้ (เช่น หุ้นทอง defensive)</li>
+      </ul>
+    </div>
   </div>
 
 </div>
