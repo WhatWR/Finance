@@ -55,6 +55,7 @@
     <button class="tab" data-target="b7">ข้อ 7 (OCF)</button>
     <button class="tab" data-target="b8">ข้อ 8 (T/F)</button>
     <button class="tab" data-target="b9">ข้อ 9 (Depreciation)</button>
+    <button class="tab" data-target="summary" style="margin-left:12px;background:var(--accent-soft);color:var(--accent);">📋 สรุป</button>
   </div>
 
   <!-- ============== B1: Expected NPV ============== -->
@@ -447,17 +448,116 @@
     </div>
   </div>
 
-  <!-- ============== Summary ============== -->
-  <div class="card" style="margin-top:32px;background:var(--accent-soft);border:none;">
-    <div class="card-title">สรุปสูตร Cash Flow Estimation</div>
-    <div class="formula-box" style="background:var(--surface);">
-      <strong>Project CF (3 ส่วน):</strong><br>
-      ① Initial Outlay = Cap. Ex. + ΔNOWC₀ <br>
-      ② Operating CF = NOPAT + Depreciation = EBIT(1−t) + Dep <br>
-      ③ Terminal CF = Salvage − Tax×(Salvage − BV) + การคืน NOWC<br><br>
-      <strong>หลักสำคัญ:</strong> เริ่มจาก EBIT (ไม่ใช้ Net Income) เพื่อไม่นับ Interest ซ้ำกับ WACC
+  <!-- ============== SUMMARY ============== -->
+  <div class="panel" id="summary">
+    <h2>สรุป Ch10 — Cash Flow Estimation</h2>
+
+    <div class="card">
+      <div class="card-title">ตารางคำตอบทั้ง 9 ข้อ</div>
+      <table>
+        <tr><th>ข้อ</th><th>หัวข้อ</th><th>วิธี</th><th>คำตอบ</th></tr>
+        <tr><td>1</td><td>Expected NPV / Variance / SD</td><td>Σ Pᵢ·NPVᵢ และ Σ Pᵢ·(NPV−E)²</td><td><strong>E=3.00 · Var=1,071 · SD=32.73</strong></td></tr>
+        <tr><td>2</td><td>After-tax Salvage CF</td><td>Salvage − Tax(Salvage − BV)</td><td><strong>13.20 ล้านบาท</strong></td></tr>
+        <tr><td>3</td><td>NOPAT + OCF จาก Income Stmt</td><td>EBIT(1−t) + Dep</td><td><strong>NOPAT=240 · OCF=420</strong></td></tr>
+        <tr><td>4</td><td>NOWC Cash Flows</td><td>CFₜ = −(NOWCₜ − NOWCₜ₋₁)</td><td><strong>−4, −2, −2, +8</strong></td></tr>
+        <tr><td>5</td><td>Sensitivity NPV ต่อ WACC</td><td>NPV ที่ 8/10/12%</td><td><strong>5.73 / 1.65 / −2.18</strong></td></tr>
+        <tr><td>6</td><td>รายการที่นับเป็น Project CF</td><td>Incremental เท่านั้น</td><td><strong>ง (cannibalize) และ จ (Dep)</strong></td></tr>
+        <tr><td>7</td><td>OCF จาก IS (ขนาดบาท)</td><td>EBIT(1−t) + Dep</td><td><strong>3,900,000 บาท</strong></td></tr>
+        <tr><td>8</td><td>True/False เกี่ยวกับ CF</td><td>วิเคราะห์</td><td><strong>เฉพาะข้อ 2 ถูก</strong></td></tr>
+        <tr><td>9</td><td>Depreciation รวมขนส่ง+ติดตั้ง</td><td>(Cap. Ex. − Salvage)/n</td><td><strong>380,000 บาท/ปี</strong></td></tr>
+      </table>
+    </div>
+
+    <h2>สูตรและกฎทองที่ต้องจำ</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Project CF — โครงสร้าง 3 ส่วน</div>
+        <div class="formula-box">
+          ① Initial Outlay = Cap.Ex. + ΔNOWC₀<br>
+          ② Operating CF = NOPAT + Dep<br>
+          ③ Terminal CF = Salvage(net of tax) + คืน NOWC
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Operating Cash Flow (OCF)</div>
+        <div class="formula-box">
+          OCF = EBIT × (1 − t) + Depreciation<br>
+          = NOPAT + Dep<br>
+          <strong>เริ่มจาก EBIT</strong> (ไม่ใช่ Net Income)
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Capital Expenditure (ทุนของเครื่องจักร)</div>
+        <div class="formula-box">
+          Cap.Ex. = ราคาซื้อ + ค่าขนส่ง + ค่าติดตั้ง<br>
+          + ค่าใช้จ่ายอื่นที่จำเป็นเพื่อใช้งาน
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Depreciation (Straight-line)</div>
+        <div class="formula-box">
+          Dep/year = (Cap.Ex. − Salvage บัญชี) / อายุ<br>
+          BV ณ ปี t = Cap.Ex. − Σ Dep
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">After-tax Salvage Cash Flow</div>
+        <div class="formula-box">
+          Profit = Sale − BV<br>
+          Tax = Profit × t<br>
+          Salvage CF = Sale − Tax<br>
+          (Sale &lt; BV → Tax credit)
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">NOWC (Working Capital)</div>
+        <div class="formula-box">
+          NOWCₜ = % × Salesₜ₊₁ (ลงทุนล่วงหน้า)<br>
+          CFₜ = −(NOWCₜ − NOWCₜ₋₁)<br>
+          ปีสุดท้าย: คืน NOWC ทั้งหมด
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Expected NPV / Variance / SD</div>
+      <div class="formula-box">
+        E(NPV) = Σ Pᵢ · NPVᵢ<br>
+        Var(NPV) = Σ Pᵢ · (NPVᵢ − E(NPV))²<br>
+        SD = √Var
+      </div>
+    </div>
+
+    <div class="info-box" style="margin-top:16px;">
+      <strong>หลักจำสำคัญ — รายการที่ <em>ห้าม</em> นับใน Project CF:</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>Interest expense</strong> — อยู่ใน WACC แล้ว (จึงเริ่มจาก EBIT ไม่ใช่ Net Income)</li>
+        <li><strong>Dividend</strong> — Cost of equity อยู่ใน WACC แล้ว</li>
+        <li><strong>Sunk cost</strong> — ค่าใช้จ่ายในอดีตที่เกิดขึ้นแล้ว</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <strong>รายการที่ <em>ต้อง</em> นับ (Incremental):</strong>
+      <ul style="margin-left:20px;margin-top:6px;">
+        <li><strong>Opportunity cost</strong> — สิ่งที่เสียไปจากการเลือกทำโครงการ (เช่น ที่ดินที่ปล่อยเช่าได้)</li>
+        <li><strong>Cannibalization</strong> — ยอดขายสินค้าเก่าที่ลดลง</li>
+        <li><strong>Depreciation</strong> — เป็น non-cash แต่ทำให้ภาษีลด → บวกกลับเข้า OCF</li>
+        <li><strong>ΔNOWC</strong> — ทุกการเปลี่ยนแปลงของ working capital</li>
+      </ul>
     </div>
   </div>
+
 </div>
 
 <script>
